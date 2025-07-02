@@ -30,53 +30,68 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+ const handleSubmit = async (e) => {
+  e.preventDefault()
+  setIsSubmitting(true)
 
-    const formData = new FormData(e.currentTarget)
+  const formData = new FormData(e.currentTarget)
 
-    // Capturar todos os dados explicitamente
-    const nome = formData.get('nome') || ''
-    const email = formData.get('email') || ''
-    const empresa = formData.get('empresa') || ''
-    const cargo = formData.get('cargo') || ''
-    const telefone = formData.get('telefone') || ''
-    const mensagem = formData.get('mensagem') || ''
+  // Capturar todos os dados explicitamente
+  const nome = formData.get('nome') || ''
+  const email = formData.get('email') || ''
+  const empresa = formData.get('empresa') || ''
+  const cargo = formData.get('cargo') || ''
+  const telefone = formData.get('telefone') || ''
+  const mensagem = formData.get('mensagem') || ''
 
-    // Criar novo FormData com ordem garantida
-    const orderedFormData = new FormData()
-    orderedFormData.append('nome', nome)
-    orderedFormData.append('email', email)
-    orderedFormData.append('empresa', empresa)
-    orderedFormData.append('cargo', cargo)
-    orderedFormData.append('telefone', telefone)
-    orderedFormData.append('mensagem', mensagem)
+  // Log para debug no console do navegador
+  console.log('Dados capturados do formulário:', {
+    nome, email, empresa, cargo, telefone, mensagem
+  })
 
-    // Log para debug no console do navegador
-    console.log('Dados sendo enviados:', {
-      nome, email, empresa, cargo, telefone, mensagem
+  // Usar URLSearchParams para garantir compatibilidade com Google Apps Script
+  const params = new URLSearchParams()
+  params.append('nome', nome)
+  params.append('email', email)
+  params.append('empresa', empresa)
+  params.append('cargo', cargo)
+  params.append('telefone', telefone)
+  params.append('mensagem', mensagem)
+
+  console.log('Parâmetros sendo enviados:', params.toString())
+
+  try {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString()
     })
 
-    try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
-        method: "POST",
-        body: orderedFormData,
-      })
+    console.log('Response status:', response.status)
+    console.log('Response ok:', response.ok)
+    
+    const responseText = await response.text()
+    console.log('Response text:', responseText)
 
-      if (response.ok) {
-        setSubmitMessage("Mensagem enviada com sucesso!")
-        e.currentTarget.reset() // limpa o formulário
-      } else {
-        setSubmitMessage("Erro ao enviar mensagem.")
-      }
-    } catch (error) {
-      console.error("Erro ao enviar:", error)
-      setSubmitMessage("Erro ao enviar mensagem.")
-    } finally {
-      setIsSubmitting(false)
+    // Verificar se a resposta contém "Sucesso" (mesmo que o status não seja 200)
+    if (response.ok || responseText.includes('Sucesso')) {
+      setSubmitMessage("Mensagem enviada com sucesso!")
+      e.currentTarget.reset() // limpa o formulário
+    } else {
+      setSubmitMessage("Erro ao enviar mensagem. Tente novamente.")
     }
+  } catch (error) {
+    console.error("Erro ao enviar:", error)
+    setSubmitMessage("Erro ao enviar mensagem. Tente novamente.")
+  } finally {
+    setIsSubmitting(false)
+    // Limpar mensagem após 5 segundos
+    setTimeout(() => setSubmitMessage(''), 5000)
   }
+}
+
 
   const services = [
     {
