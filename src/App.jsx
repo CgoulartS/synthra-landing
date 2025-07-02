@@ -31,40 +31,31 @@ function App() {
   const [submitMessage, setSubmitMessage] = useState('')
 
   const handleSubmit = async (e) => {
-  e.preventDefault()
-  setIsSubmitting(true)
-  
-  const formData = new FormData(e.target)
-  const params = new URLSearchParams()
-  params.append('nome', formData.get('nome') || '')
-  params.append('email', formData.get('email') || '')
-  params.append('empresa', formData.get('empresa') || '')
-  params.append('cargo', formData.get('cargo') || '')
-  params.append('telefone', formData.get('telefone') || '')
-  params.append('mensagem', formData.get('mensagem') || '')
 
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: params.toString()
-    })
+    e.preventDefault()
+    setIsSubmitting(true)
 
-    if (response.ok) {
-      setSubmitMessage('Mensagem enviada com sucesso! Entraremos em contato em breve.')
-      e.target.reset()
-    } else {
-      setSubmitMessage('Erro ao enviar mensagem. Tente novamente.')
+    const formData = new FormData(e.currentTarget)
+
+    try {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (response.ok) {
+        setSubmitMessage("Mensagem enviada com sucesso!")
+        e.currentTarget.reset() // limpa o formulário
+      } else {
+        setSubmitMessage("Erro ao enviar mensagem.")
+      }
+    } catch (error) {
+      console.error("Erro ao enviar:", error)
+      setSubmitMessage("Erro ao enviar mensagem.")
+    } finally {
+      setIsSubmitting(false)
     }
-  } catch (error) {
-    setSubmitMessage('Erro ao enviar mensagem. Tente novamente.')
   }
-
-  setIsSubmitting(false)
-  setTimeout(() => setSubmitMessage(''), 5000)
-}
 
 
   const services = [
