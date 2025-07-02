@@ -31,16 +31,37 @@ function App() {
   const [submitMessage, setSubmitMessage] = useState('')
 
   const handleSubmit = async (e) => {
-
     e.preventDefault()
     setIsSubmitting(true)
 
     const formData = new FormData(e.currentTarget)
 
+    // Capturar todos os dados explicitamente
+    const nome = formData.get('nome') || ''
+    const email = formData.get('email') || ''
+    const empresa = formData.get('empresa') || ''
+    const cargo = formData.get('cargo') || ''
+    const telefone = formData.get('telefone') || ''
+    const mensagem = formData.get('mensagem') || ''
+
+    // Criar novo FormData com ordem garantida
+    const orderedFormData = new FormData()
+    orderedFormData.append('nome', nome)
+    orderedFormData.append('email', email)
+    orderedFormData.append('empresa', empresa)
+    orderedFormData.append('cargo', cargo)
+    orderedFormData.append('telefone', telefone)
+    orderedFormData.append('mensagem', mensagem)
+
+    // Log para debug no console do navegador
+    console.log('Dados sendo enviados:', {
+      nome, email, empresa, cargo, telefone, mensagem
+    })
+
     try {
       const response = await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
         method: "POST",
-        body: formData,
+        body: orderedFormData,
       })
 
       if (response.ok) {
@@ -56,7 +77,6 @@ function App() {
       setIsSubmitting(false)
     }
   }
-
 
   const services = [
     {
@@ -420,5 +440,4 @@ function App() {
 }
 
 export default App
-
 
