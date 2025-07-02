@@ -36,29 +36,30 @@ function App() {
     
     const formData = new FormData(e.target)
     
-    // Criar um objeto com os dados na ordem correta
-    const data = {
-      nome: formData.get('nome'),
-      email: formData.get('email'),
-      empresa: formData.get('empresa'),
-      cargo: formData.get('cargo'),
-      telefone: formData.get('telefone') || '',
-      mensagem: formData.get('mensagem')
-    }
+    // Capturar todos os dados do formulário
+    const nome = formData.get('nome') || ''
+    const email = formData.get('email') || ''
+    const empresa = formData.get('empresa') || ''
+    const cargo = formData.get('cargo') || ''
+    const telefone = formData.get('telefone') || ''
+    const mensagem = formData.get('mensagem') || ''
     
-    // Criar FormData com ordem específica
-    const orderedFormData = new FormData()
-    orderedFormData.append('nome', data.nome)
-    orderedFormData.append('email', data.email)
-    orderedFormData.append('empresa', data.empresa)
-    orderedFormData.append('cargo', data.cargo)
-    orderedFormData.append('telefone', data.telefone)
-    orderedFormData.append('mensagem', data.mensagem)
+    // Usar URLSearchParams para garantir que todos os parâmetros sejam enviados
+    const params = new URLSearchParams()
+    params.append('nome', nome)
+    params.append('email', email)
+    params.append('empresa', empresa)
+    params.append('cargo', cargo)
+    params.append('telefone', telefone)
+    params.append('mensagem', mensagem)
     
     try {
       const response = await fetch('https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec', {
         method: 'POST',
-        body: orderedFormData
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString()
       })
       
       if (response.ok) {
