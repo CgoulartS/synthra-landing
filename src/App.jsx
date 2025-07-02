@@ -31,50 +31,41 @@ function App() {
   const [submitMessage, setSubmitMessage] = useState('')
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
-    const formData = new FormData(e.target)
-    
-    // Capturar todos os dados do formulário
-    const nome = formData.get('nome') || ''
-    const email = formData.get('email') || ''
-    const empresa = formData.get('empresa') || ''
-    const cargo = formData.get('cargo') || ''
-    const telefone = formData.get('telefone') || ''
-    const mensagem = formData.get('mensagem') || ''
-    
-    // Usar URLSearchParams para garantir que todos os parâmetros sejam enviados
-    const params = new URLSearchParams()
-    params.append('nome', nome)
-    params.append('email', email)
-    params.append('empresa', empresa)
-    params.append('cargo', cargo)
-    params.append('telefone', telefone)
-    params.append('mensagem', mensagem)
-    
-    try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params.toString()
-      })
-      
-      if (response.ok) {
-        setSubmitMessage('Mensagem enviada com sucesso! Entraremos em contato em breve.')
-        e.target.reset()
-      } else {
-        setSubmitMessage('Erro ao enviar mensagem. Tente novamente.')
-      }
-    } catch (error) {
+  e.preventDefault()
+  setIsSubmitting(true)
+  
+  const formData = new FormData(e.target)
+  const params = new URLSearchParams()
+  params.append('nome', formData.get('nome') || '')
+  params.append('email', formData.get('email') || '')
+  params.append('empresa', formData.get('empresa') || '')
+  params.append('cargo', formData.get('cargo') || '')
+  params.append('telefone', formData.get('telefone') || '')
+  params.append('mensagem', formData.get('mensagem') || '')
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString()
+    })
+
+    if (response.ok) {
+      setSubmitMessage('Mensagem enviada com sucesso! Entraremos em contato em breve.')
+      e.target.reset()
+    } else {
       setSubmitMessage('Erro ao enviar mensagem. Tente novamente.')
     }
-    
-    setIsSubmitting(false)
-    setTimeout(() => setSubmitMessage(''), 5000)
+  } catch (error) {
+    setSubmitMessage('Erro ao enviar mensagem. Tente novamente.')
   }
+
+  setIsSubmitting(false)
+  setTimeout(() => setSubmitMessage(''), 5000)
+}
+
 
   const services = [
     {
