@@ -36,10 +36,29 @@ function App() {
     
     const formData = new FormData(e.target)
     
+    // Criar um objeto com os dados na ordem correta
+    const data = {
+      nome: formData.get('nome'),
+      email: formData.get('email'),
+      empresa: formData.get('empresa'),
+      cargo: formData.get('cargo'),
+      telefone: formData.get('telefone') || '',
+      mensagem: formData.get('mensagem')
+    }
+    
+    // Criar FormData com ordem específica
+    const orderedFormData = new FormData()
+    orderedFormData.append('nome', data.nome)
+    orderedFormData.append('email', data.email)
+    orderedFormData.append('empresa', data.empresa)
+    orderedFormData.append('cargo', data.cargo)
+    orderedFormData.append('telefone', data.telefone)
+    orderedFormData.append('mensagem', data.mensagem)
+    
     try {
       const response = await fetch('https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec', {
         method: 'POST',
-        body: formData
+        body: orderedFormData
       })
       
       if (response.ok) {
