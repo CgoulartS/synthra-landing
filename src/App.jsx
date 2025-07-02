@@ -34,7 +34,10 @@ function App() {
   e.preventDefault()
   setIsSubmitting(true)
 
-  const formData = new FormData(e.currentTarget)
+  // SALVAR REFERÊNCIA DO FORM ANTES DO AWAIT
+  const form = e.currentTarget
+
+  const formData = new FormData(form)
 
   // Capturar todos os dados explicitamente
   const nome = formData.get('nome') || ''
@@ -78,7 +81,7 @@ function App() {
     // Verificar se a resposta contém "Sucesso" (mesmo que o status não seja 200)
     if (response.ok || responseText.includes('Sucesso')) {
       setSubmitMessage("Mensagem enviada com sucesso!")
-      e.currentTarget.reset() // limpa o formulário
+      form.reset() // USAR A REFERÊNCIA SALVA
     } else {
       setSubmitMessage("Erro ao enviar mensagem. Tente novamente.")
     }
