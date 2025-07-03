@@ -30,7 +30,20 @@ import {
   Cpu,
   Network,
   Eye,
-  Layers
+  Layers,
+  Calendar,
+  Settings,
+  Rocket,
+  Instagram,
+  Linkedin,
+  Send,
+  Play,
+  ExternalLink,
+  ChevronRight,
+  Globe,
+  Headphones,
+  FileText,
+  Newspaper
 } from 'lucide-react'
 import './App.css'
 
@@ -42,12 +55,9 @@ function App() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // SALVAR REFERÊNCIA DO FORM ANTES DO AWAIT
     const form = e.currentTarget
-
     const formData = new FormData(form)
 
-    // Capturar todos os dados explicitamente
     const nome = formData.get('nome') || ''
     const email = formData.get('email') || ''
     const empresa = formData.get('empresa') || ''
@@ -55,7 +65,6 @@ function App() {
     const telefone = formData.get('telefone') || ''
     const mensagem = formData.get('mensagem') || ''
 
-    // Usar URLSearchParams para garantir compatibilidade com Google Apps Script
     const params = new URLSearchParams()
     params.append('nome', nome)
     params.append('email', email)
@@ -93,74 +102,46 @@ function App() {
   const services = [
     {
       icon: <Brain className="w-8 h-8" />,
-      title: "IA Generativa Empresarial",
-      description: "Implementamos soluções de IA generativa que vão além de chatbots simples. Criamos agentes inteligentes que compreendem contexto, aprendem continuamente e geram valor real para seu negócio."
+      title: "🧠 Agente Estratégico",
+      description: "Criamos uma IA que pensa e executa como você. Toma decisões, analisa dados e executa tarefas complexas com sua personalidade e critérios.",
+      cta: "Quero criar minha IA pessoal"
     },
     {
-      icon: <Network className="w-8 h-8" />,
-      title: "Agentes Inteligentes",
-      description: "Desenvolvemos agentes de IA autônomos que tomam decisões complexas, integram-se aos seus sistemas e executam tarefas sofisticadas. Não são bots de WhatsApp - são colaboradores virtuais."
+      icon: <MessageSquare className="w-8 h-8" />,
+      title: "🤖 IA de Atendimento",
+      description: "Fluxo completo com GPT + WhatsApp + CRM. Atende, qualifica, agenda e nutre leads 24/7 com a qualidade do seu melhor vendedor.",
+      cta: "Quero automatizar meu atendimento"
     },
     {
-      icon: <Zap className="w-8 h-8" />,
-      title: "Automação Inteligente",
-      description: "Automatizamos processos empresariais com IA multimodal, análise preditiva e tomada de decisões em tempo real. Reduzimos custos e aumentamos eficiência operacional."
+      icon: <Settings className="w-8 h-8" />,
+      title: "⚙️ Automação Total",
+      description: "Conectamos Make, Kommo, Notion e IA para criar fluxos que trabalham sozinhos. Sua empresa funcionando enquanto você dorme.",
+      cta: "Quero automatizar minha empresa"
     },
     {
-      icon: <BarChart3 className="w-8 h-8" />,
-      title: "Análise de Dados com IA",
-      description: "Transformamos seus dados em insights acionáveis usando processamento de linguagem natural. Consultas em tempo real, relatórios automáticos e análise preditiva."
-    },
-    {
-      icon: <BookOpen className="w-8 h-8" />,
-      title: "Treinamentos Especializados",
-      description: "Capacitamos sua equipe para usar IA de forma estratégica. Ensinamos a diferença entre automação simples e inteligência artificial real."
-    },
-    {
-      icon: <Building className="w-8 h-8" />,
-      title: "Consultoria Estratégica",
-      description: "Diagnóstico completo de como a IA pode transformar seu negócio. Identificamos oportunidades reais de ROI e criamos roadmaps de implementação."
+      icon: <Rocket className="w-8 h-8" />,
+      title: "📈 IA para Lançamentos",
+      description: "Funis, conteúdo, automação e análise por IA. Do planejamento à execução, sua IA cuida de cada detalhe do seu lançamento.",
+      cta: "Quero lançar com IA"
     }
   ]
 
-  const benefits = [
+  const valueProps = [
     {
-      icon: <Target className="w-6 h-6" />,
-      title: "IA com Propósito Real",
-      description: "Não seguimos trends vazias. Criamos soluções com intenção clara, ROI mensurável e resultados práticos para seu negócio."
+      icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
+      text: "Automatizamos atendimento com IA"
     },
     {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Diferenciação Técnica",
-      description: "Sabemos a diferença entre um bot de WhatsApp e um agente de IA. Implementamos tecnologia de ponta, não soluções superficiais."
+      icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
+      text: "Criamos agentes que trabalham por você"
     },
     {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Resultados Mensuráveis",
-      description: "75% das empresas já adotaram IA generativa. Nós garantimos que você esteja entre os líderes, não apenas seguindo a multidão."
-    }
-  ]
-
-  const differentiators = [
-    {
-      icon: <MessageSquare className="w-6 h-6" />,
-      title: "Bot de WhatsApp ≠ IA",
-      description: "Bots seguem scripts fixos e respostas pré-programadas. Nossos agentes de IA compreendem contexto, aprendem continuamente e tomam decisões complexas."
+      icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
+      text: "Construímos fluxos com Make, Notion, Kommo e GPT"
     },
     {
-      icon: <Cpu className="w-6 h-6" />,
-      title: "IA Multimodal",
-      description: "Processamos texto, imagem e áudio simultaneamente. Criamos sistemas que entendem o mundo como humanos, não apenas palavras-chave."
-    },
-    {
-      icon: <Layers className="w-6 h-6" />,
-      title: "Integração Empresarial",
-      description: "Nossos agentes se conectam aos seus sistemas (CRM, ERP, BI) e trabalham como membros da equipe, não como ferramentas isoladas."
-    },
-    {
-      icon: <Eye className="w-6 h-6" />,
-      title: "Aprendizado Contínuo",
-      description: "Diferente de automações estáticas, nossos sistemas evoluem com seu negócio, melhorando performance e adaptando-se a novas situações."
+      icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
+      text: "Educamos sua equipe para usar IA no dia a dia"
     }
   ]
 
@@ -168,19 +149,19 @@ function App() {
     {
       name: "Maria Silva",
       role: "CEO TechCorp",
-      content: "A Synthra nos mostrou a diferença entre automação simples e IA real. Nossos agentes inteligentes reduziram custos em 40% e aumentaram satisfação do cliente.",
+      content: "O Agente Estratégico da Synthra revolucionou nossa operação. É como ter uma versão digital da Camila trabalhando 24/7 na nossa empresa.",
       rating: 5
     },
     {
       name: "João Santos",
-      role: "Diretor de Inovação",
-      content: "Finalmente uma empresa que entende que IA vai além de chatbots. Os agentes que desenvolveram tomam decisões complexas e se integram perfeitamente aos nossos sistemas.",
+      role: "Diretor de Vendas",
+      content: "A IA de Atendimento aumentou nossa conversão em 300%. Nossos leads são qualificados e nutridos automaticamente com qualidade humana.",
       rating: 5
     },
     {
       name: "Ana Costa",
-      role: "Gerente de Processos",
-      content: "A automação inteligente da Synthra transformou nossa operação. Não é só eficiência - é inteligência real aplicada aos nossos desafios.",
+      role: "Fundadora StartupX",
+      content: "A Automação Total da Synthra me devolveu 20 horas por semana. Agora posso focar no que realmente importa: estratégia e crescimento.",
       rating: 5
     }
   ]
@@ -192,19 +173,20 @@ function App() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
+              <img src="/logo-transparent.png" alt="Synthra Logo" className="h-12 w-auto" />
             </div>
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#inicio" className="text-gray-300 hover:text-cyan-400 transition-colors">Início</a>
-              <a href="#sobre" className="text-gray-300 hover:text-cyan-400 transition-colors">Sobre</a>
               <a href="#servicos" className="text-gray-300 hover:text-cyan-400 transition-colors">Serviços</a>
-              <a href="#diferenciais" className="text-gray-300 hover:text-cyan-400 transition-colors">Diferenciais</a>
-              <a href="#contato" className="text-gray-300 hover:text-cyan-400 transition-colors">Contato</a>
+              <a href="#cases" className="text-gray-300 hover:text-cyan-400 transition-colors">Cases</a>
+              <a href="#comunidade" className="text-gray-300 hover:text-cyan-400 transition-colors">Comunidade</a>
+              <a href="#sobre" className="text-gray-300 hover:text-cyan-400 transition-colors">Sobre</a>
             </nav>
             <Button 
               className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white border-0"
               onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
             >
-              Fale Conosco
+              💡 Agende uma conversa
             </Button>
           </div>
         </div>
@@ -215,14 +197,11 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 blur-3xl"></div>
         <div className="container mx-auto text-center relative z-10">
           <div className="max-w-4xl mx-auto">
-            <img src="/logo-transparent.png" alt="Synthra Logo" className="h-64 w-auto mx-auto mb-8" />
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-fade-in-up">
               A IA que pensa com você
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-              Cansamos de ver "IA" sendo usada para descrever bots simples de WhatsApp.
-              <br className="hidden md:block" />
-              A Synthra cria agentes inteligentes reais: sistemas que compreendem, aprendem e decidem.
+              Soluções inteligentes e humanas para automatizar, escalar e criar com propósito.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -230,34 +209,35 @@ function App() {
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg px-8 py-4 border-0"
                 onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
               >
-                Quero conhecer a Synthra
+                💡 Agende uma conversa
                 <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black text-lg px-8 py-4"
+                onClick={() => document.getElementById('cases').scrollIntoView({ behavior: 'smooth' })}
+              >
+                ⚙️ Explore nossos cases
+                <ExternalLink className="ml-2 w-5 h-5" />
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="sobre" className="py-20 px-4 bg-gray-900/50">
+      {/* Value Proposition */}
+      <section className="py-16 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Por que a Synthra existe?
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+              O que fazemos na prática
             </h2>
-            <p className="text-xl text-gray-300 mb-12 leading-relaxed">
-              Em 2024, 75% das empresas adotaram "IA generativa". Mas a maioria está apenas seguindo trends, 
-              implementando chatbots simples e chamando de inteligência artificial. 
-              Nós criamos agentes que realmente pensam, aprendem e geram valor mensurável.
-            </p>
-            <div className="grid md:grid-cols-3 gap-8">
-              {benefits.map((benefit, index) => (
-                <div key={index} className="text-center group">
-                  <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <div className="text-cyan-400">{benefit.icon}</div>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">{benefit.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{benefit.description}</p>
+            <div className="grid md:grid-cols-2 gap-6 mt-12">
+              {valueProps.map((prop, index) => (
+                <div key={index} className="flex items-center space-x-4 text-left">
+                  {prop.icon}
+                  <span className="text-lg text-gray-300">{prop.text}</span>
                 </div>
               ))}
             </div>
@@ -270,58 +250,34 @@ function App() {
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Nossas Especialidades
+              Nossos Serviços
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Oferecemos soluções completas em Inteligência Artificial real, não automações disfarçadas de IA.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 group">
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <div className="text-cyan-400">{service.icon}</div>
-                  </div>
-                  <CardTitle className="text-xl text-white">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-400 leading-relaxed text-center">
-                    {service.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Differentiators Section */}
-      <section id="diferenciais" className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              IA Real vs. Automação Simples
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Entenda por que nem tudo que se chama "IA" é realmente inteligência artificial.
+              Soluções autorais que combinam tecnologia de ponta com propósito humano.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            {differentiators.map((diff, index) => (
-              <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
+            {services.map((service, index) => (
+              <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 group">
                 <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
-                      <div className="text-cyan-400">{diff.icon}</div>
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <div className="text-cyan-400">{service.icon}</div>
                     </div>
-                    <CardTitle className="text-xl text-white">{diff.title}</CardTitle>
+                    <CardTitle className="text-xl text-white">{service.title}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-gray-400 leading-relaxed">
-                    {diff.description}
+                  <CardDescription className="text-gray-400 leading-relaxed mb-6">
+                    {service.description}
                   </CardDescription>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all"
+                    onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    {service.cta}
+                    <ChevronRight className="ml-2 w-4 h-4" />
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -329,17 +285,61 @@ function App() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 px-4">
+      {/* Cases Section */}
+      <section id="cases" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Resultados Reais de Clientes Reais
+              Cases & Projetos
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Veja como empresas líderes estão usando IA real para transformar seus negócios.
+              Resultados reais de quem já transformou seu negócio com IA.
             </p>
           </div>
+
+          {/* Case em Desenvolvimento */}
+          <div className="max-w-4xl mx-auto mb-16">
+            <Card className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-cyan-400/30">
+              <CardHeader>
+                <div className="flex items-center space-x-3 mb-4">
+                  <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-400/30">
+                    📌 Case em desenvolvimento
+                  </Badge>
+                </div>
+                <CardTitle className="text-2xl text-white mb-2">
+                  O Agente Social da Synthra
+                </CardTitle>
+                <CardDescription className="text-gray-300 text-lg">
+                  Um agente que cria, agenda e publica conteúdo automaticamente, aliviando a sobrecarga da founder.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6 mb-6">
+                  <div className="flex items-center space-x-3">
+                    <Instagram className="w-6 h-6 text-pink-400" />
+                    <span className="text-gray-300">Carrossel no Instagram</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Linkedin className="w-6 h-6 text-blue-400" />
+                    <span className="text-gray-300">Texto no LinkedIn</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Send className="w-6 h-6 text-cyan-400" />
+                    <span className="text-gray-300">Resumo no Telegram</span>
+                  </div>
+                </div>
+                <Button 
+                  className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                  onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Quero um agente como este
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Testimonials */}
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
@@ -365,16 +365,80 @@ function App() {
         </div>
       </section>
 
+      {/* Community Section */}
+      <section id="comunidade" className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
+              <Headphones className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                🎧 Participe da maior comunidade de IA do Brasil
+              </h2>
+              <p className="text-xl text-gray-300 mb-8">
+                Práticas semanais • Automação com propósito • Cases reais
+              </p>
+              <p className="text-lg text-cyan-400 mb-8 italic">
+                "Aqui, a IA não substitui. Ela expande."
+              </p>
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg px-8 py-4 border-0"
+                onClick={() => window.open('https://t.me/synthraia', '_blank')}
+              >
+                Entrar na Comunidade
+                <Users className="ml-2 w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="sobre" className="py-20 px-4 bg-gray-900/50">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                  ✨ Sobre Camila Goulart
+                </h2>
+                <p className="text-xl text-gray-300 mb-6 leading-relaxed">
+                  Fundadora da Synthra. Especialista em liderança, processos e IA aplicada.
+                </p>
+                <p className="text-lg text-gray-400 mb-6 leading-relaxed">
+                  Une alma, estratégia e tecnologia para ajudar pessoas e empresas a fazerem mais com sentido.
+                </p>
+                <blockquote className="text-2xl text-cyan-400 italic mb-8 border-l-4 border-cyan-400 pl-6">
+                  "A IA não substitui. Ela conecta."
+                </blockquote>
+                <Button 
+                  className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                  onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Quero aprender a liderar com IA
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
+              <div className="text-center">
+                <div className="w-80 h-80 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto">
+                  <Heart className="w-32 h-32 text-cyan-400" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
-      <section id="contato" className="py-20 px-4 bg-gray-900/50">
+      <section id="contato" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Pronto para IA Real?
+                Vamos pensar juntos?
               </h2>
               <p className="text-xl text-gray-300">
-                Vamos conversar sobre como agentes inteligentes podem transformar seu negócio.
+                Conte-nos seu desafio. Vamos criar uma solução que faz sentido para você.
               </p>
             </div>
             
@@ -393,29 +457,20 @@ function App() {
                   </div>
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white">WhatsApp</p>
+                      <p className="text-gray-400">+55 (51) 9 9472-4351</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
                       <Clock className="w-6 h-6 text-cyan-400" />
                     </div>
                     <div>
                       <p className="font-semibold text-white">Horário de Atendimento</p>
                       <p className="text-gray-400">Segunda a sexta, 9h às 18h</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-8 p-6 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg border border-cyan-400/20">
-                  <h4 className="font-semibold mb-3 text-white">Nossa Metodologia</h4>
-                  <div className="space-y-3 text-sm text-gray-300">
-                    <div className="flex items-start space-x-2">
-                      <span className="font-semibold text-cyan-400">1.</span>
-                      <span><strong>Diagnóstico Técnico:</strong> Identificamos onde IA real pode gerar ROI mensurável.</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="font-semibold text-cyan-400">2.</span>
-                      <span><strong>Prova de Conceito:</strong> Desenvolvemos um agente piloto para validar resultados.</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="font-semibold text-cyan-400">3.</span>
-                      <span><strong>Implementação Escalável:</strong> Expandimos a solução para toda a operação.</span>
                     </div>
                   </div>
                 </div>
@@ -426,7 +481,7 @@ function App() {
                   <CardHeader>
                     <CardTitle className="text-white">Fale conosco</CardTitle>
                     <CardDescription className="text-gray-400">
-                      Conte-nos sobre seu desafio. Vamos mostrar como IA real pode resolvê-lo.
+                      Conte-nos sobre seu desafio. Vamos criar uma solução que faz sentido.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -485,7 +540,7 @@ function App() {
                         <Textarea 
                           id="mensagem" 
                           name="mensagem" 
-                          placeholder="Descreva seu desafio ou como podemos ajudar..." 
+                          placeholder="Conte-nos seu desafio ou como podemos ajudar..." 
                           required 
                           className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-32 resize-y"
                         />
@@ -506,13 +561,45 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-black/70 py-12 px-4 border-t border-gray-700">
-        <div className="container mx-auto text-center text-gray-400">
-          <img src="/logo-transparent.png" alt="Synthra Logo" className="h-12 mx-auto mb-4" />
-          <p>&copy; {new Date().getFullYear()} Synthra.ia. Todos os direitos reservados.</p>
-          <p className="mt-2 text-sm">Inteligência Artificial Real • Agentes Inteligentes • Automação com Propósito</p>
-          <div className="flex justify-center space-x-4 mt-4">
-            <a href="#" className="hover:text-cyan-400 transition-colors">Política de Privacidade</a>
-            <a href="#" className="hover:text-cyan-400 transition-colors">Termos de Uso</a>
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <img src="/logo-transparent.png" alt="Synthra Logo" className="h-12 mb-4" />
+              <p className="text-gray-400 text-sm">
+                A IA que pensa com você. Soluções inteligentes e humanas.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Empresa</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#sobre" className="text-gray-400 hover:text-cyan-400 transition-colors">Sobre a Synthra.ia</a></li>
+                <li><a href="#servicos" className="text-gray-400 hover:text-cyan-400 transition-colors">Nossos Serviços</a></li>
+                <li><a href="#cases" className="text-gray-400 hover:text-cyan-400 transition-colors">Cases & Projetos</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Comunidade</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="https://t.me/synthraia" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
+                <li><a href="#contato" className="text-gray-400 hover:text-cyan-400 transition-colors">Fale com a equipe</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog de IA prática</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Newsletter</h4>
+              <p className="text-gray-400 text-sm mb-4">IA com Propósito</p>
+              <Button 
+                className="w-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+              >
+                <Newspaper className="mr-2 w-4 h-4" />
+                Assinar
+              </Button>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} Synthra.ia. Todos os direitos reservados.</p>
+            <p className="mt-2 text-sm">A IA não substitui. Ela conecta.</p>
           </div>
         </div>
       </footer>
