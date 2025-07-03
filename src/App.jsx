@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
@@ -43,7 +43,8 @@ import {
   Globe,
   Headphones,
   FileText,
-  Newspaper
+  Newspaper,
+  RefreshCw
 } from 'lucide-react'
 import './App.css'
 
@@ -54,13 +55,122 @@ function App() {
   const [newsletterMessage, setNewsletterMessage] = useState('')
   const [newsletterSubmitting, setNewsletterSubmitting] = useState(false)
   const [selectedPost, setSelectedPost] = useState(null)
+  const [blogPosts, setBlogPosts] = useState([])
+  const [loadingPosts, setLoadingPosts] = useState(true)
 
-  // Configurações do Mailchimp
-  const MAILCHIMP_CONFIG = {
-    apiKey: '33948c53290674560b9ba9e61dc00974-us14',
-    audienceId: '619bb23d0a',
-    serverPrefix: 'us14'
+  // API URL - ajuste conforme necessário
+  const API_URL = 'synthra-blog-api-cngj.vercel.app'
+
+  // Carregar posts do blog da API
+  useEffect(() => {
+    loadBlogPosts()
+  }, [])
+
+  const loadBlogPosts = async () => {
+    try {
+      setLoadingPosts(true)
+      const response = await fetch(`${API_URL}/posts`)
+      const data = await response.json()
+      
+      if (data.success) {
+        setBlogPosts(data.posts)
+      } else {
+        console.error('Erro ao carregar posts:', data.error)
+        // Fallback para posts estáticos se API não estiver disponível
+        setBlogPosts(getStaticPosts())
+      }
+    } catch (error) {
+      console.error('Erro ao conectar com API:', error)
+      // Fallback para posts estáticos
+      setBlogPosts(getStaticPosts())
+    } finally {
+      setLoadingPosts(false)
+    }
   }
+
+  // Posts estáticos como fallback
+  const getStaticPosts = () => [
+    {
+      id: 'static-1',
+      title: "Como criar seu primeiro Agente de IA",
+      excerpt: "Guia completo para implementar um agente inteligente que trabalha por você, desde o planejamento até a execução.",
+      content: `
+        <h3>Por que criar um Agente de IA?</h3>
+        <p>Em um mundo onde a eficiência determina o sucesso, ter um agente de IA trabalhando por você não é mais luxo - é necessidade. Um agente bem configurado pode executar tarefas complexas, tomar decisões baseadas em dados e trabalhar 24/7 sem parar.</p>
+        
+        <h3>O que é um Agente de IA?</h3>
+        <p>Um agente de IA é um sistema inteligente que pode:</p>
+        <ul>
+          <li>Analisar dados e tomar decisões</li>
+          <li>Executar tarefas automaticamente</li>
+          <li>Aprender com interações passadas</li>
+          <li>Integrar com suas ferramentas existentes</li>
+        </ul>
+        
+        <h3>Passo a Passo para Criar seu Agente</h3>
+        
+        <h4>1. Defina o Objetivo</h4>
+        <p>Antes de qualquer coisa, seja específico sobre o que seu agente deve fazer. Exemplos:</p>
+        <ul>
+          <li>Qualificar leads automaticamente</li>
+          <li>Responder dúvidas de clientes</li>
+          <li>Analisar dados de vendas</li>
+          <li>Gerenciar agenda e compromissos</li>
+        </ul>
+        
+        <h4>2. Escolha a Plataforma</h4>
+        <p>Para iniciantes, recomendamos:</p>
+        <ul>
+          <li><strong>Make.com:</strong> Para automações visuais</li>
+          <li><strong>OpenAI API:</strong> Para inteligência</li>
+          <li><strong>Zapier:</strong> Para integrações simples</li>
+        </ul>
+        
+        <h3>Próximos Passos</h3>
+        <p>Quer implementar um agente de IA na sua empresa? A Synthra pode ajudar você a criar uma solução personalizada que funciona desde o primeiro dia.</p>
+      `,
+      author: "Camila Goulart",
+      date: "15 de dezembro, 2024",
+      readTime: "8 min",
+      category: "Tutorial",
+      tags: ["IA", "Tutorial", "Agentes"]
+    },
+    {
+      id: 'static-2',
+      title: "Bot vs IA: Qual a diferença real?",
+      excerpt: "Entenda as diferenças fundamentais entre bots tradicionais e agentes de IA, e quando usar cada um.",
+      content: `
+        <h3>A Confusão do Mercado</h3>
+        <p>No mercado brasileiro, existe uma confusão generalizada entre "bot" e "IA". Muitas empresas vendem bots simples como se fossem inteligência artificial avançada.</p>
+        
+        <h3>Bot Tradicional: O que é?</h3>
+        <p>Um bot tradicional é um programa que segue regras pré-definidas:</p>
+        <ul>
+          <li>Funciona com "se isso, então aquilo"</li>
+          <li>Respostas limitadas e pré-programadas</li>
+          <li>Não aprende com interações</li>
+          <li>Quebra facilmente com perguntas inesperadas</li>
+        </ul>
+        
+        <h3>Agente de IA: O que faz a diferença?</h3>
+        <p>Um agente de IA verdadeiro tem capacidades avançadas:</p>
+        <ul>
+          <li>Entende contexto e nuances da linguagem</li>
+          <li>Gera respostas únicas para cada situação</li>
+          <li>Aprende e melhora com o tempo</li>
+          <li>Lida com perguntas complexas e inesperadas</li>
+        </ul>
+        
+        <h3>Nossa Recomendação</h3>
+        <p>Na Synthra, acreditamos que 2024 é o ano para investir em IA real. Os custos diminuíram drasticamente e a tecnologia amadureceu.</p>
+      `,
+      author: "Camila Goulart", 
+      date: "12 de dezembro, 2024",
+      readTime: "6 min",
+      category: "Educação",
+      tags: ["IA", "Bot", "Comparação"]
+    }
+  ]
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -122,44 +232,49 @@ function App() {
     }
 
     try {
-      // Integração com Mailchimp usando JSONP para contornar CORS
-      const url = `https://${MAILCHIMP_CONFIG.serverPrefix}.api.mailchimp.com/3.0/lists/${MAILCHIMP_CONFIG.audienceId}/members`
+      // Integração REAL com Mailchimp usando JSONP
+      const script = document.createElement('script')
+      const callbackName = 'mailchimpCallback' + Date.now()
       
-      const data = {
-        email_address: newsletterEmail,
-        status: 'subscribed',
-        merge_fields: {
-          FNAME: '', // Pode ser expandido para capturar nome
-          LNAME: ''
-        },
-        tags: ['Website Synthra']
+      window[callbackName] = function(data) {
+        document.head.removeChild(script)
+        delete window[callbackName]
+        
+        if (data.result === 'success') {
+          setNewsletterMessage("🎉 Sucesso! Você receberá nossa newsletter semanalmente com insights práticos de IA.")
+          setNewsletterEmail('')
+        } else {
+          if (data.msg && data.msg.includes('already subscribed')) {
+            setNewsletterMessage("✅ Este email já está inscrito! Você receberá nossa newsletter semanalmente.")
+            setNewsletterEmail('')
+          } else {
+            setNewsletterMessage("Erro ao se inscrever. Tente novamente ou entre em contato conosco.")
+          }
+        }
+        setNewsletterSubmitting(false)
+        setTimeout(() => setNewsletterMessage(''), 8000)
       }
-
-      // Como estamos no frontend, vamos usar uma abordagem alternativa
-      // Usando o formulário embutido do Mailchimp como fallback
-      const mailchimpFormUrl = `https://${MAILCHIMP_CONFIG.serverPrefix}.list-manage.com/subscribe/post-json?u=${MAILCHIMP_CONFIG.apiKey.split('-')[0]}&id=${MAILCHIMP_CONFIG.audienceId}&c=?`
       
-      const formData = new FormData()
-      formData.append('EMAIL', newsletterEmail)
-      formData.append('b_' + MAILCHIMP_CONFIG.apiKey.split('-')[0] + '_' + MAILCHIMP_CONFIG.audienceId, '')
-
-      // Usando fetch com modo no-cors para evitar problemas de CORS
-      const response = await fetch(mailchimpFormUrl.replace('post-json', 'post'), {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-      })
-
-      // Como estamos usando no-cors, assumimos sucesso se não houver erro
-      setNewsletterMessage("🎉 Obrigado! Você receberá nossa newsletter semanalmente com insights práticos de IA.")
-      setNewsletterEmail('')
+      const mailchimpUrl = `https://synthraia.us14.list-manage.com/subscribe/post-json?u=33948c53290674560b9ba9e61dc00974&id=619bb23d0a&EMAIL=${encodeURIComponent(newsletterEmail)}&c=${callbackName}`
+      
+      script.src = mailchimpUrl
+      document.head.appendChild(script)
+      
+      setTimeout(() => {
+        if (window[callbackName]) {
+          document.head.removeChild(script)
+          delete window[callbackName]
+          setNewsletterMessage("Timeout na inscrição. Tente novamente.")
+          setNewsletterSubmitting(false)
+          setTimeout(() => setNewsletterMessage(''), 5000)
+        }
+      }, 10000)
       
     } catch (error) {
       console.error("Erro ao se inscrever:", error)
       setNewsletterMessage("Erro ao se inscrever. Tente novamente ou entre em contato conosco.")
-    } finally {
       setNewsletterSubmitting(false)
-      setTimeout(() => setNewsletterMessage(''), 8000)
+      setTimeout(() => setNewsletterMessage(''), 5000)
     }
   }
 
@@ -201,371 +316,106 @@ function App() {
     },
     {
       icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
-      text: "Construímos fluxos com Make, Notion, Kommo e GPT"
+      text: "Integramos tudo com suas ferramentas"
     },
     {
       icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
-      text: "Educamos sua equipe para usar IA no dia a dia"
+      text: "Resultados em 30 dias ou menos"
     }
   ]
 
   const testimonials = [
     {
-      name: "Maria Silva",
-      role: "CEO TechCorp",
-      content: "O Agente Estratégico da Synthra revolucionou nossa operação. É como ter uma versão digital da Camila trabalhando 24/7 na nossa empresa.",
-      rating: 5
-    },
-    {
-      name: "João Santos",
-      role: "Diretor de Vendas",
-      content: "A IA de Atendimento aumentou nossa conversão em 300%. Nossos leads são qualificados e nutridos automaticamente com qualidade humana.",
+      name: "Carlos Silva",
+      role: "CEO, TechStart",
+      content: "A Synthra transformou nossa operação. Nosso agente de IA atende 200+ leads por dia com qualidade superior ao humano.",
       rating: 5
     },
     {
       name: "Ana Costa",
-      role: "Fundadora StartupX",
-      content: "A Automação Total da Synthra me devolveu 20 horas por semana. Agora posso focar no que realmente importa: estratégia e crescimento.",
+      role: "Diretora de Marketing, Scale Co",
+      content: "ROI de 400% em 3 meses. A automação da Synthra nos permitiu escalar sem contratar mais pessoas.",
+      rating: 5
+    },
+    {
+      name: "Roberto Lima",
+      role: "Fundador, Growth Labs",
+      content: "Camila e equipe entregaram exatamente o que prometeram. Nossa IA funciona 24/7 e converte melhor que nossa equipe.",
       rating: 5
     }
   ]
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Como criar seu primeiro Agente de IA",
-      excerpt: "Guia prático para desenvolver um agente inteligente que trabalha por você 24/7.",
-      content: `
-        <h3>Introdução</h3>
-        <p>Criar um agente de IA não é mais ficção científica. Com as ferramentas certas e a metodologia adequada, qualquer empresa pode ter seu próprio agente inteligente trabalhando 24/7.</p>
-        
-        <h3>O que é um Agente de IA?</h3>
-        <p>Um agente de IA é diferente de um chatbot simples. Enquanto bots seguem scripts pré-definidos, agentes de IA:</p>
-        <ul>
-          <li>Tomam decisões baseadas em contexto</li>
-          <li>Aprendem com interações anteriores</li>
-          <li>Executam tarefas complexas de forma autônoma</li>
-          <li>Integram-se com múltiplas ferramentas e sistemas</li>
-        </ul>
-        
-        <h3>Passo a Passo para Criar seu Agente</h3>
-        <h4>1. Defina o Propósito</h4>
-        <p>Antes de começar, seja claro sobre o que seu agente deve fazer. Exemplos:</p>
-        <ul>
-          <li>Qualificar leads automaticamente</li>
-          <li>Gerenciar agenda e compromissos</li>
-          <li>Analisar dados e gerar relatórios</li>
-          <li>Criar e publicar conteúdo</li>
-        </ul>
-        
-        <h4>2. Escolha as Ferramentas</h4>
-        <p>Na Synthra, utilizamos uma stack comprovada:</p>
-        <ul>
-          <li><strong>GPT-4:</strong> Para processamento de linguagem natural</li>
-          <li><strong>Make:</strong> Para automação e integrações</li>
-          <li><strong>Notion:</strong> Como base de conhecimento</li>
-          <li><strong>Kommo:</strong> Para gestão de relacionamento</li>
-        </ul>
-        
-        <h4>3. Treine com seus Dados</h4>
-        <p>O diferencial está no treinamento personalizado:</p>
-        <ul>
-          <li>Use conversas reais da sua empresa</li>
-          <li>Inclua seu tom de voz e personalidade</li>
-          <li>Defina regras de negócio específicas</li>
-          <li>Teste com cenários diversos</li>
-        </ul>
-        
-        <h3>Resultados Esperados</h3>
-        <p>Nossos clientes relatam:</p>
-        <ul>
-          <li>80% de redução no tempo de qualificação de leads</li>
-          <li>300% de aumento na conversão</li>
-          <li>24/7 de disponibilidade sem custo adicional</li>
-          <li>Consistência na comunicação da marca</li>
-        </ul>
-        
-        <h3>Próximos Passos</h3>
-        <p>Quer criar seu próprio agente de IA? Entre em contato conosco. Oferecemos:</p>
-        <ul>
-          <li>Consultoria estratégica gratuita</li>
-          <li>Prova de conceito em 7 dias</li>
-          <li>Implementação completa</li>
-          <li>Treinamento da sua equipe</li>
-        </ul>
-      `,
-      icon: <Brain className="w-16 h-16 text-cyan-400" />,
-      date: "2 de Janeiro, 2025",
-      readTime: "8 min"
-    },
-    {
-      id: 2,
-      title: "Bot vs IA: Qual a diferença real?",
-      excerpt: "Entenda por que nem todo chatbot é IA e como identificar soluções realmente inteligentes.",
-      content: `
-        <h3>A Confusão do Mercado</h3>
-        <p>No mercado atual, muitas empresas vendem "bots de WhatsApp" como se fossem IA. Essa confusão prejudica empresários que investem em soluções limitadas achando que estão comprando inteligência artificial.</p>
-        
-        <h3>Bot Tradicional: O que é?</h3>
-        <p>Um bot tradicional é como um atendente que só sabe responder perguntas específicas:</p>
-        <ul>
-          <li><strong>Scripts fixos:</strong> Respostas pré-programadas</li>
-          <li><strong>Fluxos lineares:</strong> Se > Então > Senão</li>
-          <li><strong>Sem contexto:</strong> Não lembra conversas anteriores</li>
-          <li><strong>Limitado:</strong> Quebra facilmente com perguntas inesperadas</li>
-        </ul>
-        
-        <h3>IA Real: O que faz a diferença?</h3>
-        <p>Uma IA verdadeira é como ter um assistente inteligente:</p>
-        <ul>
-          <li><strong>Compreensão contextual:</strong> Entende nuances e intenções</li>
-          <li><strong>Aprendizado contínuo:</strong> Melhora com cada interação</li>
-          <li><strong>Tomada de decisão:</strong> Avalia cenários e escolhe a melhor resposta</li>
-          <li><strong>Integração inteligente:</strong> Conecta informações de múltiplas fontes</li>
-        </ul>
-        
-        <h3>Exemplo Prático</h3>
-        <p><strong>Pergunta do cliente:</strong> "Preciso de uma solução para minha empresa, mas não sei bem o que vocês fazem"</p>
-        
-        <h4>Bot Tradicional responderia:</h4>
-        <p>"Desculpe, não entendi. Digite 1 para Serviços, 2 para Contato..."</p>
-        
-        <h4>IA Real responderia:</h4>
-        <p>"Entendo que você está explorando soluções para sua empresa. Para te ajudar melhor, me conte: qual é o principal desafio que vocês enfrentam hoje? É relacionado a atendimento, vendas, processos internos ou algo específico do seu setor?"</p>
-        
-        <h3>Como Identificar IA Real</h3>
-        <p>Faça estas perguntas ao fornecedor:</p>
-        <ol>
-          <li><strong>"A solução entende contexto?"</strong> - IA real mantém contexto da conversa</li>
-          <li><strong>"Aprende com interações?"</strong> - IA real melhora continuamente</li>
-          <li><strong>"Lida com perguntas inesperadas?"</strong> - IA real adapta-se a cenários novos</li>
-          <li><strong>"Integra com nossos sistemas?"</strong> - IA real conecta dados de múltiplas fontes</li>
-        </ol>
-        
-        <h3>O Custo da Escolha Errada</h3>
-        <p>Investir em um bot simples quando você precisa de IA resulta em:</p>
-        <ul>
-          <li>Clientes frustrados com respostas robóticas</li>
-          <li>Perda de leads por falta de qualificação adequada</li>
-          <li>Necessidade de retrabalho e novo investimento</li>
-          <li>Descrédito da tecnologia internamente</li>
-        </ul>
-        
-        <h3>Nossa Abordagem na Synthra</h3>
-        <p>Não vendemos bots. Criamos agentes inteligentes que:</p>
-        <ul>
-          <li>Entendem seu negócio profundamente</li>
-          <li>Falam com a personalidade da sua marca</li>
-          <li>Tomam decisões baseadas em dados reais</li>
-          <li>Evoluem constantemente</li>
-        </ul>
-        
-        <p><strong>A diferença é clara:</strong> enquanto bots executam, IA pensa.</p>
-      `,
-      icon: <MessageSquare className="w-16 h-16 text-cyan-400" />,
-      date: "28 de Dezembro, 2024",
-      readTime: "6 min"
-    },
-    {
-      id: 3,
-      title: "ROI de IA: Como medir resultados",
-      excerpt: "Métricas práticas para avaliar o retorno dos seus investimentos em inteligência artificial.",
-      content: `
-        <h3>Por que medir ROI de IA?</h3>
-        <p>Investir em IA sem medir resultados é como navegar sem bússola. Muitas empresas implementam soluções de IA mas não conseguem provar o valor gerado, dificultando novos investimentos e expansões.</p>
-        
-        <h3>Métricas Fundamentais</h3>
-        
-        <h4>1. Eficiência Operacional</h4>
-        <ul>
-          <li><strong>Tempo economizado:</strong> Horas/semana liberadas da equipe</li>
-          <li><strong>Redução de erros:</strong> % de diminuição em retrabalho</li>
-          <li><strong>Velocidade de resposta:</strong> Tempo médio de atendimento</li>
-          <li><strong>Capacidade de escala:</strong> Volume processado sem aumento de equipe</li>
-        </ul>
-        
-        <h4>2. Impacto Comercial</h4>
-        <ul>
-          <li><strong>Taxa de conversão:</strong> % de leads que viram clientes</li>
-          <li><strong>Ticket médio:</strong> Valor médio por venda</li>
-          <li><strong>Ciclo de vendas:</strong> Tempo do lead ao fechamento</li>
-          <li><strong>Retenção de clientes:</strong> % de clientes que permanecem</li>
-        </ul>
-        
-        <h4>3. Satisfação e Qualidade</h4>
-        <ul>
-          <li><strong>NPS (Net Promoter Score):</strong> Satisfação dos clientes</li>
-          <li><strong>CSAT:</strong> Avaliação do atendimento</li>
-          <li><strong>Tempo de resolução:</strong> Rapidez na solução de problemas</li>
-          <li><strong>Taxa de escalação:</strong> % de casos que precisam de humanos</li>
-        </ul>
-        
-        <h3>Fórmula de ROI para IA</h3>
-        <p><strong>ROI = (Benefícios - Custos) / Custos × 100</strong></p>
-        
-        <h4>Benefícios incluem:</h4>
-        <ul>
-          <li>Receita adicional gerada</li>
-          <li>Custos operacionais economizados</li>
-          <li>Valor do tempo liberado da equipe</li>
-          <li>Redução de perdas por erros</li>
-        </ul>
-        
-        <h4>Custos incluem:</h4>
-        <ul>
-          <li>Investimento inicial na solução</li>
-          <li>Custos de implementação</li>
-          <li>Treinamento da equipe</li>
-          <li>Manutenção e atualizações</li>
-        </ul>
-        
-        <h3>Caso Real: Cliente da Synthra</h3>
-        <p><strong>Empresa:</strong> E-commerce de moda (50 funcionários)</p>
-        <p><strong>Solução:</strong> Agente de IA para atendimento e vendas</p>
-        
-        <h4>Resultados em 6 meses:</h4>
-        <ul>
-          <li><strong>Conversão:</strong> 15% → 45% (+200%)</li>
-          <li><strong>Tempo de resposta:</strong> 4h → 30s (-99%)</li>
-          <li><strong>Equipe liberada:</strong> 120h/semana</li>
-          <li><strong>Receita adicional:</strong> R$ 180.000/mês</li>
-        </ul>
-        
-        <h4>Cálculo do ROI:</h4>
-        <ul>
-          <li><strong>Investimento:</strong> R$ 25.000 (setup + 6 meses)</li>
-          <li><strong>Benefícios:</strong> R$ 1.080.000 (6 meses de receita adicional)</li>
-          <li><strong>ROI:</strong> 4.220% em 6 meses</li>
-        </ul>
-        
-        <h3>Ferramentas para Medição</h3>
-        
-        <h4>Dashboards Recomendados:</h4>
-        <ul>
-          <li><strong>Google Analytics:</strong> Para métricas de conversão web</li>
-          <li><strong>Kommo/CRM:</strong> Para acompanhar pipeline de vendas</li>
-          <li><strong>Notion:</strong> Para centralizar KPIs e relatórios</li>
-          <li><strong>Make:</strong> Para automatizar coleta de dados</li>
-        </ul>
-        
-        <h3>Cronograma de Medição</h3>
-        
-        <h4>Primeiros 30 dias:</h4>
-        <ul>
-          <li>Estabelecer baseline (métricas antes da IA)</li>
-          <li>Configurar ferramentas de medição</li>
-          <li>Definir metas específicas</li>
-        </ul>
-        
-        <h4>30-90 dias:</h4>
-        <ul>
-          <li>Monitorar métricas semanalmente</li>
-          <li>Ajustar estratégias conforme necessário</li>
-          <li>Documentar primeiros resultados</li>
-        </ul>
-        
-        <h4>90+ dias:</h4>
-        <ul>
-          <li>Análise completa de ROI</li>
-          <li>Identificar oportunidades de expansão</li>
-          <li>Planejar próximos investimentos</li>
-        </ul>
-        
-        <h3>Erros Comuns na Medição</h3>
-        <ol>
-          <li><strong>Não estabelecer baseline:</strong> Sem dados anteriores, impossível medir melhoria</li>
-          <li><strong>Focar apenas em custos:</strong> Ignorar benefícios intangíveis</li>
-          <li><strong>Medir muito cedo:</strong> IA precisa de tempo para otimizar</li>
-          <li><strong>Métricas irrelevantes:</strong> Medir o que é fácil, não o que importa</li>
-        </ol>
-        
-        <h3>Conclusão</h3>
-        <p>Medir ROI de IA não é opcional - é essencial. Com as métricas certas e ferramentas adequadas, você pode provar o valor da IA e justificar novos investimentos.</p>
-        
-        <p><strong>Quer ajuda para medir o ROI da sua IA?</strong> Nossa equipe pode configurar dashboards personalizados e acompanhar seus resultados mensalmente.</p>
-      `,
-      icon: <TrendingUp className="w-16 h-16 text-cyan-400" />,
-      date: "20 de Dezembro, 2024",
-      readTime: "10 min"
+  // Função para obter ícone baseado na categoria
+  const getCategoryIcon = (category) => {
+    switch (category?.toLowerCase()) {
+      case 'tutorial':
+        return <Bot className="w-6 h-6" />
+      case 'educação':
+        return <Brain className="w-6 h-6" />
+      case 'métricas':
+        return <BarChart3 className="w-6 h-6" />
+      default:
+        return <FileText className="w-6 h-6" />
     }
-  ]
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Header */}
-      <header className="bg-black/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
+      <header className="border-b border-slate-700/50 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <img src="/logo-transparent.png" alt="Synthra Logo" className="h-16 w-auto" />
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-lg flex items-center justify-center">
+                <Brain className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white">Synthra.IA</h1>
+                <p className="text-xs text-slate-400">A IA que pensa com você</p>
+              </div>
             </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#inicio" className="text-gray-300 hover:text-cyan-400 transition-colors">Início</a>
-              <a href="#servicos" className="text-gray-300 hover:text-cyan-400 transition-colors">Serviços</a>
-              <a href="#cases" className="text-gray-300 hover:text-cyan-400 transition-colors">Cases</a>
-              <a href="#comunidade" className="text-gray-300 hover:text-cyan-400 transition-colors">Comunidade</a>
-              <a href="#sobre" className="text-gray-300 hover:text-cyan-400 transition-colors">Sobre</a>
-              <a href="#blog" className="text-gray-300 hover:text-cyan-400 transition-colors">Blog</a>
+            <nav className="hidden md:flex items-center space-x-6">
+              <a href="#services" className="text-slate-300 hover:text-cyan-400 transition-colors">Serviços</a>
+              <a href="#about" className="text-slate-300 hover:text-cyan-400 transition-colors">Sobre</a>
+              <a href="#blog" className="text-slate-300 hover:text-cyan-400 transition-colors">Blog</a>
+              <a href="#contact" className="text-slate-300 hover:text-cyan-400 transition-colors">
+                <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700">
+                  Fale Conosco
+                </Button>
+              </a>
             </nav>
-            <Button 
-              className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white border-0 px-6 py-3"
-              onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-            >
-              <Lightbulb className="mr-2 w-4 h-4" />
-              Agende uma conversa
-            </Button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section id="inicio" className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 blur-3xl"></div>
-        <div className="container mx-auto text-center relative z-10">
+      <section className="py-20 px-4">
+        <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-fade-in-up">
+            <Badge className="mb-6 bg-cyan-500/10 text-cyan-400 border-cyan-500/20">
+              🚀 Transforme sua empresa com IA
+            </Badge>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
               A IA que pensa com você
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-              Soluções inteligentes e humanas para automatizar, escalar e criar com propósito.
+            <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
+              Criamos agentes de IA que trabalham 24/7, automatizam processos complexos e escalam seu negócio sem aumentar custos.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg px-8 py-4 border-0"
-                onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-              >
-                <Lightbulb className="mr-2 w-5 h-5" />
-                Agende uma conversa
-                <ArrowRight className="ml-2 w-5 h-5" />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-lg px-8 py-3">
+                <Rocket className="w-5 h-5 mr-2" />
+                Quero automatizar minha empresa
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black text-lg px-8 py-4"
-                onClick={() => document.getElementById('cases').scrollIntoView({ behavior: 'smooth' })}
-              >
-                <Settings className="mr-2 w-5 h-5" />
-                Explore nossos cases
-                <ExternalLink className="ml-2 w-5 h-5" />
+              <Button size="lg" variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8 py-3">
+                <Play className="w-5 h-5 mr-2" />
+                Ver como funciona
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Proposition */}
-      <section className="py-16 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-              O que fazemos na prática
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6 mt-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {valueProps.map((prop, index) => (
-                <div key={index} className="flex items-center space-x-4 text-left">
+                <div key={index} className="flex flex-col items-center space-y-2">
                   {prop.icon}
-                  <span className="text-lg text-gray-300">{prop.text}</span>
+                  <span className="text-sm text-slate-400">{prop.text}</span>
                 </div>
               ))}
             </div>
@@ -574,120 +424,36 @@ function App() {
       </section>
 
       {/* Services Section */}
-      <section id="servicos" className="py-20 px-4">
+      <section id="services" className="py-20 px-4 bg-slate-800/30">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Nossos Serviços
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Soluções que <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">funcionam</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Soluções autorais que combinam tecnologia de ponta com propósito humano.
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Não vendemos tecnologia. Vendemos resultados. Cada solução é projetada para gerar ROI real desde o primeiro mês.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => (
-              <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 group">
+              <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-cyan-500/50 transition-all duration-300 group">
                 <CardHeader>
                   <div className="flex items-center space-x-4 mb-4">
-                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <div className="text-cyan-400">{service.icon}</div>
+                    <div className="p-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg group-hover:from-cyan-500/30 group-hover:to-purple-500/30 transition-all">
+                      {service.icon}
                     </div>
                     <CardTitle className="text-xl text-white">{service.title}</CardTitle>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-400 leading-relaxed mb-6">
+                  <CardDescription className="text-slate-300 text-base leading-relaxed">
                     {service.description}
                   </CardDescription>
-                  <Button 
-                    className="w-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all"
-                    onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                  >
-                    {service.cta}
-                    <ChevronRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Cases Section */}
-      <section id="cases" className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Cases & Projetos
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Resultados reais de quem já transformou seu negócio com IA.
-            </p>
-          </div>
-
-          {/* Case em Desenvolvimento */}
-          <div className="max-w-4xl mx-auto mb-16">
-            <Card className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-cyan-400/30">
-              <CardHeader>
-                <div className="flex items-center space-x-3 mb-4">
-                  <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-400/30">
-                    Case em desenvolvimento
-                  </Badge>
-                </div>
-                <CardTitle className="text-2xl text-white mb-2">
-                  O Agente Social da Synthra
-                </CardTitle>
-                <CardDescription className="text-gray-300 text-lg">
-                  Um agente que cria, agenda e publica conteúdo automaticamente, aliviando a sobrecarga da founder.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-6 mb-6">
-                  <div className="flex items-center space-x-3">
-                    <Instagram className="w-6 h-6 text-pink-400" />
-                    <span className="text-gray-300">Carrossel no Instagram</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Linkedin className="w-6 h-6 text-blue-400" />
-                    <span className="text-gray-300">Texto no LinkedIn</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Send className="w-6 h-6 text-cyan-400" />
-                    <span className="text-gray-300">Resumo no Telegram</span>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <Button 
-                    className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                    onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                  >
-                    Quero um agente como este
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Testimonials */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
-                <CardHeader>
-                  <div className="flex items-center space-x-1 mb-2">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <CardDescription className="text-gray-300 leading-relaxed italic">
-                    "{testimonial.content}"
-                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-t border-gray-700 pt-4">
-                    <p className="font-semibold text-white">{testimonial.name}</p>
-                    <p className="text-sm text-gray-400">{testimonial.role}</p>
-                  </div>
+                  <Button className="w-full bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700">
+                    {service.cta}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -696,26 +462,32 @@ function App() {
       </section>
 
       {/* Community Section */}
-      <section id="comunidade" className="py-20 px-4">
+      <section className="py-20 px-4">
         <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+          <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 rounded-2xl p-8 md:p-12 border border-slate-600/50">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                 Participe da maior comunidade de IA do Brasil
               </h2>
-              <p className="text-xl text-gray-300 mb-8">
+              <p className="text-lg text-slate-300 max-w-2xl mx-auto">
                 Práticas semanais • Automação com propósito • Cases reais
               </p>
-              <p className="text-lg text-cyan-400 mb-8 italic">
+            </div>
+            
+            <div className="text-center mb-8">
+              <blockquote className="text-xl md:text-2xl text-cyan-400 italic font-medium">
                 "Aqui, a IA não substitui. Ela expande."
-              </p>
+              </blockquote>
+            </div>
+            
+            <div className="flex justify-center">
               <Button 
-                size="lg"
-                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg px-8 py-4 border-0"
+                size="lg" 
+                className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-lg px-8 py-3"
                 onClick={() => window.open('https://t.me/+pa-ZYAu6siU1YThh', '_blank')}
               >
-                Entrar na Comunidade
-                <Users className="ml-2 w-5 h-5" />
+                <Send className="w-5 h-5 mr-2" />
+                Entrar na comunidade
               </Button>
             </div>
           </div>
@@ -723,38 +495,45 @@ function App() {
       </section>
 
       {/* About Section */}
-      <section id="sobre" className="py-20 px-4 bg-gray-900/50">
+      <section id="about" className="py-20 px-4 bg-slate-800/30">
         <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                  Sobre Camila Goulart
-                </h2>
-                <p className="text-xl text-gray-300 mb-6 leading-relaxed">
-                  Fundadora da Synthra. Especialista em liderança, processos e IA aplicada.
-                </p>
-                <p className="text-lg text-gray-400 mb-6 leading-relaxed">
-                  Une alma, estratégia e tecnologia para ajudar pessoas e empresas a fazerem mais com sentido.
-                </p>
-                <blockquote className="text-2xl text-cyan-400 italic mb-8 border-l-4 border-cyan-400 pl-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                Sobre Camila Goulart
+              </h2>
+              <p className="text-lg text-slate-300 mb-6 leading-relaxed">
+                Fundadora da Synthra. Especialista em liderança, processos e IA aplicada.
+              </p>
+              <p className="text-lg text-slate-300 mb-8 leading-relaxed">
+                Une alma, estratégia e tecnologia para ajudar pessoas e empresas a fazerem mais com sentido.
+              </p>
+              <blockquote className="border-l-4 border-cyan-400 pl-6 mb-8">
+                <p className="text-xl text-cyan-400 italic font-medium">
                   "A IA não substitui. Ela conecta."
-                </blockquote>
-                <Button 
-                  className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                  onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Quero aprender a liderar com IA
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-              <div className="text-center">
-                <div className="w-80 h-80 rounded-full overflow-hidden mx-auto border-4 border-cyan-400/30">
-                  <img 
-                    src="/camila-goulart.png" 
-                    alt="Camila Goulart - Fundadora da Synthra" 
-                    className="w-full h-full object-cover"
-                  />
+                </p>
+              </blockquote>
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700"
+              >
+                <ArrowRight className="w-5 h-5 mr-2" />
+                Quero aprender a liderar com IA
+              </Button>
+            </div>
+            <div className="flex justify-center">
+              <div className="relative">
+                <div className="w-80 h-80 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 p-1">
+                  <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
+                    <img 
+                      src="/camila-goulart.png" 
+                      alt="Camila Goulart - Fundadora"
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
+                </div>
+                <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full flex items-center justify-center">
+                  <Brain className="w-8 h-8 text-white" />
                 </div>
               </div>
             </div>
@@ -766,320 +545,423 @@ function App() {
       <section id="blog" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent leading-tight" style={{paddingBottom: '8px'}}>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white" style={{paddingBottom: '8px'}}>
               Blog de IA Prática
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Insights, tutoriais e cases reais para você dominar a IA no seu negócio.
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Insights semanais, tutoriais práticos e cases reais de implementação de IA em negócios brasileiros.
             </p>
+            
+            {/* Botão para recarregar posts */}
+            <div className="mt-6">
+              <Button 
+                onClick={loadBlogPosts}
+                variant="outline" 
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                disabled={loadingPosts}
+              >
+                {loadingPosts ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Carregando...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Atualizar posts
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
-          
-          {!selectedPost ? (
-            <>
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                {blogPosts.map((post) => (
-                  <Card key={post.id} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 cursor-pointer" onClick={() => setSelectedPost(post)}>
-                    <CardHeader>
-                      <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
-                        {post.icon}
-                      </div>
-                      <CardTitle className="text-white">{post.title}</CardTitle>
-                      <CardDescription className="text-gray-400">
-                        {post.excerpt}
-                      </CardDescription>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mt-4">
-                        <span>{post.date}</span>
-                        <span>•</span>
-                        <span>{post.readTime}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Button variant="outline" className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black">
-                        Ler artigo
-                        <BookOpen className="ml-2 w-4 h-4" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </>
-          ) : (
+
+          {selectedPost ? (
+            // Visualização do artigo individual
             <div className="max-w-4xl mx-auto">
               <Button 
-                variant="outline" 
-                className="mb-8 border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
                 onClick={() => setSelectedPost(null)}
+                variant="outline" 
+                className="mb-8 border-slate-600 text-slate-300 hover:bg-slate-800"
               >
-                ← Voltar para o blog
+                <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+                Voltar para o blog
               </Button>
               
-              <article className="bg-gray-800/50 border border-gray-700 rounded-lg overflow-hidden">
+              <article className="bg-slate-800/50 rounded-2xl p-8 md:p-12 border border-slate-700">
                 {/* Header do artigo */}
-                <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 p-8 border-b border-gray-700">
-                  <div className="flex items-center space-x-4 text-sm text-cyan-400 mb-4">
-                    <span>{selectedPost.date}</span>
-                    <span>•</span>
-                    <span>{selectedPost.readTime}</span>
-                    <span>•</span>
-                    <span>Por Camila Goulart</span>
+                <div className="mb-8 pb-8 border-b border-slate-700">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="p-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg">
+                      {getCategoryIcon(selectedPost.category)}
+                    </div>
+                    <div>
+                      <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 mb-2">
+                        {selectedPost.category}
+                      </Badge>
+                      <div className="flex items-center space-x-4 text-sm text-slate-400">
+                        <span>{selectedPost.author}</span>
+                        <span>•</span>
+                        <span>{selectedPost.date}</span>
+                        <span>•</span>
+                        <span>{selectedPost.readTime}</span>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">{selectedPost.title}</h1>
-                  <p className="text-xl text-gray-300 leading-relaxed">{selectedPost.excerpt}</p>
+                  <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+                    {selectedPost.title}
+                  </h1>
+                  <p className="text-xl text-slate-300 leading-relaxed">
+                    {selectedPost.excerpt}
+                  </p>
                 </div>
-                
+
                 {/* Conteúdo do artigo */}
-                <div className="p-8">
-                  <div 
-                    className="article-content text-gray-300 leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-                    style={{
-                      fontSize: '18px',
-                      lineHeight: '1.8'
-                    }}
-                  />
-                </div>
-                
+                <div 
+                  className="article-content prose prose-lg prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+                />
+
                 {/* CTA final */}
-                <div className="p-8 border-t border-gray-700">
-                  <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg p-6 border border-cyan-400/20 text-center">
-                    <h3 className="text-xl font-semibold text-white mb-4">Gostou do conteúdo?</h3>
-                    <p className="text-gray-300 mb-6">
+                <div className="mt-12 pt-8 border-t border-slate-700 text-center">
+                  <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 rounded-xl p-8 border border-slate-600/50">
+                    <h3 className="text-2xl font-bold text-white mb-4">Gostou do conteúdo?</h3>
+                    <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
                       Quer implementar essas estratégias na sua empresa? Nossa equipe pode ajudar você a transformar teoria em resultados práticos.
                     </p>
-                    <div className="flex justify-center">
-                      <Button 
-                        className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                        onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                      >
-                        Falar com especialista
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Button 
+                      size="lg" 
+                      className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700"
+                      onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+                    >
+                      <ArrowRight className="w-5 h-5 mr-2" />
+                      Falar com especialista
+                    </Button>
                   </div>
                 </div>
               </article>
+            </div>
+          ) : (
+            // Lista de artigos
+            <div>
+              {loadingPosts ? (
+                <div className="text-center py-12">
+                  <div className="w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-slate-300">Carregando artigos...</p>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                  {blogPosts.map((post) => (
+                    <Card 
+                      key={post.id} 
+                      className="bg-slate-800/50 border-slate-700 hover:border-cyan-500/50 transition-all duration-300 group cursor-pointer"
+                      onClick={() => setSelectedPost(post)}
+                    >
+                      <CardHeader>
+                        <div className="flex items-center space-x-3 mb-4">
+                          <div className="p-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg group-hover:from-cyan-500/30 group-hover:to-purple-500/30 transition-all">
+                            {getCategoryIcon(post.category)}
+                          </div>
+                          <Badge className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20">
+                            {post.category}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-xl text-white group-hover:text-cyan-400 transition-colors leading-tight">
+                          {post.title}
+                        </CardTitle>
+                        <CardDescription className="text-slate-300 leading-relaxed">
+                          {post.excerpt}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center justify-between text-sm text-slate-400 mb-4">
+                          <span>{post.author}</span>
+                          <span>{post.readTime}</span>
+                        </div>
+                        <div className="flex items-center text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                          <span className="text-sm font-medium">Ler artigo</span>
+                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+              
+              {!loadingPosts && blogPosts.length === 0 && (
+                <div className="text-center py-12">
+                  <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                  <p className="text-slate-400">Nenhum artigo encontrado.</p>
+                </div>
+              )}
             </div>
           )}
         </div>
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 px-4 bg-gray-900/50">
+      <section className="py-20 px-4 bg-slate-800/30">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
-              <Newspaper className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Newsletter IA com Propósito
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Receba semanalmente insights práticos, cases reais e tendências de IA que realmente importam para o seu negócio.
-              </p>
+            <div className="bg-gradient-to-r from-slate-800/80 to-slate-700/80 rounded-2xl p-8 md:p-12 border border-slate-600/50">
+              <div className="mb-8">
+                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Newspaper className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                  Newsletter "IA com Propósito"
+                </h2>
+                <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+                  Receba semanalmente insights práticos, tutoriais exclusivos e cases reais de IA aplicada em negócios brasileiros.
+                </p>
+              </div>
+              
               <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
-                <div className="flex gap-4">
-                  <Input 
-                    type="email" 
-                    placeholder="Seu melhor email" 
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Input
+                    type="email"
+                    placeholder="Seu melhor email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
+                    className="flex-1 bg-slate-700/50 border-slate-600 text-white placeholder-slate-400"
                     required
-                    disabled={newsletterSubmitting}
-                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 flex-1"
                   />
                   <Button 
-                    type="submit"
+                    type="submit" 
                     disabled={newsletterSubmitting}
-                    className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6"
+                    className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 whitespace-nowrap"
                   >
-                    {newsletterSubmitting ? 'Enviando...' : 'Assinar'}
-                    <Send className="ml-2 w-4 h-4" />
+                    {newsletterSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Inscrevendo...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-4 h-4 mr-2" />
+                        Quero receber
+                      </>
+                    )}
                   </Button>
                 </div>
-                <p className="text-sm text-gray-400 mt-4">
-                  Sem spam. Apenas conteúdo que agrega valor. Cancele quando quiser.
-                </p>
                 {newsletterMessage && (
-                  <p className="text-center mt-4 text-sm text-green-400">{newsletterMessage}</p>
+                  <p className={`mt-4 text-sm ${newsletterMessage.includes('🎉') || newsletterMessage.includes('✅') ? 'text-green-400' : 'text-red-400'}`}>
+                    {newsletterMessage}
+                  </p>
                 )}
               </form>
+              
+              <div className="mt-6 text-sm text-slate-400">
+                <p>✨ Conteúdo exclusivo • 📊 Cases reais • 🚀 Zero spam</p>
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Resultados que <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">falam</span>
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Empresas que transformaram seus negócios com nossas soluções de IA.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-6">
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-slate-300 mb-6 leading-relaxed">"{testimonial.content}"</p>
+                  <div>
+                    <p className="font-semibold text-white">{testimonial.name}</p>
+                    <p className="text-sm text-slate-400">{testimonial.role}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contato" className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Vamos pensar juntos?
-              </h2>
-              <p className="text-xl text-gray-300">
-                Conte-nos seu desafio. Vamos criar uma solução que faz sentido para você.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <h3 className="text-2xl font-semibold mb-6 text-white">Entre em contato</h3>
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">Email</p>
-                      <p className="text-gray-400">contato@synthraia.com.br</p>
-                    </div>
+      <section id="contact" className="py-20 px-4 bg-slate-800/30">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Vamos <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">conversar</span>
+            </h2>
+            <p className="text-xl text-slate-300">
+              Conte-nos sobre seu desafio e vamos criar uma solução de IA que funciona para você.
+            </p>
+          </div>
+          
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="nome" className="text-slate-300">Nome completo</Label>
+                    <Input 
+                      id="nome" 
+                      name="nome" 
+                      required 
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
-                      <Phone className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">WhatsApp</p>
-                      <p className="text-gray-400">+55 (51) 9 9472-4351</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-white">Horário de Atendimento</p>
-                      <p className="text-gray-400">Segunda a sexta, 9h às 18h</p>
-                    </div>
+                  <div className="space-y-3">
+                    <Label htmlFor="email" className="text-slate-300">Email</Label>
+                    <Input 
+                      id="email" 
+                      name="email" 
+                      type="email" 
+                      required 
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
                   </div>
                 </div>
-              </div>
-              
-              <div>
-                <Card className="bg-gray-800/50 border-gray-700">
-                  <CardHeader>
-                    <CardTitle className="text-white">Fale conosco</CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Conte-nos sobre seu desafio. Vamos criar uma solução que faz sentido.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="space-y-3">
-                        <Label htmlFor="nome" className="text-white block">Nome</Label>
-                        <Input 
-                          id="nome" 
-                          name="nome" 
-                          placeholder="Seu nome" 
-                          required 
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="email" className="text-white block">Email</Label>
-                        <Input 
-                          id="email" 
-                          name="email" 
-                          type="email" 
-                          placeholder="seu@email.com" 
-                          required 
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="empresa" className="text-white block">Nome da Empresa</Label>
-                        <Input 
-                          id="empresa" 
-                          name="empresa" 
-                          placeholder="Nome da sua empresa" 
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="cargo" className="text-white block">Cargo/Função</Label>
-                        <Input 
-                          id="cargo" 
-                          name="cargo" 
-                          placeholder="Seu cargo ou função" 
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="telefone" className="text-white block">Telefone (opcional)</Label>
-                        <Input 
-                          id="telefone" 
-                          name="telefone" 
-                          type="tel" 
-                          placeholder="(XX) XXXXX-XXXX" 
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="mensagem" className="text-white block">Mensagem</Label>
-                        <Textarea 
-                          id="mensagem" 
-                          name="mensagem" 
-                          placeholder="Conte-nos seu desafio ou como podemos ajudar..." 
-                          required 
-                          className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-32 resize-y"
-                        />
-                      </div>
-                      <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg py-3 border-0" disabled={isSubmitting}>
-                        {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </Button>
-                      {submitMessage && <p className="text-center mt-4 text-sm text-green-400">{submitMessage}</p>}
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="empresa" className="text-slate-300">Empresa</Label>
+                    <Input 
+                      id="empresa" 
+                      name="empresa" 
+                      required 
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Label htmlFor="cargo" className="text-slate-300">Cargo</Label>
+                    <Input 
+                      id="cargo" 
+                      name="cargo" 
+                      required 
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="telefone" className="text-slate-300">Telefone</Label>
+                  <Input 
+                    id="telefone" 
+                    name="telefone" 
+                    required 
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="mensagem" className="text-slate-300">Conte-nos sobre seu desafio</Label>
+                  <Textarea 
+                    id="mensagem" 
+                    name="mensagem" 
+                    rows={4} 
+                    required 
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                    placeholder="Descreva qual processo você gostaria de automatizar ou que tipo de IA você precisa..."
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-lg py-3"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Enviando...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2" />
+                      Enviar mensagem
+                    </>
+                  )}
+                </Button>
+                
+                {submitMessage && (
+                  <p className={`text-center ${submitMessage.includes('sucesso') ? 'text-green-400' : 'text-red-400'}`}>
+                    {submitMessage}
+                  </p>
+                )}
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black/70 py-12 px-4 border-t border-gray-700">
+      <footer className="py-12 px-4 border-t border-slate-700/50">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <img src="/logo-transparent.png" alt="Synthra Logo" className="h-12 mb-4" />
-              <p className="text-gray-400 text-sm">
-                A IA que pensa com você. Soluções inteligentes e humanas.
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-lg flex items-center justify-center">
+                  <Brain className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Synthra.IA</h3>
+                  <p className="text-xs text-slate-400">A IA que pensa com você</p>
+                </div>
+              </div>
+              <p className="text-slate-400 mb-6 max-w-md">
+                Soluções inteligentes e humanas para automatizar, escalar e criar com propósito.
               </p>
+              <div className="flex space-x-4">
+                <Button size="sm" variant="outline" className="border-slate-600 text-slate-400 hover:bg-slate-800">
+                  <Instagram className="w-4 h-4" />
+                </Button>
+                <Button size="sm" variant="outline" className="border-slate-600 text-slate-400 hover:bg-slate-800">
+                  <Linkedin className="w-4 h-4" />
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="border-slate-600 text-slate-400 hover:bg-slate-800"
+                  onClick={() => window.open('https://t.me/+pa-ZYAu6siU1YThh', '_blank')}
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
+            
             <div>
-              <h4 className="font-semibold text-white mb-4">Empresa</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#sobre" className="text-gray-400 hover:text-cyan-400 transition-colors">Sobre a Synthra.ia</a></li>
-                <li><a href="#servicos" className="text-gray-400 hover:text-cyan-400 transition-colors">Nossos Serviços</a></li>
-                <li><a href="#cases" className="text-gray-400 hover:text-cyan-400 transition-colors">Cases & Projetos</a></li>
+              <h4 className="font-semibold text-white mb-4">Serviços</h4>
+              <ul className="space-y-2 text-slate-400">
+                <li><a href="#services" className="hover:text-cyan-400 transition-colors">Agente Estratégico</a></li>
+                <li><a href="#services" className="hover:text-cyan-400 transition-colors">IA de Atendimento</a></li>
+                <li><a href="#services" className="hover:text-cyan-400 transition-colors">Automação Total</a></li>
+                <li><a href="#services" className="hover:text-cyan-400 transition-colors">IA para Lançamentos</a></li>
               </ul>
             </div>
+            
             <div>
-              <h4 className="font-semibold text-white mb-4">Comunidade</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="https://t.me/+pa-ZYAu6siU1YThh" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
-                <li><a href="#contato" className="text-gray-400 hover:text-cyan-400 transition-colors">Fale com a equipe</a></li>
-                <li><a href="#blog" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog de IA prática</a></li>
+              <h4 className="font-semibold text-white mb-4">Contato</h4>
+              <ul className="space-y-2 text-slate-400">
+                <li className="flex items-center space-x-2">
+                  <Mail className="w-4 h-4" />
+                  <span>contato@synthraia.com.br</span>
+                </li>
+                <li className="flex items-center space-x-2">
+                  <Globe className="w-4 h-4" />
+                  <span>synthraia.com.br</span>
+                </li>
               </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Newsletter</h4>
-              <p className="text-gray-400 text-sm mb-4">IA com Propósito</p>
-              <Button 
-                size="sm"
-                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                onClick={() => document.querySelector('section:has([class*="newsletter"])').scrollIntoView({ behavior: 'smooth' })}
-              >
-                Assinar Newsletter
-              </Button>
             </div>
           </div>
-          <div className="border-t border-gray-700 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              © 2025 Synthra.ia. Todos os direitos reservados. • A IA não substitui. Ela conecta.
-            </p>
+          
+          <div className="border-t border-slate-700/50 mt-8 pt-8 text-center text-slate-400">
+            <p>&copy; 2024 Synthra.IA. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
