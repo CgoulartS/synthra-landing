@@ -700,12 +700,9 @@ function App() {
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
-              <div className="flex items-center justify-center gap-4 mb-6">
-                
-                <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                  Participe da maior comunidade de IA do Brasil
-                </h2>
-              </div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                Participe da maior comunidade de IA do Brasil
+              </h2>
               <p className="text-xl text-gray-300 mb-8">
                 Práticas semanais • Automação com propósito • Cases reais
               </p>
@@ -769,7 +766,7 @@ function App() {
       <section id="blog" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent leading-tight" style={{paddingBottom: '8px'}}>
               Blog de IA Prática
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -845,18 +842,20 @@ function App() {
                 
                 {/* CTA final */}
                 <div className="p-8 border-t border-gray-700">
-                  <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg p-6 border border-cyan-400/20">
+                  <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg p-6 border border-cyan-400/20 text-center">
                     <h3 className="text-xl font-semibold text-white mb-4">Gostou do conteúdo?</h3>
-                    <p className="text-gray-300 mb-4">
+                    <p className="text-gray-300 mb-6">
                       Quer implementar essas estratégias na sua empresa? Nossa equipe pode ajudar você a transformar teoria em resultados práticos.
                     </p>
-                    <Button 
-                      className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                      onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                    >
-                      Falar com especialista
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
+                    <div className="flex justify-center">
+                      <Button 
+                        className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                        onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+                      >
+                        Falar com especialista
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </article>
