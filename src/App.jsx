@@ -388,7 +388,7 @@ function App() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">Email</p>
-                      <p className="text-gray-400">contato@synthra.ia</p>
+                      <p className="text-gray-400">contato@synthraia.com.br</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
