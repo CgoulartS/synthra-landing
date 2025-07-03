@@ -50,9 +50,6 @@ import './App.css'
 function App() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
-  const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [newsletterMessage, setNewsletterMessage] = useState('')
-  const [selectedPost, setSelectedPost] = useState(null)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -99,20 +96,6 @@ function App() {
     } finally {
       setIsSubmitting(false)
       setTimeout(() => setSubmitMessage(''), 5000)
-    }
-  }
-
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault()
-    
-    // Simulação de envio para newsletter (pode ser integrado com Mailchimp depois)
-    try {
-      setNewsletterMessage("Obrigado! Você receberá nossa newsletter semanalmente.")
-      setNewsletterEmail('')
-      setTimeout(() => setNewsletterMessage(''), 5000)
-    } catch (error) {
-      setNewsletterMessage("Erro ao se inscrever. Tente novamente.")
-      setTimeout(() => setNewsletterMessage(''), 5000)
     }
   }
 
@@ -180,266 +163,6 @@ function App() {
       role: "Fundadora StartupX",
       content: "A Automação Total da Synthra me devolveu 20 horas por semana. Agora posso focar no que realmente importa: estratégia e crescimento.",
       rating: 5
-    }
-  ]
-
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Como criar seu primeiro Agente de IA",
-      excerpt: "Guia prático para desenvolver um agente inteligente que trabalha por você 24/7.",
-      content: `
-        <h3>Introdução</h3>
-        <p>Criar um agente de IA não é mais ficção científica. Com as ferramentas certas e a metodologia adequada, qualquer empresa pode ter seu próprio agente inteligente trabalhando 24/7.</p>
-        
-        <h3>O que é um Agente de IA?</h3>
-        <p>Um agente de IA é diferente de um chatbot simples. Enquanto bots seguem scripts pré-definidos, agentes de IA:</p>
-        <ul>
-          <li>Tomam decisões baseadas em contexto</li>
-          <li>Aprendem com interações anteriores</li>
-          <li>Executam tarefas complexas de forma autônoma</li>
-          <li>Integram-se com múltiplas ferramentas e sistemas</li>
-        </ul>
-        
-        <h3>Passo a Passo para Criar seu Agente</h3>
-        <h4>1. Defina o Propósito</h4>
-        <p>Antes de começar, seja claro sobre o que seu agente deve fazer. Exemplos:</p>
-        <ul>
-          <li>Qualificar leads automaticamente</li>
-          <li>Gerenciar agenda e compromissos</li>
-          <li>Analisar dados e gerar relatórios</li>
-          <li>Criar e publicar conteúdo</li>
-        </ul>
-        
-        <h4>2. Escolha as Ferramentas</h4>
-        <p>Na Synthra, utilizamos uma stack comprovada:</p>
-        <ul>
-          <li><strong>GPT-4:</strong> Para processamento de linguagem natural</li>
-          <li><strong>Make:</strong> Para automação e integrações</li>
-          <li><strong>Notion:</strong> Como base de conhecimento</li>
-          <li><strong>Kommo:</strong> Para gestão de relacionamento</li>
-        </ul>
-        
-        <h4>3. Treine com seus Dados</h4>
-        <p>O diferencial está no treinamento personalizado:</p>
-        <ul>
-          <li>Use conversas reais da sua empresa</li>
-          <li>Inclua seu tom de voz e personalidade</li>
-          <li>Defina regras de negócio específicas</li>
-          <li>Teste com cenários diversos</li>
-        </ul>
-        
-        <h3>Resultados Esperados</h3>
-        <p>Nossos clientes relatam:</p>
-        <ul>
-          <li>80% de redução no tempo de qualificação de leads</li>
-          <li>300% de aumento na conversão</li>
-          <li>24/7 de disponibilidade sem custo adicional</li>
-          <li>Consistência na comunicação da marca</li>
-        </ul>
-        
-        <h3>Próximos Passos</h3>
-        <p>Quer criar seu próprio agente de IA? Entre em contato conosco. Oferecemos:</p>
-        <ul>
-          <li>Consultoria estratégica gratuita</li>
-          <li>Prova de conceito em 7 dias</li>
-          <li>Implementação completa</li>
-          <li>Treinamento da sua equipe</li>
-        </ul>
-      `,
-      icon: <Brain className="w-16 h-16 text-cyan-400" />,
-      date: "2 de Janeiro, 2025",
-      readTime: "8 min"
-    },
-    {
-      id: 2,
-      title: "Bot vs IA: Qual a diferença real?",
-      excerpt: "Entenda por que nem todo chatbot é IA e como identificar soluções realmente inteligentes.",
-      content: `
-        <h3>A Confusão do Mercado</h3>
-        <p>No mercado atual, muitas empresas vendem "bots de WhatsApp" como se fossem IA. Essa confusão prejudica empresários que investem em soluções limitadas achando que estão comprando inteligência artificial.</p>
-        
-        <h3>Bot Tradicional: O que é?</h3>
-        <p>Um bot tradicional é como um atendente que só sabe responder perguntas específicas:</p>
-        <ul>
-          <li><strong>Scripts fixos:</strong> Respostas pré-programadas</li>
-          <li><strong>Fluxos lineares:</strong> Se > Então > Senão</li>
-          <li><strong>Sem contexto:</strong> Não lembra conversas anteriores</li>
-          <li><strong>Limitado:</strong> Quebra facilmente com perguntas inesperadas</li>
-        </ul>
-        
-        <h3>IA Real: O que faz a diferença?</h3>
-        <p>Uma IA verdadeira é como ter um assistente inteligente:</p>
-        <ul>
-          <li><strong>Compreensão contextual:</strong> Entende nuances e intenções</li>
-          <li><strong>Aprendizado contínuo:</strong> Melhora com cada interação</li>
-          <li><strong>Tomada de decisão:</strong> Avalia cenários e escolhe a melhor resposta</li>
-          <li><strong>Integração inteligente:</strong> Conecta informações de múltiplas fontes</li>
-        </ul>
-        
-        <h3>Exemplo Prático</h3>
-        <p><strong>Pergunta do cliente:</strong> "Preciso de uma solução para minha empresa, mas não sei bem o que vocês fazem"</p>
-        
-        <h4>Bot Tradicional responderia:</h4>
-        <p>"Desculpe, não entendi. Digite 1 para Serviços, 2 para Contato..."</p>
-        
-        <h4>IA Real responderia:</h4>
-        <p>"Entendo que você está explorando soluções para sua empresa. Para te ajudar melhor, me conte: qual é o principal desafio que vocês enfrentam hoje? É relacionado a atendimento, vendas, processos internos ou algo específico do seu setor?"</p>
-        
-        <h3>Como Identificar IA Real</h3>
-        <p>Faça estas perguntas ao fornecedor:</p>
-        <ol>
-          <li><strong>"A solução entende contexto?"</strong> - IA real mantém contexto da conversa</li>
-          <li><strong>"Aprende com interações?"</strong> - IA real melhora continuamente</li>
-          <li><strong>"Lida com perguntas inesperadas?"</strong> - IA real adapta-se a cenários novos</li>
-          <li><strong>"Integra com nossos sistemas?"</strong> - IA real conecta dados de múltiplas fontes</li>
-        </ol>
-        
-        <h3>O Custo da Escolha Errada</h3>
-        <p>Investir em um bot simples quando você precisa de IA resulta em:</p>
-        <ul>
-          <li>Clientes frustrados com respostas robóticas</li>
-          <li>Perda de leads por falta de qualificação adequada</li>
-          <li>Necessidade de retrabalho e novo investimento</li>
-          <li>Descrédito da tecnologia internamente</li>
-        </ul>
-        
-        <h3>Nossa Abordagem na Synthra</h3>
-        <p>Não vendemos bots. Criamos agentes inteligentes que:</p>
-        <ul>
-          <li>Entendem seu negócio profundamente</li>
-          <li>Falam com a personalidade da sua marca</li>
-          <li>Tomam decisões baseadas em dados reais</li>
-          <li>Evoluem constantemente</li>
-        </ul>
-        
-        <p><strong>A diferença é clara:</strong> enquanto bots executam, IA pensa.</p>
-      `,
-      icon: <MessageSquare className="w-16 h-16 text-cyan-400" />,
-      date: "28 de Dezembro, 2024",
-      readTime: "6 min"
-    },
-    {
-      id: 3,
-      title: "ROI de IA: Como medir resultados",
-      excerpt: "Métricas práticas para avaliar o retorno dos seus investimentos em inteligência artificial.",
-      content: `
-        <h3>Por que medir ROI de IA?</h3>
-        <p>Investir em IA sem medir resultados é como navegar sem bússola. Muitas empresas implementam soluções de IA mas não conseguem provar o valor gerado, dificultando novos investimentos e expansões.</p>
-        
-        <h3>Métricas Fundamentais</h3>
-        
-        <h4>1. Eficiência Operacional</h4>
-        <ul>
-          <li><strong>Tempo economizado:</strong> Horas/semana liberadas da equipe</li>
-          <li><strong>Redução de erros:</strong> % de diminuição em retrabalho</li>
-          <li><strong>Velocidade de resposta:</strong> Tempo médio de atendimento</li>
-          <li><strong>Capacidade de escala:</strong> Volume processado sem aumento de equipe</li>
-        </ul>
-        
-        <h4>2. Impacto Comercial</h4>
-        <ul>
-          <li><strong>Taxa de conversão:</strong> % de leads que viram clientes</li>
-          <li><strong>Ticket médio:</strong> Valor médio por venda</li>
-          <li><strong>Ciclo de vendas:</strong> Tempo do lead ao fechamento</li>
-          <li><strong>Retenção de clientes:</strong> % de clientes que permanecem</li>
-        </ul>
-        
-        <h4>3. Satisfação e Qualidade</h4>
-        <ul>
-          <li><strong>NPS (Net Promoter Score):</strong> Satisfação dos clientes</li>
-          <li><strong>CSAT:</strong> Avaliação do atendimento</li>
-          <li><strong>Tempo de resolução:</strong> Rapidez na solução de problemas</li>
-          <li><strong>Taxa de escalação:</strong> % de casos que precisam de humanos</li>
-        </ul>
-        
-        <h3>Fórmula de ROI para IA</h3>
-        <p><strong>ROI = (Benefícios - Custos) / Custos × 100</strong></p>
-        
-        <h4>Benefícios incluem:</h4>
-        <ul>
-          <li>Receita adicional gerada</li>
-          <li>Custos operacionais economizados</li>
-          <li>Valor do tempo liberado da equipe</li>
-          <li>Redução de perdas por erros</li>
-        </ul>
-        
-        <h4>Custos incluem:</h4>
-        <ul>
-          <li>Investimento inicial na solução</li>
-          <li>Custos de implementação</li>
-          <li>Treinamento da equipe</li>
-          <li>Manutenção e atualizações</li>
-        </ul>
-        
-        <h3>Caso Real: Cliente da Synthra</h3>
-        <p><strong>Empresa:</strong> E-commerce de moda (50 funcionários)</p>
-        <p><strong>Solução:</strong> Agente de IA para atendimento e vendas</p>
-        
-        <h4>Resultados em 6 meses:</h4>
-        <ul>
-          <li><strong>Conversão:</strong> 15% → 45% (+200%)</li>
-          <li><strong>Tempo de resposta:</strong> 4h → 30s (-99%)</li>
-          <li><strong>Equipe liberada:</strong> 120h/semana</li>
-          <li><strong>Receita adicional:</strong> R$ 180.000/mês</li>
-        </ul>
-        
-        <h4>Cálculo do ROI:</h4>
-        <ul>
-          <li><strong>Investimento:</strong> R$ 25.000 (setup + 6 meses)</li>
-          <li><strong>Benefícios:</strong> R$ 1.080.000 (6 meses de receita adicional)</li>
-          <li><strong>ROI:</strong> 4.220% em 6 meses</li>
-        </ul>
-        
-        <h3>Ferramentas para Medição</h3>
-        
-        <h4>Dashboards Recomendados:</h4>
-        <ul>
-          <li><strong>Google Analytics:</strong> Para métricas de conversão web</li>
-          <li><strong>Kommo/CRM:</strong> Para acompanhar pipeline de vendas</li>
-          <li><strong>Notion:</strong> Para centralizar KPIs e relatórios</li>
-          <li><strong>Make:</strong> Para automatizar coleta de dados</li>
-        </ul>
-        
-        <h3>Cronograma de Medição</h3>
-        
-        <h4>Primeiros 30 dias:</h4>
-        <ul>
-          <li>Estabelecer baseline (métricas antes da IA)</li>
-          <li>Configurar ferramentas de medição</li>
-          <li>Definir metas específicas</li>
-        </ul>
-        
-        <h4>30-90 dias:</h4>
-        <ul>
-          <li>Monitorar métricas semanalmente</li>
-          <li>Ajustar estratégias conforme necessário</li>
-          <li>Documentar primeiros resultados</li>
-        </ul>
-        
-        <h4>90+ dias:</h4>
-        <ul>
-          <li>Análise completa de ROI</li>
-          <li>Identificar oportunidades de expansão</li>
-          <li>Planejar próximos investimentos</li>
-        </ul>
-        
-        <h3>Erros Comuns na Medição</h3>
-        <ol>
-          <li><strong>Não estabelecer baseline:</strong> Sem dados anteriores, impossível medir melhoria</li>
-          <li><strong>Focar apenas em custos:</strong> Ignorar benefícios intangíveis</li>
-          <li><strong>Medir muito cedo:</strong> IA precisa de tempo para otimizar</li>
-          <li><strong>Métricas irrelevantes:</strong> Medir o que é fácil, não o que importa</li>
-        </ol>
-        
-        <h3>Conclusão</h3>
-        <p>Medir ROI de IA não é opcional - é essencial. Com as métricas certas e ferramentas adequadas, você pode provar o valor da IA e justificar novos investimentos.</p>
-        
-        <p><strong>Quer ajuda para medir o ROI da sua IA?</strong> Nossa equipe pode configurar dashboards personalizados e acompanhar seus resultados mensalmente.</p>
-      `,
-      icon: <TrendingUp className="w-16 h-16 text-cyan-400" />,
-      date: "20 de Dezembro, 2024",
-      readTime: "10 min"
     }
   ]
 
@@ -666,7 +389,7 @@ function App() {
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg px-8 py-4 border-0"
-                onClick={() => window.open('https://t.me/+pa-ZYAu6siU1YThh', '_blank')}
+                onClick={() => window.open('https://t.me/synthraia', '_blank')}
               >
                 Entrar na Comunidade
                 <Users className="ml-2 w-5 h-5" />
@@ -705,7 +428,7 @@ function App() {
               <div className="text-center">
                 <div className="w-80 h-80 rounded-full overflow-hidden mx-auto border-4 border-cyan-400/30">
                   <img 
-                    src="/upload/Designsemnome(6).png" 
+                    src="/camila-goulart.png" 
                     alt="Camila Goulart - Fundadora da Synthra" 
                     className="w-full h-full object-cover"
                   />
@@ -728,77 +451,72 @@ function App() {
             </p>
           </div>
           
-          {!selectedPost ? (
-            <>
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                {blogPosts.map((post) => (
-                  <Card key={post.id} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 cursor-pointer" onClick={() => setSelectedPost(post)}>
-                    <CardHeader>
-                      <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
-                        {post.icon}
-                      </div>
-                      <CardTitle className="text-white">{post.title}</CardTitle>
-                      <CardDescription className="text-gray-400">
-                        {post.excerpt}
-                      </CardDescription>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mt-4">
-                        <span>{post.date}</span>
-                        <span>•</span>
-                        <span>{post.readTime}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Button variant="outline" className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black">
-                        Ler artigo
-                        <BookOpen className="ml-2 w-4 h-4" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </>
-          ) : (
-            <div className="max-w-4xl mx-auto">
-              <Button 
-                variant="outline" 
-                className="mb-8 border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
-                onClick={() => setSelectedPost(null)}
-              >
-                ← Voltar para o blog
-              </Button>
-              
-              <article className="bg-gray-800/50 border border-gray-700 rounded-lg p-8">
-                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
-                  <span>{selectedPost.date}</span>
-                  <span>•</span>
-                  <span>{selectedPost.readTime}</span>
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {/* Blog Posts Preview */}
+            <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
+              <CardHeader>
+                <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
+                  <Brain className="w-16 h-16 text-cyan-400" />
                 </div>
-                
-                <h1 className="text-4xl font-bold text-white mb-6">{selectedPost.title}</h1>
-                
-                <div 
-                  className="prose prose-invert prose-cyan max-w-none text-gray-300 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-                />
-                
-                <div className="mt-12 pt-8 border-t border-gray-700">
-                  <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg p-6 border border-cyan-400/20">
-                    <h3 className="text-xl font-semibold text-white mb-4">Gostou do conteúdo?</h3>
-                    <p className="text-gray-300 mb-4">
-                      Quer implementar essas estratégias na sua empresa? Nossa equipe pode ajudar você a transformar teoria em resultados práticos.
-                    </p>
-                    <Button 
-                      className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                      onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                    >
-                      Falar com especialista
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </div>
+                <CardTitle className="text-white">Como criar seu primeiro Agente de IA</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Guia prático para desenvolver um agente inteligente que trabalha por você 24/7.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black">
+                  Ler artigo
+                  <BookOpen className="ml-2 w-4 h-4" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
+              <CardHeader>
+                <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
+                  <MessageSquare className="w-16 h-16 text-cyan-400" />
                 </div>
-              </article>
-            </div>
-          )}
+                <CardTitle className="text-white">Bot vs IA: Qual a diferença real?</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Entenda por que nem todo chatbot é IA e como identificar soluções realmente inteligentes.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black">
+                  Ler artigo
+                  <BookOpen className="ml-2 w-4 h-4" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
+              <CardHeader>
+                <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
+                  <TrendingUp className="w-16 h-16 text-cyan-400" />
+                </div>
+                <CardTitle className="text-white">ROI de IA: Como medir resultados</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Métricas práticas para avaliar o retorno dos seus investimentos em inteligência artificial.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black">
+                  Ler artigo
+                  <BookOpen className="ml-2 w-4 h-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+            >
+              Ver todos os artigos
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -814,18 +532,14 @@ function App() {
               <p className="text-xl text-gray-300 mb-8">
                 Receba semanalmente insights práticos, cases reais e tendências de IA que realmente importam para o seu negócio.
               </p>
-              <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
+              <div className="max-w-md mx-auto">
                 <div className="flex gap-4">
                   <Input 
                     type="email" 
                     placeholder="Seu melhor email" 
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    required
                     className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 flex-1"
                   />
                   <Button 
-                    type="submit"
                     className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6"
                   >
                     Assinar
@@ -835,10 +549,7 @@ function App() {
                 <p className="text-sm text-gray-400 mt-4">
                   Sem spam. Apenas conteúdo que agrega valor. Cancele quando quiser.
                 </p>
-                {newsletterMessage && (
-                  <p className="text-center mt-4 text-sm text-green-400">{newsletterMessage}</p>
-                )}
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -995,7 +706,7 @@ function App() {
             <div>
               <h4 className="font-semibold text-white mb-4">Comunidade</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="https://t.me/+pa-ZYAu6siU1YThh" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
+                <li><a href="https://t.me/synthraia" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
                 <li><a href="#contato" className="text-gray-400 hover:text-cyan-400 transition-colors">Fale com a equipe</a></li>
                 <li><a href="#blog" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog de IA prática</a></li>
               </ul>
@@ -1004,18 +715,17 @@ function App() {
               <h4 className="font-semibold text-white mb-4">Newsletter</h4>
               <p className="text-gray-400 text-sm mb-4">IA com Propósito</p>
               <Button 
-                size="sm"
-                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                onClick={() => document.querySelector('section:has(#newsletter)').scrollIntoView({ behavior: 'smooth' })}
+                className="w-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                onClick={() => document.querySelector('#newsletter input').focus()}
               >
-                Assinar Newsletter
+                <Newspaper className="mr-2 w-4 h-4" />
+                Assinar
               </Button>
             </div>
           </div>
-          <div className="border-t border-gray-700 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              © 2025 Synthra.ia. Todos os direitos reservados. • A IA não substitui. Ela conecta.
-            </p>
+          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} Synthra.ia. Todos os direitos reservados.</p>
+            <p className="mt-2 text-sm">A IA não substitui. Ela conecta.</p>
           </div>
         </div>
       </footer>
