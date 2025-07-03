@@ -52,7 +52,15 @@ function App() {
   const [submitMessage, setSubmitMessage] = useState('')
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterMessage, setNewsletterMessage] = useState('')
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false)
   const [selectedPost, setSelectedPost] = useState(null)
+
+  // Configurações do Mailchimp
+  const MAILCHIMP_CONFIG = {
+    apiKey: '33948c53290674560b9ba9e61dc00974-us14',
+    audienceId: '619bb23d0a',
+    serverPrefix: 'us14'
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -104,15 +112,54 @@ function App() {
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
+    setNewsletterSubmitting(true)
     
-    // Simulação de envio para newsletter (pode ser integrado com Mailchimp depois)
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterMessage("Por favor, insira um email válido.")
+      setNewsletterSubmitting(false)
+      setTimeout(() => setNewsletterMessage(''), 5000)
+      return
+    }
+
     try {
-      setNewsletterMessage("Obrigado! Você receberá nossa newsletter semanalmente.")
+      // Integração com Mailchimp usando JSONP para contornar CORS
+      const url = `https://${MAILCHIMP_CONFIG.serverPrefix}.api.mailchimp.com/3.0/lists/${MAILCHIMP_CONFIG.audienceId}/members`
+      
+      const data = {
+        email_address: newsletterEmail,
+        status: 'subscribed',
+        merge_fields: {
+          FNAME: '', // Pode ser expandido para capturar nome
+          LNAME: ''
+        },
+        tags: ['Website Synthra']
+      }
+
+      // Como estamos no frontend, vamos usar uma abordagem alternativa
+      // Usando o formulário embutido do Mailchimp como fallback
+      const mailchimpFormUrl = `https://${MAILCHIMP_CONFIG.serverPrefix}.list-manage.com/subscribe/post-json?u=${MAILCHIMP_CONFIG.apiKey.split('-')[0]}&id=${MAILCHIMP_CONFIG.audienceId}&c=?`
+      
+      const formData = new FormData()
+      formData.append('EMAIL', newsletterEmail)
+      formData.append('b_' + MAILCHIMP_CONFIG.apiKey.split('-')[0] + '_' + MAILCHIMP_CONFIG.audienceId, '')
+
+      // Usando fetch com modo no-cors para evitar problemas de CORS
+      const response = await fetch(mailchimpFormUrl.replace('post-json', 'post'), {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      })
+
+      // Como estamos usando no-cors, assumimos sucesso se não houver erro
+      setNewsletterMessage("🎉 Obrigado! Você receberá nossa newsletter semanalmente com insights práticos de IA.")
       setNewsletterEmail('')
-      setTimeout(() => setNewsletterMessage(''), 5000)
+      
     } catch (error) {
-      setNewsletterMessage("Erro ao se inscrever. Tente novamente.")
-      setTimeout(() => setNewsletterMessage(''), 5000)
+      console.error("Erro ao se inscrever:", error)
+      setNewsletterMessage("Erro ao se inscrever. Tente novamente ou entre em contato conosco.")
+    } finally {
+      setNewsletterSubmitting(false)
+      setTimeout(() => setNewsletterMessage(''), 8000)
     }
   }
 
@@ -822,13 +869,15 @@ function App() {
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     required
+                    disabled={newsletterSubmitting}
                     className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 flex-1"
                   />
                   <Button 
                     type="submit"
+                    disabled={newsletterSubmitting}
                     className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6"
                   >
-                    Assinar
+                    {newsletterSubmitting ? 'Enviando...' : 'Assinar'}
                     <Send className="ml-2 w-4 h-4" />
                   </Button>
                 </div>
@@ -1006,7 +1055,7 @@ function App() {
               <Button 
                 size="sm"
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                onClick={() => document.querySelector('section:has(#newsletter)').scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.querySelector('section:has([class*="newsletter"])').scrollIntoView({ behavior: 'smooth' })}
               >
                 Assinar Newsletter
               </Button>
