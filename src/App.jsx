@@ -701,7 +701,7 @@ function App() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
               <div className="flex items-center justify-center gap-4 mb-6">
-                <Headphones className="w-12 h-12 text-cyan-400" />
+                
                 <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                   Participe da maior comunidade de IA do Brasil
                 </h2>
