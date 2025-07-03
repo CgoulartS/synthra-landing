@@ -59,7 +59,7 @@ function App() {
   const [loadingPosts, setLoadingPosts] = useState(true)
 
   // API URL - ajuste conforme necessário
-  const API_URL = 'synthra-blog-api-cngj.vercel.app'
+  const API_URL = 'https://synthra-blog-api.onrender.com/api'
 
   // Carregar posts do blog da API
   useEffect(() => {
