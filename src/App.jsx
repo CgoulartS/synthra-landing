@@ -700,10 +700,12 @@ function App() {
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-4 mb-6">
                 <Headphones className="w-12 h-12 text-cyan-400" />
-                Participe da maior comunidade de IA do Brasil
-              </h2>
+                <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                  Participe da maior comunidade de IA do Brasil
+                </h2>
+              </div>
               <p className="text-xl text-gray-300 mb-8">
                 Práticas semanais • Automação com propósito • Cases reais
               </p>
@@ -752,7 +754,7 @@ function App() {
               <div className="text-center">
                 <div className="w-80 h-80 rounded-full overflow-hidden mx-auto border-4 border-cyan-400/30">
                   <img 
-                    src="/upload/Designsemnome(6).png" 
+                    src="/camila-goulart.png" 
                     alt="Camila Goulart - Fundadora da Synthra" 
                     className="w-full h-full object-cover"
                   />
@@ -814,21 +816,35 @@ function App() {
                 ← Voltar para o blog
               </Button>
               
-              <article className="bg-gray-800/50 border border-gray-700 rounded-lg p-8">
-                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
-                  <span>{selectedPost.date}</span>
-                  <span>•</span>
-                  <span>{selectedPost.readTime}</span>
+              <article className="bg-gray-800/50 border border-gray-700 rounded-lg overflow-hidden">
+                {/* Header do artigo */}
+                <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 p-8 border-b border-gray-700">
+                  <div className="flex items-center space-x-4 text-sm text-cyan-400 mb-4">
+                    <span>{selectedPost.date}</span>
+                    <span>•</span>
+                    <span>{selectedPost.readTime}</span>
+                    <span>•</span>
+                    <span>Por Camila Goulart</span>
+                  </div>
+                  
+                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">{selectedPost.title}</h1>
+                  <p className="text-xl text-gray-300 leading-relaxed">{selectedPost.excerpt}</p>
                 </div>
                 
-                <h1 className="text-4xl font-bold text-white mb-6">{selectedPost.title}</h1>
+                {/* Conteúdo do artigo */}
+                <div className="p-8">
+                  <div 
+                    className="article-content text-gray-300 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+                    style={{
+                      fontSize: '18px',
+                      lineHeight: '1.8'
+                    }}
+                  />
+                </div>
                 
-                <div 
-                  className="prose prose-invert prose-cyan max-w-none text-gray-300 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-                />
-                
-                <div className="mt-12 pt-8 border-t border-gray-700">
+                {/* CTA final */}
+                <div className="p-8 border-t border-gray-700">
                   <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg p-6 border border-cyan-400/20">
                     <h3 className="text-xl font-semibold text-white mb-4">Gostou do conteúdo?</h3>
                     <p className="text-gray-300 mb-4">
