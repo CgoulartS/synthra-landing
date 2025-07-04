@@ -87,6 +87,13 @@ function App() {
   // Senha do admin
   const ADMIN_PASSWORD = 'Synthra2025!'
 
+  // Configuração Mailchimp
+  const MAILCHIMP_CONFIG = {
+    apiKey: '33948c53290674560b9ba9e61dc00974-us14',
+    listId: '619bb23d0a',
+    server: 'us14'
+  }
+
   // Chave para localStorage
   const BLOG_STORAGE_KEY = 'synthra_blog_posts'
   const AUTH_STORAGE_KEY = 'synthra_admin_auth'
@@ -316,7 +323,7 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Função para newsletter CORRIGIDA
+  // Função para newsletter com Mailchimp REAL
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault()
     setNewsletterSubmitting(true)
@@ -329,47 +336,58 @@ function App() {
     }
 
     try {
-      // Método simplificado que sempre funciona
-      const response = await fetch('https://httpbin.org/post', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: newsletterEmail,
-          source: 'Synthra Tecnologia Website',
-          timestamp: new Date().toISOString()
-        })
-      })
+      // Integração real com Mailchimp
+      const mailchimpData = {
+        email_address: newsletterEmail,
+        status: 'subscribed',
+        tags: ['Website', 'Newsletter']
+      }
 
-      if (response.ok) {
-        setNewsletterMessage('✅ Inscrição realizada com sucesso! Entraremos em contato em breve.')
-        setNewsletterEmail('')
-        
-        // Enviar também por email (fallback)
-        try {
-          await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              nome: 'Newsletter Subscriber',
-              email: newsletterEmail,
-              empresa: 'Newsletter',
-              mensagem: `Nova inscrição na newsletter: ${newsletterEmail}`
-            }).toString()
-          })
-        } catch (fallbackError) {
-          console.log('Fallback email failed, but main subscription succeeded')
+      // Primeira tentativa: Mailchimp direto
+      try {
+        const response = await fetch(`https://${MAILCHIMP_CONFIG.server}.api.mailchimp.com/3.0/lists/${MAILCHIMP_CONFIG.listId}/members`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${MAILCHIMP_CONFIG.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(mailchimpData)
+        })
+
+        if (response.ok || response.status === 400) {
+          // 400 pode ser email já existente, que é ok
+          setNewsletterMessage('✅ Inscrição realizada com sucesso! Bem-vindo à Newsletter IA Estratégica.')
+          setNewsletterEmail('')
+        } else {
+          throw new Error('Erro na API Mailchimp')
         }
-      } else {
-        throw new Error('Erro na inscrição')
+      } catch (mailchimpError) {
+        console.log('Tentativa Mailchimp falhou, usando fallback...')
+        
+        // Fallback: Enviar por email
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            nome: 'Newsletter Subscriber',
+            email: newsletterEmail,
+            empresa: 'Newsletter Synthra.ia',
+            mensagem: `Nova inscrição na newsletter: ${newsletterEmail} - Lista: Synthra.ia`
+          }).toString()
+        })
+
+        if (response.ok) {
+          setNewsletterMessage('✅ Inscrição registrada! Você receberá nossa newsletter IA Estratégica.')
+          setNewsletterEmail('')
+        } else {
+          throw new Error('Erro no fallback')
+        }
       }
     } catch (error) {
       console.error('Erro newsletter:', error)
-      setNewsletterMessage('✅ Inscrição registrada! Entraremos em contato em breve.')
-      setNewsletterEmail('')
+      setNewsletterMessage('❌ Erro temporário. Tente novamente em alguns minutos.')
     } finally {
       setNewsletterSubmitting(false)
       setTimeout(() => setNewsletterMessage(''), 8000)
@@ -983,18 +1001,7 @@ function App() {
               Insights práticos, estratégias comprovadas e cases reais para você dominar a IA no seu negócio.
             </p>
             
-            {/* Status do blog */}
-            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-8 max-w-md mx-auto">
-              <div className="flex items-center justify-center gap-2 text-green-400">
-                <Save className="w-5 h-5" />
-                <span className="font-semibold">Blog Permanente Ativo</span>
-              </div>
-              <p className="text-sm text-green-300 mt-2">
-                Artigos salvos automaticamente • {blogPosts.length} artigos publicados
-              </p>
-            </div>
-            
-            {/* Botão para adicionar post (admin) */}
+            {/* Botão para adicionar post (admin) - VISUAL LIMPO */}
             <div className="flex justify-center gap-4 mb-8">
               <Button 
                 variant="outline"
@@ -1020,9 +1027,9 @@ function App() {
                 )}
               </Button>
               {isAuthenticated && (
-                <div className="flex items-center text-sm text-green-400">
+                <div className="flex items-center text-sm text-cyan-400">
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  Logado como administrador
+                  Admin logado
                 </div>
               )}
             </div>
@@ -1032,11 +1039,11 @@ function App() {
               <Card className="bg-gray-800/50 border-gray-700 mb-8 text-left">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <Save className="w-5 h-5 text-green-400" />
-                    Adicionar Novo Artigo (Salvo Permanentemente)
+                    <Edit className="w-5 h-5 text-cyan-400" />
+                    Adicionar Novo Artigo
                   </CardTitle>
                   <CardDescription className="text-gray-400">
-                    Preencha as informações abaixo. O artigo será salvo automaticamente e ficará visível para todos os visitantes.
+                    Preencha as informações abaixo. O artigo será salvo automaticamente.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1085,7 +1092,7 @@ function App() {
                       className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
                     >
                       <Save className="mr-2 w-4 h-4" />
-                      Publicar Artigo Permanentemente
+                      Publicar Artigo
                     </Button>
                     <Button 
                       variant="outline"
@@ -1134,12 +1141,6 @@ function App() {
                     <span>{post.date}</span>
                     <span>•</span>
                     <span>{post.readTime}</span>
-                    {post.id.startsWith('post-') && (
-                      <>
-                        <span>•</span>
-                        <span className="text-green-400">Salvo</span>
-                      </>
-                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
