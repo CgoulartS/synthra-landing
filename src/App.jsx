@@ -64,9 +64,6 @@ import './App.css'
 function App() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
-  const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false)
-  const [newsletterMessage, setNewsletterMessage] = useState('')
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [selectedArticle, setSelectedArticle] = useState(null)
   const [blogPosts, setBlogPosts] = useState([])
@@ -86,13 +83,6 @@ function App() {
 
   // Senha do admin
   const ADMIN_PASSWORD = 'Synthra2025!'
-
-  // Configuração Mailchimp
-  const MAILCHIMP_CONFIG = {
-    apiKey: '33948c53290674560b9ba9e61dc00974-us14',
-    listId: '619bb23d0a',
-    server: 'us14'
-  }
 
   // Chave para localStorage
   const BLOG_STORAGE_KEY = 'synthra_blog_posts'
@@ -321,77 +311,6 @@ function App() {
   // Função para voltar ao topo
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Função para newsletter com Mailchimp REAL
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault()
-    setNewsletterSubmitting(true)
-    setNewsletterMessage('')
-
-    if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      setNewsletterMessage('❌ Por favor, insira um email válido.')
-      setNewsletterSubmitting(false)
-      return
-    }
-
-    try {
-      // Integração real com Mailchimp
-      const mailchimpData = {
-        email_address: newsletterEmail,
-        status: 'subscribed',
-        tags: ['Website', 'Newsletter']
-      }
-
-      // Primeira tentativa: Mailchimp direto
-      try {
-        const response = await fetch(`https://${MAILCHIMP_CONFIG.server}.api.mailchimp.com/3.0/lists/${MAILCHIMP_CONFIG.listId}/members`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${MAILCHIMP_CONFIG.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(mailchimpData)
-        })
-
-        if (response.ok || response.status === 400) {
-          // 400 pode ser email já existente, que é ok
-          setNewsletterMessage('✅ Inscrição realizada com sucesso! Bem-vindo à Newsletter IA Estratégica.')
-          setNewsletterEmail('')
-        } else {
-          throw new Error('Erro na API Mailchimp')
-        }
-      } catch (mailchimpError) {
-        console.log('Tentativa Mailchimp falhou, usando fallback...')
-        
-        // Fallback: Enviar por email
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw_yJW-cDeV8067TzYGgK5wJ6cbgd8n1Yr3ymu3si4UF0475EMFoC6ngy-MIqUbYqJz4Q/exec", {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            nome: 'Newsletter Subscriber',
-            email: newsletterEmail,
-            empresa: 'Newsletter Synthra.ia',
-            mensagem: `Nova inscrição na newsletter: ${newsletterEmail} - Lista: Synthra.ia`
-          }).toString()
-        })
-
-        if (response.ok) {
-          setNewsletterMessage('✅ Inscrição registrada! Você receberá nossa newsletter IA Estratégica.')
-          setNewsletterEmail('')
-        } else {
-          throw new Error('Erro no fallback')
-        }
-      }
-    } catch (error) {
-      console.error('Erro newsletter:', error)
-      setNewsletterMessage('❌ Erro temporário. Tente novamente em alguns minutos.')
-    } finally {
-      setNewsletterSubmitting(false)
-      setTimeout(() => setNewsletterMessage(''), 8000)
-    }
   }
 
   // Função para adicionar novo post PERMANENTE
@@ -1173,7 +1092,7 @@ function App() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
+      {/* Newsletter Section - FORMULÁRIO OFICIAL MAILCHIMP */}
       <section className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
@@ -1185,40 +1104,51 @@ function App() {
               <p className="text-xl text-gray-300 mb-8">
                 Receba semanalmente insights práticos, estratégias comprovadas e tendências de IA que realmente transformam negócios.
               </p>
-              <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
-                <div className="flex gap-4">
-                  <Input 
-                    type="email" 
-                    placeholder="Seu melhor email" 
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 flex-1"
-                    required
-                  />
-                  <Button 
-                    type="submit"
-                    className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6"
-                    disabled={newsletterSubmitting}
+              
+              {/* FORMULÁRIO OFICIAL MAILCHIMP - SEM CORS */}
+              <div className="max-w-md mx-auto">
+                <div id="mc_embed_signup" className="mailchimp-form">
+                  <form 
+                    action="https://synthraia.us14.list-manage.com/subscribe/post?u=a816257ff44d8ef7acb18ebc1&id=619bb23d0a&f_id=004ac2e1f0" 
+                    method="post" 
+                    id="mc-embedded-subscribe-form" 
+                    name="mc-embedded-subscribe-form" 
+                    className="validate" 
+                    target="_blank"
                   >
-                    {newsletterSubmitting ? (
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
+                    <div className="flex gap-4">
+                      <input 
+                        type="email" 
+                        name="EMAIL" 
+                        className="required email bg-gray-700 border border-gray-600 text-white placeholder-gray-400 flex-1 px-4 py-3 rounded-lg focus:outline-none focus:border-cyan-400" 
+                        id="mce-EMAIL" 
+                        required 
+                        placeholder="Seu melhor email"
+                      />
+                      <div style={{position: 'absolute', left: '-5000px'}} aria-hidden="true">
+                        <input type="text" name="b_a816257ff44d8ef7acb18ebc1_619bb23d0a" tabIndex="-1" />
+                      </div>
+                      <button 
+                        type="submit" 
+                        name="subscribe" 
+                        id="mc-embedded-subscribe" 
+                        className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2"
+                      >
                         Assinar
-                        <Send className="ml-2 w-4 h-4" />
-                      </>
-                    )}
-                  </Button>
+                        <Send className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div id="mce-responses" className="clear foot mt-4">
+                      <div className="response" id="mce-error-response" style={{display: 'none'}}></div>
+                      <div className="response" id="mce-success-response" style={{display: 'none'}}></div>
+                    </div>
+                  </form>
                 </div>
-                {newsletterMessage && (
-                  <p className={`text-sm mt-4 ${newsletterMessage.includes('✅') ? 'text-green-400' : 'text-red-400'}`}>
-                    {newsletterMessage}
-                  </p>
-                )}
-                <p className="text-sm text-gray-400 mt-4">
-                  Sem spam. Apenas conteúdo estratégico que agrega valor. Cancele quando quiser.
-                </p>
-              </form>
+              </div>
+              
+              <p className="text-sm text-gray-400 mt-4">
+                Sem spam. Apenas conteúdo estratégico que agrega valor. Cancele quando quiser.
+              </p>
             </div>
           </div>
         </div>
@@ -1385,7 +1315,7 @@ function App() {
               <p className="text-gray-400 text-sm mb-4">IA Estratégica</p>
               <Button 
                 className="w-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
-                onClick={() => document.querySelector('input[type="email"]').focus()}
+                onClick={() => document.querySelector('#mce-EMAIL').focus()}
               >
                 <Newspaper className="mr-2 w-4 h-4" />
                 Assinar
@@ -1408,6 +1338,9 @@ function App() {
           <ChevronUp className="w-6 h-6" />
         </Button>
       )}
+
+      {/* Script do Mailchimp */}
+      <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
     </div>
   )
 }
