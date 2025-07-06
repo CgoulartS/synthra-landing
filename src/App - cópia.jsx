@@ -57,10 +57,7 @@ import {
   LogOut,
   User,
   Save,
-  Trash2,
-  Award,
-  Handshake,
-  MessageCircle
+  Trash2
 } from 'lucide-react'
 import './App.css'
 
@@ -724,16 +721,6 @@ function App() {
             <ChevronUp className="w-6 h-6" />
           </Button>
         )}
-
-        {/* Widget WhatsApp */}
-        <div className="fixed bottom-6 left-6 z-50">
-          <Button
-            className="bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 shadow-lg animate-pulse"
-            onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Vi seu site e gostaria de saber mais sobre consultoria em IA.', '_blank')}
-          >
-            <MessageCircle className="w-6 h-6" />
-          </Button>
-        </div>
       </div>
     )
   }
@@ -750,7 +737,6 @@ function App() {
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#inicio" className="text-gray-300 hover:text-cyan-400 transition-colors">Início</a>
               <a href="#servicos" className="text-gray-300 hover:text-cyan-400 transition-colors">Serviços</a>
-              <a href="#parcerias" className="text-gray-300 hover:text-cyan-400 transition-colors">Parcerias</a>
               <a href="#cases" className="text-gray-300 hover:text-cyan-400 transition-colors">Cases</a>
               <a href="#comunidade" className="text-gray-300 hover:text-cyan-400 transition-colors">Comunidade</a>
               <a href="#sobre" className="text-gray-300 hover:text-cyan-400 transition-colors">Sobre</a>
@@ -874,109 +860,8 @@ function App() {
         </div>
       </section>
 
-      {/* Partnerships Section - NOVA SEÇÃO */}
-      <section id="parcerias" className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Parcerias Estratégicas
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Certificações e parcerias que garantem excelência e confiabilidade em nossas soluções.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
-              <CardContent className="p-12">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                  <div className="text-center md:text-left">
-                    <div className="flex items-center justify-center md:justify-start mb-6">
-                      <Award className="w-8 h-8 text-cyan-400 mr-3" />
-                      <h3 className="text-2xl font-bold text-white">Parceira Oficial Kommo</h3>
-                    </div>
-                    <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                      Somos <strong className="text-cyan-400">parceiros certificados da Kommo</strong>, uma das principais plataformas de CRM e automação de vendas do mundo. Esta certificação nos permite oferecer:
-                    </p>
-                    <ul className="text-gray-300 space-y-3 mb-8">
-                      <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-                        <span><strong>Implementação especializada</strong> do Kommo CRM</span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-                        <span><strong>Automações avançadas</strong> de vendas e marketing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-                        <span><strong>Integração com IA</strong> para potencializar resultados</span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-                        <span><strong>Suporte técnico especializado</strong> e treinamento</span>
-                      </li>
-                    </ul>
-                    <Button 
-                      className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                      onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                    >
-                      <Handshake className="mr-2 w-4 h-4" />
-                      Implementar Kommo + IA
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </div>
-                  <div className="text-center">
-                    <div className="bg-white rounded-2xl p-8 inline-block shadow-lg">
-                      <img 
-                        src="/Badgelight.png" 
-                        alt="Kommo Partner Badge" 
-                        className="h-24 w-auto mx-auto"
-                      />
-                    </div>
-                    <p className="text-sm text-gray-400 mt-4">
-                      Certificação oficial Kommo Partner
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="mt-12 text-center">
-              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-8 border border-cyan-400/20">
-                <h3 className="text-2xl font-bold mb-4 text-white">
-                  Por que escolher um parceiro certificado?
-                </h3>
-                <div className="grid md:grid-cols-3 gap-6 mt-8">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <ShieldCheck className="w-8 h-8 text-cyan-400" />
-                    </div>
-                    <h4 className="font-semibold text-white mb-2">Expertise Validada</h4>
-                    <p className="text-gray-400 text-sm">Conhecimento técnico certificado e atualizado</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Rocket className="w-8 h-8 text-cyan-400" />
-                    </div>
-                    <h4 className="font-semibold text-white mb-2">Implementação Rápida</h4>
-                    <p className="text-gray-400 text-sm">Processos otimizados e melhores práticas</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Heart className="w-8 h-8 text-cyan-400" />
-                    </div>
-                    <h4 className="font-semibold text-white mb-2">Suporte Garantido</h4>
-                    <p className="text-gray-400 text-sm">Acesso direto ao suporte técnico oficial</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Cases Section */}
-      <section id="cases" className="py-20 px-4">
+      <section id="cases" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
@@ -1024,7 +909,7 @@ function App() {
       </section>
 
       {/* Community Section */}
-      <section id="comunidade" className="py-20 px-4 bg-gray-900/50">
+      <section id="comunidade" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
@@ -1051,7 +936,7 @@ function App() {
       </section>
 
       {/* About Section */}
-      <section id="sobre" className="py-20 px-4">
+      <section id="sobre" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -1091,7 +976,7 @@ function App() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="py-20 px-4 bg-gray-900/50">
+      <section id="blog" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent pb-2">
@@ -1274,7 +1159,7 @@ function App() {
       </section>
 
       {/* Newsletter Section - SEM REDIRECIONAMENTO */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
@@ -1327,7 +1212,7 @@ function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contato" className="py-20 px-4 bg-gray-900/50">
+      <section id="contato" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
@@ -1358,7 +1243,7 @@ function App() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">WhatsApp</p>
-                      <p className="text-gray-400">+55 (51) 99186-7042</p>
+                      <p className="text-gray-400">+55 (51) 9 9472-4351</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
@@ -1471,7 +1356,6 @@ function App() {
               <ul className="space-y-2 text-sm">
                 <li><a href="#sobre" className="text-gray-400 hover:text-cyan-400 transition-colors">Sobre a Synthra Tecnologia</a></li>
                 <li><a href="#servicos" className="text-gray-400 hover:text-cyan-400 transition-colors">Nossos Serviços</a></li>
-                <li><a href="#parcerias" className="text-gray-400 hover:text-cyan-400 transition-colors">Parcerias</a></li>
                 <li><a href="#cases" className="text-gray-400 hover:text-cyan-400 transition-colors">Cases & Resultados</a></li>
               </ul>
             </div>
@@ -1511,16 +1395,6 @@ function App() {
           <ChevronUp className="w-6 h-6" />
         </Button>
       )}
-
-      {/* Widget WhatsApp */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <Button
-          className="bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 shadow-lg animate-pulse"
-          onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Vi seu site e gostaria de saber mais sobre consultoria em IA.', '_blank')}
-        >
-          <MessageCircle className="w-6 h-6" />
-        </Button>
-      </div>
     </div>
   )
 }
