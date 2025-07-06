@@ -725,15 +725,7 @@ function App() {
           </Button>
         )}
 
-        {/* Widget WhatsApp */}
-        <div className="fixed bottom-6 left-6 z-50">
-          <Button
-            className="bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 shadow-lg animate-pulse"
-            onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Vi seu site e gostaria de saber mais sobre consultoria em IA.', '_blank')}
-          >
-            <MessageCircle className="w-6 h-6" />
-          </Button>
-        </div>
+     
       </div>
     )
   }
