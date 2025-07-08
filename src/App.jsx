@@ -299,33 +299,33 @@ function App() {
 
   // Carregar script do Kommo após o componente montar
   useEffect(() => {
-  const existingScript = document.getElementById('kommo_button_script');
-  if (existingScript) return;
+  if (document.getElementById('kommo_script')) return;
 
   const script = document.createElement('script');
-  script.src = 'https://gso.kommo.com/js/button.js';
-  script.id = 'kommo_button_script';
-  script.async = true;
-
-  script.onload = () => {
-    window.crm_plugin = {
-      id: "1047378",
-      hash: "6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
-      locale: "pt",
-      setMeta: function (p) {
-        this.params = (this.params || []).concat([p]);
+  script.id = 'kommo_script';
+  script.innerHTML = `(function(a,m,o,c,r,m){
+    a[m]={
+      id:"1047378",
+      hash:"6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
+      locale:"pt",
+      setMeta:function(p){
+        this.params=(this.params||[]).concat([p])
       }
     };
-
-    window.crmPlugin = window.crmPlugin || function () {
-      (window.crmPlugin.q = window.crmPlugin.q || []).push(arguments);
+    a[o]=a[o]||function(){
+      (a[o].q=a[o].q||[]).push(arguments)
     };
+    var d=a.document,
+    s=d.createElement('script');
+    s.async=true;
+    s.id=m+'_script';
+    s.src='https://gso.kommo.com/js/button.js';
+    d.head&&d.head.appendChild(s)
+  })(window,0,'crmPlugin',0,0,'crm_plugin');`;
 
-    window.crmPlugin('button', 'create');
-  };
-
-  document.head.appendChild(script);
+  document.body.appendChild(script);
 }, []);
+
 
   // Controle do botão voltar ao topo
   useEffect(() => {
