@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
@@ -41,9 +41,26 @@ import {
   ExternalLink,
   ChevronRight,
   Globe,
-  Headphones,
   FileText,
-  Newspaper
+  Newspaper,
+  ChevronUp,
+  RefreshCw,
+  Edit,
+  Plus,
+  Database,
+  PieChart,
+  GraduationCap,
+  Puzzle,
+  ShieldCheck,
+  Palette,
+  Lock,
+  LogOut,
+  User,
+  Save,
+  Trash2,
+  Award,
+  Handshake,
+  MessageCircle
 } from 'lucide-react'
 import './App.css'
 
@@ -51,9 +68,387 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
   const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false)
   const [newsletterMessage, setNewsletterMessage] = useState('')
-  const [selectedPost, setSelectedPost] = useState(null)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const [selectedArticle, setSelectedArticle] = useState(null)
+  const [blogPosts, setBlogPosts] = useState([])
+  const [showBlogAdmin, setShowBlogAdmin] = useState(false)
+  const [newPost, setNewPost] = useState({
+    title: '',
+    excerpt: '',
+    content: '',
+    readTime: '5 min'
+  })
 
+  // Estados de autenticação
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
+  const [loginPassword, setLoginPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
+
+  // Senha do admin
+  const ADMIN_PASSWORD = 'Synthra2025!'
+
+  // Chave para localStorage
+  const BLOG_STORAGE_KEY = 'synthra_blog_posts'
+  const AUTH_STORAGE_KEY = 'synthra_admin_auth'
+
+  // Posts padrão do blog
+  const defaultPosts = [
+    {
+      id: 'consultoria-ia-estrategica',
+      title: 'Como a Consultoria em IA Transforma Negócios',
+      excerpt: 'Descubra como um diagnóstico de maturidade em IA pode identificar oportunidades com retorno mensurável.',
+      content: `
+        <div class="article-header">
+          <h1>Como a Consultoria em IA Transforma Negócios</h1>
+          <div class="article-meta">
+            <span class="author">Por Camila Goulart</span>
+            <span class="date">4 de Janeiro, 2025</span>
+            <span class="read-time">8 min de leitura</span>
+          </div>
+        </div>
+
+        <div class="article-content">
+          <h3>O Diagnóstico que Muda Tudo</h3>
+          <p>Muitas empresas investem em IA sem saber por onde começar. O resultado? Projetos que não geram retorno e equipes frustradas. A <strong>Consultoria Estratégica em IA</strong> resolve esse problema com uma abordagem estruturada.</p>
+
+          <h3>Diagnóstico de Maturidade em IA</h3>
+          <p>Avaliamos 4 dimensões críticas:</p>
+          <ul>
+            <li><strong>Dados:</strong> Qualidade, estrutura e disponibilidade</li>
+            <li><strong>Tecnologia:</strong> Infraestrutura e ferramentas existentes</li>
+            <li><strong>Pessoas:</strong> Competências e cultura organizacional</li>
+            <li><strong>Processos:</strong> Maturidade e padronização</li>
+          </ul>
+
+          <h3>Identificação de Oportunidades</h3>
+          <p>Com base no diagnóstico, mapeamos oportunidades com <strong>retorno mensurável</strong>:</p>
+          <ul>
+            <li>Automação de processos repetitivos</li>
+            <li>Otimização de tomada de decisão</li>
+            <li>Personalização em escala</li>
+            <li>Previsão e prevenção de problemas</li>
+          </ul>
+
+          <h3>Roadmap de Transformação</h3>
+          <p>Criamos um plano estruturado em fases:</p>
+          <ol>
+            <li><strong>Quick Wins (0-3 meses):</strong> Resultados rápidos para gerar momentum</li>
+            <li><strong>Prova de Conceito (3-6 meses):</strong> Validação de conceitos</li>
+            <li><strong>Escala (6-12 meses):</strong> Expansão para toda organização</li>
+            <li><strong>Inovação (12+ meses):</strong> Diferenciação competitiva</li>
+          </ol>
+
+          <h3>Treinamento para Adoção Segura</h3>
+          <p>A tecnologia é apenas 30% do sucesso. Os outros 70% são pessoas e processos. Por isso, incluímos:</p>
+          <ul>
+            <li>Workshops práticos por área</li>
+            <li>Mentoria para líderes</li>
+            <li>Diretrizes de uso ético</li>
+            <li>Governança e compliance</li>
+          </ul>
+
+          <h3>Resultados Esperados</h3>
+          <p>Empresas que seguem nossa consultoria alcançam:</p>
+          <ul>
+            <li><strong>40-60% redução</strong> em tarefas manuais</li>
+            <li><strong>25-35% aumento</strong> na produtividade</li>
+            <li><strong>ROI de 300-500%</strong> no primeiro ano</li>
+            <li><strong>Time to market 50% menor</strong> para novos produtos</li>
+          </ul>
+
+          <p>A IA não é sobre tecnologia. É sobre <strong>transformação inteligente</strong> que coloca pessoas no centro.</p>
+        </div>
+      `,
+      author: 'Camila Goulart',
+      date: '4 de Janeiro, 2025',
+      readTime: '8 min',
+      category: 'Consultoria',
+      createdAt: Date.now() - 86400000 // 1 dia atrás
+    },
+    {
+      id: 'automacao-inteligente-processos',
+      title: 'Automação Inteligente: Além do RPA Tradicional',
+      excerpt: 'Como combinar RPA com IA generativa para criar robôs que tomam decisões baseadas em contexto.',
+      content: `
+        <div class="article-header">
+          <h1>Automação Inteligente: Além do RPA Tradicional</h1>
+          <div class="article-meta">
+            <span class="author">Por Camila Goulart</span>
+            <span class="date">2 de Janeiro, 2025</span>
+            <span class="read-time">7 min de leitura</span>
+          </div>
+        </div>
+
+        <div class="article-content">
+          <h3>A Evolução da Automação</h3>
+          <p>RPA tradicional automatiza tarefas repetitivas, mas não consegue lidar com exceções ou tomar decisões. A <strong>Automação Inteligente de Processos (IPA)</strong> combina RPA com IA para criar robôs verdadeiramente inteligentes.</p>
+
+          <h3>IPA + RPA com IA: A Combinação Perfeita</h3>
+          <p>Nossa abordagem integra:</p>
+          <ul>
+            <li><strong>RPA:</strong> Para tarefas estruturadas e repetitivas</li>
+            <li><strong>IA Generativa:</strong> Para interpretação e tomada de decisão</li>
+            <li><strong>Machine Learning:</strong> Para aprendizado contínuo</li>
+            <li><strong>OCR Inteligente:</strong> Para documentos não estruturados</li>
+          </ul>
+
+          <h3>Robôs que Tomam Decisões</h3>
+          <p>Nossos <strong>Intelligent Agents</strong> conseguem:</p>
+          <ul>
+            <li>Analisar emails e extrair informações relevantes</li>
+            <li>Classificar documentos por contexto, não apenas por formato</li>
+            <li>Tomar decisões baseadas em regras de negócio complexas</li>
+            <li>Adaptar-se a mudanças nos processos automaticamente</li>
+          </ul>
+
+          <h4>Exemplo Prático: Processamento de Faturas</h4>
+          <p><strong>RPA Tradicional:</strong> Processa apenas faturas no formato padrão</p>
+          <p><strong>IPA com IA:</strong> Processa qualquer formato, identifica inconsistências, sugere correções e aprende com exceções</p>
+
+          <h3>Integração com Sistemas Legados</h3>
+          <p>Conectamos a automação com:</p>
+          <ul>
+            <li><strong>CRMs:</strong> Salesforce, HubSpot, Kommo</li>
+            <li><strong>ERPs:</strong> SAP, Oracle, Totvs</li>
+            <li><strong>APIs:</strong> Qualquer sistema com interface</li>
+            <li><strong>Bancos de Dados:</strong> SQL, NoSQL, Cloud</li>
+          </ul>
+
+          <h3>Implementação Gradual</h3>
+          <p>Nossa metodologia garante sucesso:</p>
+          <ol>
+            <li><strong>Mapeamento:</strong> Identificação de processos candidatos</li>
+            <li><strong>Prova de Conceito:</strong> Validação em ambiente controlado</li>
+            <li><strong>Piloto:</strong> Implementação em processo real</li>
+            <li><strong>Escala:</strong> Expansão para outros processos</li>
+            <li><strong>Otimização:</strong> Melhoria contínua com IA</li>
+          </ol>
+
+          <h3>ROI Comprovado</h3>
+          <p>Clientes que implementaram IPA alcançaram:</p>
+          <ul>
+            <li><strong>80% redução</strong> no tempo de processamento</li>
+            <li><strong>95% precisão</strong> em tarefas automatizadas</li>
+            <li><strong>60% economia</strong> em custos operacionais</li>
+            <li><strong>24/7 operação</strong> sem intervenção humana</li>
+          </ul>
+
+          <p>A automação inteligente não substitui pessoas. Ela <strong>libera talentos</strong> para atividades estratégicas e criativas.</p>
+        </div>
+      `,
+      author: 'Camila Goulart',
+      date: '2 de Janeiro, 2025',
+      readTime: '7 min',
+      category: 'Automação',
+      createdAt: Date.now() - 172800000 // 2 dias atrás
+    }
+  ]
+
+  // Carregar posts do localStorage ou usar padrão
+  useEffect(() => {
+    const savedPosts = localStorage.getItem(BLOG_STORAGE_KEY)
+    if (savedPosts) {
+      try {
+        const parsedPosts = JSON.parse(savedPosts)
+        setBlogPosts(parsedPosts)
+      } catch (error) {
+        console.error('Erro ao carregar posts:', error)
+        setBlogPosts(defaultPosts)
+        savePosts(defaultPosts)
+      }
+    } else {
+      setBlogPosts(defaultPosts)
+      savePosts(defaultPosts)
+    }
+  }, [])
+
+  // Verificar se já está logado
+  useEffect(() => {
+    const authStatus = localStorage.getItem(AUTH_STORAGE_KEY)
+    if (authStatus === 'authenticated') {
+      setIsAuthenticated(true)
+    }
+  }, [])
+
+  // Controle do botão voltar ao topo
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Função para salvar posts no localStorage
+  const savePosts = (posts) => {
+    try {
+      localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts))
+    } catch (error) {
+      console.error('Erro ao salvar posts:', error)
+    }
+  }
+
+  // Função de login
+  const handleLogin = (e) => {
+    e.preventDefault()
+    if (loginPassword === ADMIN_PASSWORD) {
+      setIsAuthenticated(true)
+      localStorage.setItem(AUTH_STORAGE_KEY, 'authenticated')
+      setShowLogin(false)
+      setLoginPassword('')
+      setLoginError('')
+    } else {
+      setLoginError('Senha incorreta. Tente novamente.')
+      setLoginPassword('')
+    }
+  }
+
+  // Função de logout
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    localStorage.removeItem(AUTH_STORAGE_KEY)
+    setShowBlogAdmin(false)
+  }
+
+  // Função para voltar ao topo
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Função para newsletter SEM REDIRECIONAMENTO
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault()
+    setNewsletterSubmitting(true)
+    setNewsletterMessage('')
+
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterMessage('❌ Por favor, insira um email válido.')
+      setNewsletterSubmitting(false)
+      return
+    }
+
+    try {
+      // Criar iframe oculto para envio SEM redirecionamento
+      const iframe = document.createElement('iframe')
+      iframe.style.display = 'none'
+      iframe.name = 'hidden-mailchimp-form'
+      document.body.appendChild(iframe)
+      
+      // Criar formulário temporário
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = 'https://synthraia.us14.list-manage.com/subscribe/post?u=a816257ff44d8ef7acb18ebc1&id=619bb23d0a&f_id=004ac2e1f0'
+      form.target = 'hidden-mailchimp-form' // Enviar para iframe oculto
+      
+      // Adicionar campo de email
+      const emailInput = document.createElement('input')
+      emailInput.type = 'email'
+      emailInput.name = 'EMAIL'
+      emailInput.value = newsletterEmail
+      form.appendChild(emailInput)
+      
+      // Honeypot (anti-spam)
+      const honeypot = document.createElement('input')
+      honeypot.type = 'text'
+      honeypot.name = 'b_a816257ff44d8ef7acb18ebc1_619bb23d0a'
+      honeypot.value = ''
+      honeypot.style.display = 'none'
+      form.appendChild(honeypot)
+      
+      // Adicionar formulário ao DOM e enviar
+      document.body.appendChild(form)
+      form.submit()
+      
+      // Limpar após 2 segundos
+      setTimeout(() => {
+        if (document.body.contains(form)) document.body.removeChild(form)
+        if (document.body.contains(iframe)) document.body.removeChild(iframe)
+      }, 2000)
+      
+      // Sucesso - usuário fica no site!
+      setNewsletterMessage('✅ Inscrição realizada com sucesso! Bem-vindo à Newsletter IA Estratégica.')
+      setNewsletterEmail('')
+      
+    } catch (error) {
+      console.error('Erro newsletter:', error)
+      setNewsletterMessage('❌ Erro temporário. Tente novamente em alguns minutos.')
+    } finally {
+      setNewsletterSubmitting(false)
+      setTimeout(() => setNewsletterMessage(''), 8000)
+    }
+  }
+
+  // Função para adicionar novo post PERMANENTE
+  const handleAddPost = () => {
+    if (!newPost.title || !newPost.content) {
+      alert('Título e conteúdo são obrigatórios!')
+      return
+    }
+
+    const post = {
+      id: `post-${Date.now()}`,
+      title: newPost.title,
+      excerpt: newPost.excerpt || newPost.content.substring(0, 150) + '...',
+      content: `
+        <div class="article-header">
+          <h1>${newPost.title}</h1>
+          <div class="article-meta">
+            <span class="author">Por Camila Goulart</span>
+            <span class="date">${new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+            <span class="read-time">${newPost.readTime}</span>
+          </div>
+        </div>
+        <div class="article-content">
+          ${newPost.content.split('\n').map(paragraph => {
+            const trimmed = paragraph.trim()
+            if (!trimmed) return ''
+            if (trimmed.startsWith('### ')) {
+              return `<h3>${trimmed.substring(4)}</h3>`
+            }
+            if (trimmed.startsWith('#### ')) {
+              return `<h4>${trimmed.substring(5)}</h4>`
+            }
+            if (trimmed.startsWith('> ')) {
+              return `<blockquote>${trimmed.substring(2)}</blockquote>`
+            }
+            if (trimmed === '---') {
+              return '<hr>'
+            }
+            return `<p>${trimmed}</p>`
+          }).join('')}
+        </div>
+      `,
+      author: 'Camila Goulart',
+      date: new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }),
+      readTime: newPost.readTime,
+      category: 'Artigo',
+      createdAt: Date.now()
+    }
+
+    const updatedPosts = [post, ...blogPosts]
+    setBlogPosts(updatedPosts)
+    savePosts(updatedPosts) // SALVAR PERMANENTEMENTE
+    
+    setNewPost({ title: '', excerpt: '', content: '', readTime: '5 min' })
+    setShowBlogAdmin(false)
+    alert('✅ Artigo publicado com sucesso e salvo permanentemente!')
+  }
+
+  // Função para deletar post
+  const handleDeletePost = (postId) => {
+    if (window.confirm('Tem certeza que deseja deletar este artigo?')) {
+      const updatedPosts = blogPosts.filter(post => post.id !== postId)
+      setBlogPosts(updatedPosts)
+      savePosts(updatedPosts)
+      alert('Artigo deletado com sucesso!')
+    }
+  }
+
+  // Função para formulário de contato
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -102,63 +497,79 @@ function App() {
     }
   }
 
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault()
-    
-    // Simulação de envio para newsletter (pode ser integrado com Mailchimp depois)
-    try {
-      setNewsletterMessage("Obrigado! Você receberá nossa newsletter semanalmente.")
-      setNewsletterEmail('')
-      setTimeout(() => setNewsletterMessage(''), 5000)
-    } catch (error) {
-      setNewsletterMessage("Erro ao se inscrever. Tente novamente.")
-      setTimeout(() => setNewsletterMessage(''), 5000)
-    }
-  }
-
   const services = [
     {
       icon: <Brain className="w-8 h-8" />,
-      title: "Agente Estratégico",
-      description: "Criamos uma IA que pensa e executa como você. Toma decisões, analisa dados e executa tarefas complexas com sua personalidade e critérios.",
-      cta: "Quero criar minha IA pessoal"
+      title: "Consultoria Estratégica em Inteligência Artificial",
+      description: "Diagnóstico de maturidade em IA, identificação de oportunidades com retorno mensurável, roadmap de transformação e treinamento de times para adoção segura e consciente.",
+      cta: "Quero uma consultoria estratégica"
+    },
+    {
+      icon: <Cog className="w-8 h-8" />,
+      title: "Automação Inteligente de Processos (IPA + RPA com IA)",
+      description: "Automatização de tarefas repetitivas com IA generativa, robôs que tomam decisões baseadas em contexto e integração com sistemas legados, CRMs, ERPs e APIs.",
+      cta: "Quero automatizar processos"
+    },
+    {
+      icon: <PieChart className="w-8 h-8" />,
+      title: "Criação de Dashboards Inteligentes e Insights com IA",
+      description: "Dashboards dinâmicos com análises preditivas e prescritivas, visualização de dados com apoio de LLMs para tomada de decisão e chatbots analíticos.",
+      cta: "Quero dashboards inteligentes"
+    },
+    {
+      icon: <Bot className="w-8 h-8" />,
+      title: "Desenvolvimento de Agentes Autônomos",
+      description: "Criação de IAs personalizadas que executam tarefas de ponta a ponta, bots multi-plataforma (WhatsApp, Telegram, Notion, CRMs) que aprendem com o uso.",
+      cta: "Quero agentes autônomos"
+    },
+    {
+      icon: <GraduationCap className="w-8 h-8" />,
+      title: "Treinamentos e Formação em IA para Equipes e Líderes",
+      description: "Formação prática em uso estratégico de IA no trabalho, workshops sobre IA generativa, automação e ética, trilha de aprendizado customizada por perfil e área.",
+      cta: "Quero treinamentos em IA"
+    },
+    {
+      icon: <Puzzle className="w-8 h-8" />,
+      title: "Soluções Personalizadas com IA Generativa",
+      description: "Desenvolvimento de APIs com modelos customizados (LLMs privados ou públicos), construção de apps, plataformas e ferramentas baseadas em IA.",
+      cta: "Quero soluções personalizadas"
     },
     {
       icon: <MessageSquare className="w-8 h-8" />,
-      title: "IA de Atendimento",
-      description: "Fluxo completo com GPT + WhatsApp + CRM. Atende, qualifica, agenda e nutre leads 24/7 com a qualidade do seu melhor vendedor.",
-      cta: "Quero automatizar meu atendimento"
+      title: "Chatbots Inteligentes e Suporte com IA",
+      description: "Atendimento com IA treinada no contexto do negócio, capacidade de interpretar documentos, PDFs, planilhas e chatbots conectados a CRMs e WhatsApp.",
+      cta: "Quero chatbots inteligentes"
     },
     {
-      icon: <Settings className="w-8 h-8" />,
-      title: "Automação Total",
-      description: "Conectamos Make, Kommo, Notion e IA para criar fluxos que trabalham sozinhos. Sua empresa funcionando enquanto você dorme.",
-      cta: "Quero automatizar minha empresa"
+      icon: <Palette className="w-8 h-8" />,
+      title: "Branding com IA: Posicionamento, Copywriting e Lançamentos",
+      description: "Criação de narrativas, nomes e identidades com apoio de IA, copywriting avançado (VSL, pitch, sequências de e-mail) e suporte a lançamentos com automações.",
+      cta: "Quero branding com IA"
     },
     {
-      icon: <Rocket className="w-8 h-8" />,
-      title: "IA para Lançamentos",
-      description: "Funis, conteúdo, automação e análise por IA. Do planejamento à execução, sua IA cuida de cada detalhe do seu lançamento.",
-      cta: "Quero lançar com IA"
+      icon: <ShieldCheck className="w-8 h-8" />,
+      title: "Governança, Ética e Segurança em IA",
+      description: "Implantação de boas práticas e uso ético da IA, diretrizes para evitar vieses, garantir transparência e conformidade com LGPD e normas internacionais.",
+      cta: "Quero governança em IA"
     }
   ]
 
   const valueProps = [
     {
       icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
-      text: "Automatizamos atendimento com IA"
+      text: "Consultoria estratégica para transformação com IA"
     },
     {
       icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
-      text: "Criamos agentes que trabalham por você"
+      text: "Automação inteligente de processos complexos"
     },
     {
       icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
-      text: "Construímos fluxos com Make, Notion, Kommo e GPT"
+      text: "Desenvolvimento de agentes autônomos personalizados"
     },
     {
       icon: <CheckCircle className="w-6 h-6 text-cyan-400" />,
-      text: "Educamos sua equipe para usar IA no dia a dia"
+      text: "Treinamento e capacitação de equipes em IA"
     }
   ]
 
@@ -166,282 +577,157 @@ function App() {
     {
       name: "Maria Silva",
       role: "CEO TechCorp",
-      content: "O Agente Estratégico da Synthra revolucionou nossa operação. É como ter uma versão digital da Camila trabalhando 24/7 na nossa empresa.",
+      content: "A consultoria estratégica da Synthra Tecnologia transformou nossa visão sobre IA. Implementamos soluções que geraram 400% de ROI no primeiro ano.",
       rating: 5
     },
     {
       name: "João Santos",
-      role: "Diretor de Vendas",
-      content: "A IA de Atendimento aumentou nossa conversão em 300%. Nossos leads são qualificados e nutridos automaticamente com qualidade humana.",
+      role: "Diretor de Operações",
+      content: "A automação inteligente de processos reduziu 80% do trabalho manual. Nossos colaboradores agora focam em atividades estratégicas.",
       rating: 5
     },
     {
       name: "Ana Costa",
       role: "Fundadora StartupX",
-      content: "A Automação Total da Synthra me devolveu 20 horas por semana. Agora posso focar no que realmente importa: estratégia e crescimento.",
+      content: "Os agentes autônomos criados pela Synthra funcionam 24/7. É como ter uma equipe trabalhando enquanto dormimos.",
       rating: 5
     }
   ]
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Como criar seu primeiro Agente de IA",
-      excerpt: "Guia prático para desenvolver um agente inteligente que trabalha por você 24/7.",
-      content: `
-        <h3>Introdução</h3>
-        <p>Criar um agente de IA não é mais ficção científica. Com as ferramentas certas e a metodologia adequada, qualquer empresa pode ter seu próprio agente inteligente trabalhando 24/7.</p>
-        
-        <h3>O que é um Agente de IA?</h3>
-        <p>Um agente de IA é diferente de um chatbot simples. Enquanto bots seguem scripts pré-definidos, agentes de IA:</p>
-        <ul>
-          <li>Tomam decisões baseadas em contexto</li>
-          <li>Aprendem com interações anteriores</li>
-          <li>Executam tarefas complexas de forma autônoma</li>
-          <li>Integram-se com múltiplas ferramentas e sistemas</li>
-        </ul>
-        
-        <h3>Passo a Passo para Criar seu Agente</h3>
-        <h4>1. Defina o Propósito</h4>
-        <p>Antes de começar, seja claro sobre o que seu agente deve fazer. Exemplos:</p>
-        <ul>
-          <li>Qualificar leads automaticamente</li>
-          <li>Gerenciar agenda e compromissos</li>
-          <li>Analisar dados e gerar relatórios</li>
-          <li>Criar e publicar conteúdo</li>
-        </ul>
-        
-        <h4>2. Escolha as Ferramentas</h4>
-        <p>Na Synthra, utilizamos uma stack comprovada:</p>
-        <ul>
-          <li><strong>GPT-4:</strong> Para processamento de linguagem natural</li>
-          <li><strong>Make:</strong> Para automação e integrações</li>
-          <li><strong>Notion:</strong> Como base de conhecimento</li>
-          <li><strong>Kommo:</strong> Para gestão de relacionamento</li>
-        </ul>
-        
-        <h4>3. Treine com seus Dados</h4>
-        <p>O diferencial está no treinamento personalizado:</p>
-        <ul>
-          <li>Use conversas reais da sua empresa</li>
-          <li>Inclua seu tom de voz e personalidade</li>
-          <li>Defina regras de negócio específicas</li>
-          <li>Teste com cenários diversos</li>
-        </ul>
-        
-        <h3>Resultados Esperados</h3>
-        <p>Nossos clientes relatam:</p>
-        <ul>
-          <li>80% de redução no tempo de qualificação de leads</li>
-          <li>300% de aumento na conversão</li>
-          <li>24/7 de disponibilidade sem custo adicional</li>
-          <li>Consistência na comunicação da marca</li>
-        </ul>
-        
-        <h3>Próximos Passos</h3>
-        <p>Quer criar seu próprio agente de IA? Entre em contato conosco. Oferecemos:</p>
-        <ul>
-          <li>Consultoria estratégica gratuita</li>
-          <li>Prova de conceito em 7 dias</li>
-          <li>Implementação completa</li>
-          <li>Treinamento da sua equipe</li>
-        </ul>
-      `,
-      icon: <Brain className="w-16 h-16 text-cyan-400" />,
-      date: "2 de Janeiro, 2025",
-      readTime: "8 min"
-    },
-    {
-      id: 2,
-      title: "Bot vs IA: Qual a diferença real?",
-      excerpt: "Entenda por que nem todo chatbot é IA e como identificar soluções realmente inteligentes.",
-      content: `
-        <h3>A Confusão do Mercado</h3>
-        <p>No mercado atual, muitas empresas vendem "bots de WhatsApp" como se fossem IA. Essa confusão prejudica empresários que investem em soluções limitadas achando que estão comprando inteligência artificial.</p>
-        
-        <h3>Bot Tradicional: O que é?</h3>
-        <p>Um bot tradicional é como um atendente que só sabe responder perguntas específicas:</p>
-        <ul>
-          <li><strong>Scripts fixos:</strong> Respostas pré-programadas</li>
-          <li><strong>Fluxos lineares:</strong> Se > Então > Senão</li>
-          <li><strong>Sem contexto:</strong> Não lembra conversas anteriores</li>
-          <li><strong>Limitado:</strong> Quebra facilmente com perguntas inesperadas</li>
-        </ul>
-        
-        <h3>IA Real: O que faz a diferença?</h3>
-        <p>Uma IA verdadeira é como ter um assistente inteligente:</p>
-        <ul>
-          <li><strong>Compreensão contextual:</strong> Entende nuances e intenções</li>
-          <li><strong>Aprendizado contínuo:</strong> Melhora com cada interação</li>
-          <li><strong>Tomada de decisão:</strong> Avalia cenários e escolhe a melhor resposta</li>
-          <li><strong>Integração inteligente:</strong> Conecta informações de múltiplas fontes</li>
-        </ul>
-        
-        <h3>Exemplo Prático</h3>
-        <p><strong>Pergunta do cliente:</strong> "Preciso de uma solução para minha empresa, mas não sei bem o que vocês fazem"</p>
-        
-        <h4>Bot Tradicional responderia:</h4>
-        <p>"Desculpe, não entendi. Digite 1 para Serviços, 2 para Contato..."</p>
-        
-        <h4>IA Real responderia:</h4>
-        <p>"Entendo que você está explorando soluções para sua empresa. Para te ajudar melhor, me conte: qual é o principal desafio que vocês enfrentam hoje? É relacionado a atendimento, vendas, processos internos ou algo específico do seu setor?"</p>
-        
-        <h3>Como Identificar IA Real</h3>
-        <p>Faça estas perguntas ao fornecedor:</p>
-        <ol>
-          <li><strong>"A solução entende contexto?"</strong> - IA real mantém contexto da conversa</li>
-          <li><strong>"Aprende com interações?"</strong> - IA real melhora continuamente</li>
-          <li><strong>"Lida com perguntas inesperadas?"</strong> - IA real adapta-se a cenários novos</li>
-          <li><strong>"Integra com nossos sistemas?"</strong> - IA real conecta dados de múltiplas fontes</li>
-        </ol>
-        
-        <h3>O Custo da Escolha Errada</h3>
-        <p>Investir em um bot simples quando você precisa de IA resulta em:</p>
-        <ul>
-          <li>Clientes frustrados com respostas robóticas</li>
-          <li>Perda de leads por falta de qualificação adequada</li>
-          <li>Necessidade de retrabalho e novo investimento</li>
-          <li>Descrédito da tecnologia internamente</li>
-        </ul>
-        
-        <h3>Nossa Abordagem na Synthra</h3>
-        <p>Não vendemos bots. Criamos agentes inteligentes que:</p>
-        <ul>
-          <li>Entendem seu negócio profundamente</li>
-          <li>Falam com a personalidade da sua marca</li>
-          <li>Tomam decisões baseadas em dados reais</li>
-          <li>Evoluem constantemente</li>
-        </ul>
-        
-        <p><strong>A diferença é clara:</strong> enquanto bots executam, IA pensa.</p>
-      `,
-      icon: <MessageSquare className="w-16 h-16 text-cyan-400" />,
-      date: "28 de Dezembro, 2024",
-      readTime: "6 min"
-    },
-    {
-      id: 3,
-      title: "ROI de IA: Como medir resultados",
-      excerpt: "Métricas práticas para avaliar o retorno dos seus investimentos em inteligência artificial.",
-      content: `
-        <h3>Por que medir ROI de IA?</h3>
-        <p>Investir em IA sem medir resultados é como navegar sem bússola. Muitas empresas implementam soluções de IA mas não conseguem provar o valor gerado, dificultando novos investimentos e expansões.</p>
-        
-        <h3>Métricas Fundamentais</h3>
-        
-        <h4>1. Eficiência Operacional</h4>
-        <ul>
-          <li><strong>Tempo economizado:</strong> Horas/semana liberadas da equipe</li>
-          <li><strong>Redução de erros:</strong> % de diminuição em retrabalho</li>
-          <li><strong>Velocidade de resposta:</strong> Tempo médio de atendimento</li>
-          <li><strong>Capacidade de escala:</strong> Volume processado sem aumento de equipe</li>
-        </ul>
-        
-        <h4>2. Impacto Comercial</h4>
-        <ul>
-          <li><strong>Taxa de conversão:</strong> % de leads que viram clientes</li>
-          <li><strong>Ticket médio:</strong> Valor médio por venda</li>
-          <li><strong>Ciclo de vendas:</strong> Tempo do lead ao fechamento</li>
-          <li><strong>Retenção de clientes:</strong> % de clientes que permanecem</li>
-        </ul>
-        
-        <h4>3. Satisfação e Qualidade</h4>
-        <ul>
-          <li><strong>NPS (Net Promoter Score):</strong> Satisfação dos clientes</li>
-          <li><strong>CSAT:</strong> Avaliação do atendimento</li>
-          <li><strong>Tempo de resolução:</strong> Rapidez na solução de problemas</li>
-          <li><strong>Taxa de escalação:</strong> % de casos que precisam de humanos</li>
-        </ul>
-        
-        <h3>Fórmula de ROI para IA</h3>
-        <p><strong>ROI = (Benefícios - Custos) / Custos × 100</strong></p>
-        
-        <h4>Benefícios incluem:</h4>
-        <ul>
-          <li>Receita adicional gerada</li>
-          <li>Custos operacionais economizados</li>
-          <li>Valor do tempo liberado da equipe</li>
-          <li>Redução de perdas por erros</li>
-        </ul>
-        
-        <h4>Custos incluem:</h4>
-        <ul>
-          <li>Investimento inicial na solução</li>
-          <li>Custos de implementação</li>
-          <li>Treinamento da equipe</li>
-          <li>Manutenção e atualizações</li>
-        </ul>
-        
-        <h3>Caso Real: Cliente da Synthra</h3>
-        <p><strong>Empresa:</strong> E-commerce de moda (50 funcionários)</p>
-        <p><strong>Solução:</strong> Agente de IA para atendimento e vendas</p>
-        
-        <h4>Resultados em 6 meses:</h4>
-        <ul>
-          <li><strong>Conversão:</strong> 15% → 45% (+200%)</li>
-          <li><strong>Tempo de resposta:</strong> 4h → 30s (-99%)</li>
-          <li><strong>Equipe liberada:</strong> 120h/semana</li>
-          <li><strong>Receita adicional:</strong> R$ 180.000/mês</li>
-        </ul>
-        
-        <h4>Cálculo do ROI:</h4>
-        <ul>
-          <li><strong>Investimento:</strong> R$ 25.000 (setup + 6 meses)</li>
-          <li><strong>Benefícios:</strong> R$ 1.080.000 (6 meses de receita adicional)</li>
-          <li><strong>ROI:</strong> 4.220% em 6 meses</li>
-        </ul>
-        
-        <h3>Ferramentas para Medição</h3>
-        
-        <h4>Dashboards Recomendados:</h4>
-        <ul>
-          <li><strong>Google Analytics:</strong> Para métricas de conversão web</li>
-          <li><strong>Kommo/CRM:</strong> Para acompanhar pipeline de vendas</li>
-          <li><strong>Notion:</strong> Para centralizar KPIs e relatórios</li>
-          <li><strong>Make:</strong> Para automatizar coleta de dados</li>
-        </ul>
-        
-        <h3>Cronograma de Medição</h3>
-        
-        <h4>Primeiros 30 dias:</h4>
-        <ul>
-          <li>Estabelecer baseline (métricas antes da IA)</li>
-          <li>Configurar ferramentas de medição</li>
-          <li>Definir metas específicas</li>
-        </ul>
-        
-        <h4>30-90 dias:</h4>
-        <ul>
-          <li>Monitorar métricas semanalmente</li>
-          <li>Ajustar estratégias conforme necessário</li>
-          <li>Documentar primeiros resultados</li>
-        </ul>
-        
-        <h4>90+ dias:</h4>
-        <ul>
-          <li>Análise completa de ROI</li>
-          <li>Identificar oportunidades de expansão</li>
-          <li>Planejar próximos investimentos</li>
-        </ul>
-        
-        <h3>Erros Comuns na Medição</h3>
-        <ol>
-          <li><strong>Não estabelecer baseline:</strong> Sem dados anteriores, impossível medir melhoria</li>
-          <li><strong>Focar apenas em custos:</strong> Ignorar benefícios intangíveis</li>
-          <li><strong>Medir muito cedo:</strong> IA precisa de tempo para otimizar</li>
-          <li><strong>Métricas irrelevantes:</strong> Medir o que é fácil, não o que importa</li>
-        </ol>
-        
-        <h3>Conclusão</h3>
-        <p>Medir ROI de IA não é opcional - é essencial. Com as métricas certas e ferramentas adequadas, você pode provar o valor da IA e justificar novos investimentos.</p>
-        
-        <p><strong>Quer ajuda para medir o ROI da sua IA?</strong> Nossa equipe pode configurar dashboards personalizados e acompanhar seus resultados mensalmente.</p>
-      `,
-      icon: <TrendingUp className="w-16 h-16 text-cyan-400" />,
-      date: "20 de Dezembro, 2024",
-      readTime: "10 min"
-    }
-  ]
+  // Modal de Login
+  if (showLogin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white flex items-center justify-center">
+        <Card className="bg-gray-800/50 border-gray-700 w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-cyan-400" />
+            </div>
+            <CardTitle className="text-white">Acesso Administrativo</CardTitle>
+            <CardDescription className="text-gray-400">
+              Digite a senha para acessar o painel de administração do blog
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="password" className="text-white">Senha</Label>
+                <Input 
+                  id="password"
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Digite a senha"
+                  className="bg-gray-700 border-gray-600 text-white"
+                  required
+                />
+              </div>
+              {loginError && (
+                <p className="text-red-400 text-sm">{loginError}</p>
+              )}
+              <div className="flex gap-4">
+                <Button 
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                >
+                  Entrar
+                </Button>
+                <Button 
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowLogin(false)}
+                  className="border-gray-600 text-gray-400"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Se um artigo está selecionado, mostrar apenas ele
+  if (selectedArticle) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+        {/* Header simplificado para artigo */}
+        <header className="bg-black/50 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <img src="/logo-synthra.png" alt="Synthra Tecnologia" className="h-16 w-auto" />
+              </div>
+              <div className="flex items-center gap-4">
+                <Button 
+                  variant="outline"
+                  className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                  onClick={() => setSelectedArticle(null)}
+                >
+                  ← Voltar ao Blog
+                </Button>
+                {isAuthenticated && (
+                  <Button 
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sair
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Conteúdo do artigo */}
+        <div className="container mx-auto px-4 py-12 max-w-4xl">
+          <div 
+            className="article-wrapper"
+            dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
+          />
+          
+          {/* CTA no final do artigo */}
+          <div className="mt-16 text-center">
+            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-8 border border-cyan-400/20">
+              <h3 className="text-2xl font-bold mb-4 text-white">
+                Gostou do conteúdo?
+              </h3>
+              <p className="text-gray-300 mb-6">
+                Vamos conversar sobre como implementar IA na sua empresa
+              </p>
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                onClick={() => {
+                  setSelectedArticle(null)
+                  setTimeout(() => {
+                    document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })
+                  }, 100)
+                }}
+              >
+                Falar com especialista
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Botão voltar ao topo */}
+        {showBackToTop && (
+          <Button
+            className="fixed bottom-6 right-6 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white rounded-full w-12 h-12 shadow-lg z-50"
+            onClick={scrollToTop}
+          >
+            <ChevronUp className="w-6 h-6" />
+          </Button>
+        )}
+
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
@@ -450,23 +736,36 @@ function App() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <img src="/logo-transparent.png" alt="Synthra Logo" className="h-16 w-auto" />
+              <img src="/logo-synthra.png" alt="Synthra Tecnologia" className="h-16 w-auto" />
             </div>
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#inicio" className="text-gray-300 hover:text-cyan-400 transition-colors">Início</a>
               <a href="#servicos" className="text-gray-300 hover:text-cyan-400 transition-colors">Serviços</a>
+              <a href="#parcerias" className="text-gray-300 hover:text-cyan-400 transition-colors">Parcerias</a>
               <a href="#cases" className="text-gray-300 hover:text-cyan-400 transition-colors">Cases</a>
               <a href="#comunidade" className="text-gray-300 hover:text-cyan-400 transition-colors">Comunidade</a>
               <a href="#sobre" className="text-gray-300 hover:text-cyan-400 transition-colors">Sobre</a>
               <a href="#blog" className="text-gray-300 hover:text-cyan-400 transition-colors">Blog</a>
             </nav>
-            <Button 
-              className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white border-0 px-6 py-3"
-              onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-            >
-              <Lightbulb className="mr-2 w-4 h-4" />
-              Agende uma conversa
-            </Button>
+            <div className="flex items-center gap-4">
+              <Button 
+                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white border-0 px-6 py-3"
+                onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+              >
+                <Lightbulb className="mr-2 w-4 h-4" />
+                Agende uma conversa
+              </Button>
+              {isAuthenticated && (
+                <Button 
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -480,7 +779,7 @@ function App() {
               A IA que pensa com você
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-              Soluções inteligentes e humanas para automatizar, escalar e criar com propósito.
+              Consultoria estratégica, automação inteligente e soluções personalizadas em IA para transformar seu negócio.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -498,8 +797,8 @@ function App() {
                 className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black text-lg px-8 py-4"
                 onClick={() => document.getElementById('cases').scrollIntoView({ behavior: 'smooth' })}
               >
-                <Settings className="mr-2 w-5 h-5" />
-                Explore nossos cases
+                <Eye className="mr-2 w-5 h-5" />
+                Ver nossos cases
                 <ExternalLink className="ml-2 w-5 h-5" />
               </Button>
             </div>
@@ -534,22 +833,22 @@ function App() {
               Nossos Serviços
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Soluções autorais que combinam tecnologia de ponta com propósito humano.
+              Soluções completas em IA para transformar sua empresa com estratégia, tecnologia e resultados mensuráveis.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20 group">
                 <CardHeader>
-                  <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex items-center justify-center mb-4">
                     <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                       <div className="text-cyan-400">{service.icon}</div>
                     </div>
-                    <CardTitle className="text-xl text-white">{service.title}</CardTitle>
                   </div>
+                  <CardTitle className="text-lg text-white text-center mb-4">{service.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-gray-400 leading-relaxed mb-6">
+                  <CardDescription className="text-gray-400 leading-relaxed mb-6 text-center">
                     {service.description}
                   </CardDescription>
                   <Button 
@@ -566,60 +865,117 @@ function App() {
         </div>
       </section>
 
-      {/* Cases Section */}
-      <section id="cases" className="py-20 px-4 bg-gray-900/50">
+      {/* Partnerships Section - NOVA SEÇÃO */}
+      <section id="parcerias" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Cases & Projetos
+              Parcerias Estratégicas
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Resultados reais de quem já transformou seu negócio com IA.
+              Certificações e parcerias que garantem excelência e confiabilidade em nossas soluções.
             </p>
           </div>
 
-          {/* Case em Desenvolvimento */}
-          <div className="max-w-4xl mx-auto mb-16">
-            <Card className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-cyan-400/30">
-              <CardHeader>
-                <div className="flex items-center space-x-3 mb-4">
-                  <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-400/30">
-                    Case em desenvolvimento
-                  </Badge>
-                </div>
-                <CardTitle className="text-2xl text-white mb-2">
-                  O Agente Social da Synthra
-                </CardTitle>
-                <CardDescription className="text-gray-300 text-lg">
-                  Um agente que cria, agenda e publica conteúdo automaticamente, aliviando a sobrecarga da founder.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-6 mb-6">
-                  <div className="flex items-center space-x-3">
-                    <Instagram className="w-6 h-6 text-pink-400" />
-                    <span className="text-gray-300">Carrossel no Instagram</span>
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
+              <CardContent className="p-12">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  <div className="text-center md:text-left">
+                    <div className="flex items-center justify-center md:justify-start mb-6">
+                      <Award className="w-8 h-8 text-cyan-400 mr-3" />
+                      <h3 className="text-2xl font-bold text-white">Parceira Oficial Kommo</h3>
+                    </div>
+                    <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                      Somos <strong className="text-cyan-400">parceiros certificados da Kommo</strong>, uma das principais plataformas de CRM e automação de vendas do mundo. Esta certificação nos permite oferecer:
+                    </p>
+                    <ul className="text-gray-300 space-y-3 mb-8">
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Implementação especializada</strong> do Kommo CRM</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Automações avançadas</strong> de vendas e marketing</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Integração com IA</strong> para potencializar resultados</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Suporte técnico especializado</strong> e treinamento</span>
+                      </li>
+                    </ul>
+                    <Button 
+                      className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                      onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+                    >
+                      <Handshake className="mr-2 w-4 h-4" />
+                      Implementar Kommo + IA
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Linkedin className="w-6 h-6 text-blue-400" />
-                    <span className="text-gray-300">Texto no LinkedIn</span>
+                  <div className="text-center">
+                    <div className="bg-white rounded-2xl p-8 inline-block shadow-lg">
+                      <img 
+                        src="/Badgelight.png" 
+                        alt="Kommo Partner Badge" 
+                        className="h-24 w-auto mx-auto"
+                      />
+                    </div>
+                    <p className="text-sm text-gray-400 mt-4">
+                      Certificação oficial Kommo Partner
+                    </p>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Send className="w-6 h-6 text-cyan-400" />
-                    <span className="text-gray-300">Resumo no Telegram</span>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <Button 
-                    className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                    onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
-                  >
-                    Quero um agente como este
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
                 </div>
               </CardContent>
             </Card>
+
+            <div className="mt-12 text-center">
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-8 border border-cyan-400/20">
+                <h3 className="text-2xl font-bold mb-4 text-white">
+                  Por que escolher um parceiro certificado?
+                </h3>
+                <div className="grid md:grid-cols-3 gap-6 mt-8">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <ShieldCheck className="w-8 h-8 text-cyan-400" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Expertise Validada</h4>
+                    <p className="text-gray-400 text-sm">Conhecimento técnico certificado e atualizado</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Rocket className="w-8 h-8 text-cyan-400" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Implementação Rápida</h4>
+                    <p className="text-gray-400 text-sm">Processos otimizados e melhores práticas</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Heart className="w-8 h-8 text-cyan-400" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Suporte Garantido</h4>
+                    <p className="text-gray-400 text-sm">Acesso direto ao suporte técnico oficial</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cases Section */}
+      <section id="cases" className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Cases & Resultados
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Transformações reais de empresas que implementaram IA com estratégia e resultados mensuráveis.
+            </p>
           </div>
 
           {/* Testimonials */}
@@ -645,23 +1001,32 @@ function App() {
               </Card>
             ))}
           </div>
+
+          <div className="text-center mt-12">
+            <Button 
+              className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+              onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+            >
+              Quero resultados como estes
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Community Section */}
-      <section id="comunidade" className="py-20 px-4">
+      <section id="comunidade" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent flex items-center justify-center gap-4">
-                <Headphones className="w-12 h-12 text-cyan-400" />
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                 Participe da maior comunidade de IA do Brasil
               </h2>
               <p className="text-xl text-gray-300 mb-8">
-                Práticas semanais • Automação com propósito • Cases reais
+                Práticas semanais • Automação com propósito • Cases reais • Networking qualificado
               </p>
               <p className="text-lg text-cyan-400 mb-8 italic">
-                "Aqui, a IA não substitui. Ela expande."
+                "Aqui, a IA não substitui. Ela conecta e transforma."
               </p>
               <Button 
                 size="lg"
@@ -677,7 +1042,7 @@ function App() {
       </section>
 
       {/* About Section */}
-      <section id="sobre" className="py-20 px-4 bg-gray-900/50">
+      <section id="sobre" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -686,27 +1051,27 @@ function App() {
                   Sobre Camila Goulart
                 </h2>
                 <p className="text-xl text-gray-300 mb-6 leading-relaxed">
-                  Fundadora da Synthra. Especialista em liderança, processos e IA aplicada.
+                  Fundadora da Synthra Tecnologia. Especialista em consultoria estratégica, automação inteligente e implementação de IA em negócios.
                 </p>
                 <p className="text-lg text-gray-400 mb-6 leading-relaxed">
-                  Une alma, estratégia e tecnologia para ajudar pessoas e empresas a fazerem mais com sentido.
+                  Une visão estratégica, conhecimento técnico e experiência prática para ajudar empresas a transformarem seus negócios com IA de forma consciente e rentável.
                 </p>
                 <blockquote className="text-2xl text-cyan-400 italic mb-8 border-l-4 border-cyan-400 pl-6">
-                  "A IA não substitui. Ela conecta."
+                  "A IA não substitui. Ela conecta pessoas, processos e possibilidades."
                 </blockquote>
                 <Button 
                   className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
                   onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Quero aprender a liderar com IA
+                  Quero uma consultoria estratégica
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
               <div className="text-center">
                 <div className="w-80 h-80 rounded-full overflow-hidden mx-auto border-4 border-cyan-400/30">
                   <img 
-                    src="/upload/Designsemnome(6).png" 
-                    alt="Camila Goulart - Fundadora da Synthra" 
+                    src="/camila-goulart.png" 
+                    alt="Camila Goulart - Fundadora da Synthra Tecnologia" 
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -717,103 +1082,202 @@ function App() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="py-20 px-4">
+      <section id="blog" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Blog de IA Prática
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent pb-2">
+              Blog de IA Estratégica
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Insights, tutoriais e cases reais para você dominar a IA no seu negócio.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Insights práticos, estratégias comprovadas e cases reais para você dominar a IA no seu negócio.
             </p>
-          </div>
-          
-          {!selectedPost ? (
-            <>
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                {blogPosts.map((post) => (
-                  <Card key={post.id} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 cursor-pointer" onClick={() => setSelectedPost(post)}>
-                    <CardHeader>
-                      <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
-                        {post.icon}
-                      </div>
-                      <CardTitle className="text-white">{post.title}</CardTitle>
-                      <CardDescription className="text-gray-400">
-                        {post.excerpt}
-                      </CardDescription>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mt-4">
-                        <span>{post.date}</span>
-                        <span>•</span>
-                        <span>{post.readTime}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Button variant="outline" className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black">
-                        Ler artigo
-                        <BookOpen className="ml-2 w-4 h-4" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </>
-          ) : (
-            <div className="max-w-4xl mx-auto">
+            
+            {/* Botão para adicionar post (admin) - VISUAL LIMPO */}
+            <div className="flex justify-center gap-4 mb-8">
               <Button 
-                variant="outline" 
-                className="mb-8 border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
-                onClick={() => setSelectedPost(null)}
+                variant="outline"
+                className="border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                onClick={() => {
+                  if (isAuthenticated) {
+                    setShowBlogAdmin(!showBlogAdmin)
+                  } else {
+                    setShowLogin(true)
+                  }
+                }}
               >
-                ← Voltar para o blog
+                {isAuthenticated ? (
+                  <>
+                    <Plus className="mr-2 w-4 h-4" />
+                    Adicionar novo artigo
+                  </>
+                ) : (
+                  <>
+                    <User className="mr-2 w-4 h-4" />
+                    Acesso administrativo
+                  </>
+                )}
               </Button>
-              
-              <article className="bg-gray-800/50 border border-gray-700 rounded-lg p-8">
-                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
-                  <span>{selectedPost.date}</span>
-                  <span>•</span>
-                  <span>{selectedPost.readTime}</span>
+              {isAuthenticated && (
+                <div className="flex items-center text-sm text-cyan-400">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Admin logado
                 </div>
-                
-                <h1 className="text-4xl font-bold text-white mb-6">{selectedPost.title}</h1>
-                
-                <div 
-                  className="prose prose-invert prose-cyan max-w-none text-gray-300 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-                />
-                
-                <div className="mt-12 pt-8 border-t border-gray-700">
-                  <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg p-6 border border-cyan-400/20">
-                    <h3 className="text-xl font-semibold text-white mb-4">Gostou do conteúdo?</h3>
-                    <p className="text-gray-300 mb-4">
-                      Quer implementar essas estratégias na sua empresa? Nossa equipe pode ajudar você a transformar teoria em resultados práticos.
+              )}
+            </div>
+
+            {/* Painel de administração do blog */}
+            {showBlogAdmin && isAuthenticated && (
+              <Card className="bg-gray-800/50 border-gray-700 mb-8 text-left">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <Edit className="w-5 h-5 text-cyan-400" />
+                    Adicionar Novo Artigo
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Preencha as informações abaixo. O artigo será salvo automaticamente.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-white">Título</Label>
+                    <Input 
+                      value={newPost.title}
+                      onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                      placeholder="Título do artigo"
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-white">Resumo (opcional)</Label>
+                    <Input 
+                      value={newPost.excerpt}
+                      onChange={(e) => setNewPost({...newPost, excerpt: e.target.value})}
+                      placeholder="Breve descrição do artigo"
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-white">Tempo de leitura</Label>
+                    <Input 
+                      value={newPost.readTime}
+                      onChange={(e) => setNewPost({...newPost, readTime: e.target.value})}
+                      placeholder="5 min"
+                      className="bg-gray-700 border-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-white">Conteúdo</Label>
+                    <Textarea 
+                      value={newPost.content}
+                      onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                      placeholder="Escreva o conteúdo do artigo aqui. Use ### para títulos, #### para subtítulos, > para citações."
+                      className="bg-gray-700 border-gray-600 text-white h-40"
+                    />
+                    <p className="text-xs text-gray-400 mt-2">
+                      Dica: Use ### para títulos, #### para subtítulos, > para citações, --- para separadores
                     </p>
+                  </div>
+                  <div className="flex gap-4">
                     <Button 
+                      onClick={handleAddPost}
                       className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                      onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
                     >
-                      Falar com especialista
-                      <ArrowRight className="ml-2 w-4 h-4" />
+                      <Save className="mr-2 w-4 h-4" />
+                      Publicar Artigo
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => setShowBlogAdmin(false)}
+                      className="border-gray-600 text-gray-400"
+                    >
+                      Cancelar
                     </Button>
                   </div>
-                </div>
-              </article>
-            </div>
-          )}
+                </CardContent>
+              </Card>
+            )}
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {blogPosts.slice(0, 6).map((post, index) => (
+              <Card key={post.id || index} className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 group cursor-pointer">
+                <CardHeader>
+                  <div className="w-full h-48 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg mb-4 flex items-center justify-center">
+                    {post.category === 'Consultoria' && <Brain className="w-16 h-16 text-cyan-400" />}
+                    {post.category === 'Automação' && <Cog className="w-16 h-16 text-cyan-400" />}
+                    {!['Consultoria', 'Automação'].includes(post.category) && <BookOpen className="w-16 h-16 text-cyan-400" />}
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <CardTitle className="text-white group-hover:text-cyan-400 transition-colors flex-1">
+                      {post.title}
+                    </CardTitle>
+                    {isAuthenticated && post.id.startsWith('post-') && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeletePost(post.id)
+                        }}
+                        className="border-red-400/30 text-red-400 hover:bg-red-400 hover:text-white ml-2"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  <CardDescription className="text-gray-400">
+                    {post.excerpt}
+                  </CardDescription>
+                  <div className="flex items-center space-x-4 text-sm text-gray-500 mt-4">
+                    <span>{post.date}</span>
+                    <span>•</span>
+                    <span>{post.readTime}</span>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                    onClick={() => setSelectedArticle(post)}
+                  >
+                    Ler artigo completo
+                    <BookOpen className="ml-2 w-4 h-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+              onClick={() => {
+                // Scroll para o topo da seção blog para ver todos
+                document.getElementById('blog').scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
+              Ver todos os artigos ({blogPosts.length})
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-20 px-4 bg-gray-900/50">
+      {/* Newsletter Section - SEM REDIRECIONAMENTO */}
+      <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
               <Newspaper className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Newsletter IA com Propósito
+                Newsletter IA Estratégica
               </h2>
               <p className="text-xl text-gray-300 mb-8">
-                Receba semanalmente insights práticos, cases reais e tendências de IA que realmente importam para o seu negócio.
+                Receba semanalmente insights práticos, estratégias comprovadas e tendências de IA que realmente transformam negócios.
               </p>
+              
+              {/* FORMULÁRIO SEM REDIRECIONAMENTO */}
               <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
                 <div className="flex gap-4">
                   <Input 
@@ -821,23 +1285,32 @@ function App() {
                     placeholder="Seu melhor email" 
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    required
                     className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 flex-1"
+                    required
                   />
                   <Button 
                     type="submit"
                     className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-6"
+                    disabled={newsletterSubmitting}
                   >
-                    Assinar
-                    <Send className="ml-2 w-4 h-4" />
+                    {newsletterSubmitting ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        Assinar
+                        <Send className="ml-2 w-4 h-4" />
+                      </>
+                    )}
                   </Button>
                 </div>
-                <p className="text-sm text-gray-400 mt-4">
-                  Sem spam. Apenas conteúdo que agrega valor. Cancele quando quiser.
-                </p>
                 {newsletterMessage && (
-                  <p className="text-center mt-4 text-sm text-green-400">{newsletterMessage}</p>
+                  <p className={`text-sm mt-4 ${newsletterMessage.includes('✅') ? 'text-green-400' : 'text-red-400'}`}>
+                    {newsletterMessage}
+                  </p>
                 )}
+                <p className="text-sm text-gray-400 mt-4">
+                  Sem spam. Apenas conteúdo estratégico que agrega valor. Cancele quando quiser.
+                </p>
               </form>
             </div>
           </div>
@@ -845,15 +1318,15 @@ function App() {
       </section>
 
       {/* Contact Section */}
-      <section id="contato" className="py-20 px-4">
+      <section id="contato" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                Vamos pensar juntos?
+                Vamos transformar seu negócio?
               </h2>
               <p className="text-xl text-gray-300">
-                Conte-nos seu desafio. Vamos criar uma solução que faz sentido para você.
+                Conte-nos seu desafio. Vamos criar uma estratégia de IA que gera resultados reais.
               </p>
             </div>
             
@@ -876,7 +1349,7 @@ function App() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">WhatsApp</p>
-                      <p className="text-gray-400">+55 (51) 9 9472-4351</p>
+                      <p className="text-gray-400">+55 (51) 99186-7042</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
@@ -896,7 +1369,7 @@ function App() {
                   <CardHeader>
                     <CardTitle className="text-white">Fale conosco</CardTitle>
                     <CardDescription className="text-gray-400">
-                      Conte-nos sobre seu desafio. Vamos criar uma solução que faz sentido.
+                      Conte-nos sobre seu desafio. Vamos criar uma estratégia de IA personalizada.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -979,17 +1452,18 @@ function App() {
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <img src="/logo-transparent.png" alt="Synthra Logo" className="h-12 mb-4" />
+              <img src="/logo-synthra.png" alt="Synthra Tecnologia" className="h-12 mb-4" />
               <p className="text-gray-400 text-sm">
-                A IA que pensa com você. Soluções inteligentes e humanas.
+                A IA que pensa com você. Consultoria estratégica e soluções inteligentes.
               </p>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Empresa</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#sobre" className="text-gray-400 hover:text-cyan-400 transition-colors">Sobre a Synthra.ia</a></li>
+                <li><a href="#sobre" className="text-gray-400 hover:text-cyan-400 transition-colors">Sobre a Synthra Tecnologia</a></li>
                 <li><a href="#servicos" className="text-gray-400 hover:text-cyan-400 transition-colors">Nossos Serviços</a></li>
-                <li><a href="#cases" className="text-gray-400 hover:text-cyan-400 transition-colors">Cases & Projetos</a></li>
+                <li><a href="#parcerias" className="text-gray-400 hover:text-cyan-400 transition-colors">Parcerias</a></li>
+                <li><a href="#cases" className="text-gray-400 hover:text-cyan-400 transition-colors">Cases & Resultados</a></li>
               </ul>
             </div>
             <div>
@@ -997,28 +1471,39 @@ function App() {
               <ul className="space-y-2 text-sm">
                 <li><a href="https://t.me/+pa-ZYAu6siU1YThh" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
                 <li><a href="#contato" className="text-gray-400 hover:text-cyan-400 transition-colors">Fale com a equipe</a></li>
-                <li><a href="#blog" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog de IA prática</a></li>
+                <li><a href="#blog" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog de IA estratégica</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Newsletter</h4>
-              <p className="text-gray-400 text-sm mb-4">IA com Propósito</p>
+              <p className="text-gray-400 text-sm mb-4">IA Estratégica</p>
               <Button 
-                size="sm"
-                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
-                onClick={() => document.querySelector('section:has(#newsletter)').scrollIntoView({ behavior: 'smooth' })}
+                className="w-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                onClick={() => document.querySelector('input[type="email"]').focus()}
               >
-                Assinar Newsletter
+                <Newspaper className="mr-2 w-4 h-4" />
+                Assinar
               </Button>
             </div>
           </div>
-          <div className="border-t border-gray-700 pt-8 text-center">
-            <p className="text-gray-400 text-sm">
-              © 2025 Synthra.ia. Todos os direitos reservados. • A IA não substitui. Ela conecta.
-            </p>
+          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} Synthra Tecnologia. Todos os direitos reservados.</p>
+            <p className="mt-2 text-sm">A IA não substitui. Ela conecta e transforma.</p>
           </div>
         </div>
       </footer>
+
+      {/* Botão voltar ao topo */}
+      {showBackToTop && (
+        <Button
+          className="fixed bottom-6 right-6 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white rounded-full w-12 h-12 shadow-lg z-50"
+          onClick={scrollToTop}
+        >
+          <ChevronUp className="w-6 h-6" />
+        </Button>
+      )}
+
+  
     </div>
   )
 }
