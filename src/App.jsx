@@ -297,6 +297,35 @@ function App() {
     }
   }, [])
 
+  // Carregar script do Kommo após o componente montar
+  useEffect(() => {
+    const loadKommoScript = () => {
+      // Verificar se o script já foi carregado
+      if (window.crmPlugin) return;
+
+      // Criar e configurar o script
+      (function(a,m,o,c,r,m){
+        a[m]={
+          id:"1047378",
+          hash:"6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
+          locale:"pt",
+          setMeta:function(p){this.params=(this.params||[]).concat([p])}
+        };
+        a[o]=a[o]||function(){(a[o].q=a[o].q||[]).push(arguments)};
+        var d=a.document,s=d.createElement('script');
+        s.async=true;
+        s.id=m+'_script';
+        s.src='https://gso.kommo.com/js/button.js';
+        d.head&&d.head.appendChild(s)
+      }(window,0,'crmPlugin',0,0,'crm_plugin'));
+    };
+
+    // Carregar o script após um pequeno delay para garantir que o DOM está pronto
+    const timer = setTimeout(loadKommoScript, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   // Controle do botão voltar ao topo
   useEffect(() => {
     const handleScroll = () => {
@@ -1537,29 +1566,6 @@ function App() {
         </Button>
       )}
 
-      {/* Chat Kommo */}
-      <div 
-        dangerouslySetInnerHTML={{
-          __html: `
-            <script>
-              (function(a,m,o,c,r,m){
-                a[m]={
-                  id:"1047378",
-                  hash:"6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
-                  locale:"pt",
-                  setMeta:function(p){this.params=(this.params||[]).concat([p])}
-                };
-                a[o]=a[o]||function(){(a[o].q=a[o].q||[]).push(arguments)};
-                var d=a.document,s=d.createElement('script');
-                s.async=true;
-                s.id=m+'_script';
-                s.src='https://gso.kommo.com/js/button.js';
-                d.head&&d.head.appendChild(s)
-              }(window,0,'crmPlugin',0,0,'crm_plugin'));
-            </script>
-          `
-        }}
-      />
     </div>
   )
 }
