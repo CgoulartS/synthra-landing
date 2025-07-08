@@ -1566,6 +1566,22 @@ function App() {
         </Button>
       )}
 
+      {/* Chat Kommo */}
+      <script 
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function(w,d,u,b){w['KommoWidgetSettings']={
+              id: 'your-kommo-id',
+              locale: 'pt'
+            };
+            var s=d.createElement('script');s.async=1;s.src=u+'?'+b;
+            var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+            })(window,document,'https://widget.kommo.com/widget/widget.js','v=2');
+          `
+        }}
+      />
+
+
     </div>
   )
 }
