@@ -685,7 +685,7 @@ function App() {
             </Badge>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-fade-in-up">
-              Automação Inteligente que Reduz Custos Automaticamente
+              Automação Inteligente
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
@@ -788,6 +788,106 @@ function App() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+  {/* Partnerships Section */}
+      <section id="parcerias" className="py-20 px-4 bg-gray-900/50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Parcerias Estratégicas
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Certificações e parcerias que garantem excelência e confiabilidade em nossas soluções.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300">
+              <CardContent className="p-12">
+                <div className="grid md:grid-cols-2 gap-12 items-center">
+                  <div className="text-center md:text-left">
+                    <div className="flex items-center justify-center md:justify-start mb-6">
+                      <Award className="w-8 h-8 text-cyan-400 mr-3" />
+                      <h3 className="text-2xl font-bold text-white">Parceira Oficial Kommo</h3>
+                    </div>
+                    <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                      Somos <strong className="text-cyan-400">parceiros certificados da Kommo</strong>, uma das principais plataformas de CRM e automação de vendas do mundo. Esta certificação nos permite oferecer:
+                    </p>
+                    <ul className="text-gray-300 space-y-3 mb-8">
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Implementação especializada</strong> do Kommo CRM</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Automações avançadas</strong> de vendas e marketing</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Integração com IA</strong> para potencializar resultados</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span><strong>Suporte técnico especializado</strong> e treinamento</span>
+                      </li>
+                    </ul>
+                    <Button 
+                      className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
+                      onClick={() => document.getElementById('contato').scrollIntoView({ behavior: 'smooth' })}
+                    >
+                      <Handshake className="mr-2 w-4 h-4" />
+                      Implementar Kommo + IA
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </div>
+                  <div className="text-center">
+                    <div className="bg-white rounded-2xl p-8 inline-block shadow-lg">
+                      <img 
+                        src="/Badgelight.png" 
+                        alt="Kommo Partner Badge" 
+                        className="h-24 w-auto mx-auto"
+                      />
+                    </div>
+                    <p className="text-sm text-gray-400 mt-4">
+                      Certificação oficial Kommo Partner
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="mt-12 text-center">
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-8 border border-cyan-400/20">
+                <h3 className="text-2xl font-bold mb-4 text-white">
+                  Por que escolher um parceiro certificado?
+                </h3>
+                <div className="grid md:grid-cols-3 gap-6 mt-8">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <ShieldCheck className="w-8 h-8 text-cyan-400" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Expertise Validada</h4>
+                    <p className="text-gray-400 text-sm">Conhecimento técnico certificado e atualizado</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Rocket className="w-8 h-8 text-cyan-400" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Implementação Rápida</h4>
+                    <p className="text-gray-400 text-sm">Processos otimizados e melhores práticas</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <Heart className="w-8 h-8 text-cyan-400" />
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">Suporte Garantido</h4>
+                    <p className="text-gray-400 text-sm">Acesso direto ao suporte técnico oficial</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
