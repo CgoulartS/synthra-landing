@@ -974,7 +974,7 @@ function App() {
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-lg px-8 py-4 border-0"
-                onClick={() => window.open('https://t.me/+pa-ZYAu6siU1YThh', '_blank')}
+                onClick={() => window.open('https://t.me/synthraia', '_blank')}
               >
                 Entrar na Comunidade
                 <Users className="ml-2 w-5 h-5" />
@@ -1502,7 +1502,7 @@ function App() {
             <div>
               <h4 className="font-semibold text-white mb-4">Comunidade</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="https://t.me/+pa-ZYAu6siU1YThh" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
+                <li><a href="https://t.me/synthraia" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">Entre na comunidade</a></li>
                 <li><a href="#contato" className="text-gray-400 hover:text-cyan-400 transition-colors">Fale com a equipe</a></li>
                 <li><a href="#blog" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog de IA prática</a></li>
               </ul>
@@ -1538,18 +1538,16 @@ function App() {
       )}
 
       {/* Chat Kommo */}
-      <div 
+      <script 
         dangerouslySetInnerHTML={{
           __html: `
-            <script>
-              (function(w,d,u,b){w['KommoWidgetSettings']={
-                id: '6c7b4b8b-4b8b-4b8b-4b8b-4b8b4b8b4b8b',
-                locale: 'pt'
-              };
-              var s=d.createElement('script');s.async=1;s.src=u+'?'+b;
-              var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
-              })(window,document,'https://widget.kommo.com/widget/widget.js','v=2');
-            </script>
+            (function(w,d,u,b){w['KommoWidgetSettings']={
+              id: 'your-kommo-id',
+              locale: 'pt'
+            };
+            var s=d.createElement('script');s.async=1;s.src=u+'?'+b;
+            var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+            })(window,document,'https://widget.kommo.com/widget/widget.js','v=2');
           `
         }}
       />
