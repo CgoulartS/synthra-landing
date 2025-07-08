@@ -304,7 +304,7 @@ function App() {
       if (window.crmPlugin) return;
 
       // Criar e configurar o script
-      (function(a,m,o,c,r,m){
+      (function(a,m,o,c,r,n){
         a[m]={
           id:"1047378",
           hash:"6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
@@ -314,7 +314,7 @@ function App() {
         a[o]=a[o]||function(){(a[o].q=a[o].q||[]).push(arguments)};
         var d=a.document,s=d.createElement('script');
         s.async=true;
-        s.id=m+'_script';
+        s.id=n+'_script';
         s.src='https://gso.kommo.com/js/button.js';
         d.head&&d.head.appendChild(s)
       }(window,0,'crmPlugin',0,0,'crm_plugin'));
