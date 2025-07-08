@@ -283,36 +283,6 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Carregar script da Kommo
-  useEffect(() => {
-    const script = document.createElement('script')
-    script.innerHTML = `
-      (function(a,m,o,c,r,m){
-        a[m]={
-          id:"1047378",
-          hash:"6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
-          locale:"pt",
-          setMeta:function(p){this.params=(this.params||[]).concat([p])}
-        };
-        a[o]=a[o]||function(){(a[o].q=a[o].q||[]).push(arguments)};
-        var d=a.document,s=d.createElement('script');
-        s.async=true;
-        s.id=m+'_script';
-        s.src='https://gso.kommo.com/js/button.js';
-        d.head&&d.head.appendChild(s)
-      }(window,0,'crmPlugin',0,0,'crm_plugin'));
-    `
-    document.head.appendChild(script)
-
-    return () => {
-      // Cleanup se necessário
-      const existingScript = document.getElementById('crm_plugin_script')
-      if (existingScript) {
-        existingScript.remove()
-      }
-    }
-  }, [])
-
   // Função para salvar posts no localStorage
   const savePosts = (posts) => {
     try {
@@ -755,7 +725,6 @@ function App() {
           </Button>
         )}
 
-       
       </div>
     )
   }
@@ -896,7 +865,7 @@ function App() {
         </div>
       </section>
 
-      {/* Partnerships Section */}
+      {/* Partnerships Section - NOVA SEÇÃO */}
       <section id="parcerias" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -1534,6 +1503,7 @@ function App() {
         </Button>
       )}
 
+  
     </div>
   )
 }
