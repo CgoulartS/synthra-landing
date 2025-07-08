@@ -1542,13 +1542,20 @@ function App() {
         dangerouslySetInnerHTML={{
           __html: `
             <script>
-              (function(w,d,u,b){w['KommoWidgetSettings']={
-                id: '6c7b4b8b-4b8b-4b8b-4b8b-4b8b4b8b4b8b',
-                locale: 'pt'
-              };
-              var s=d.createElement('script');s.async=1;s.src=u+'?'+b;
-              var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
-              })(window,document,'https://widget.kommo.com/widget/widget.js','v=2');
+              (function(a,m,o,c,r,m){
+                a[m]={
+                  id:"1047378",
+                  hash:"6dd7e40dff8df4b354fcb8ee068b507b4830e1e9525ba8b5ad0e22072ca29a19",
+                  locale:"pt",
+                  setMeta:function(p){this.params=(this.params||[]).concat([p])}
+                };
+                a[o]=a[o]||function(){(a[o].q=a[o].q||[]).push(arguments)};
+                var d=a.document,s=d.createElement('script');
+                s.async=true;
+                s.id=m+'_script';
+                s.src='https://gso.kommo.com/js/button.js';
+                d.head&&d.head.appendChild(s)
+              }(window,0,'crmPlugin',0,0,'crm_plugin'));
             </script>
           `
         }}
