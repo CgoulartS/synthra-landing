@@ -684,7 +684,7 @@ function App() {
               🤖 A Primeira Consultoria com IA Autônoma
             </Badge>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-fade-in-up">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-normal bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent animate-fade-in-up">
               Automação Inteligente
             </h1>
             
@@ -795,7 +795,7 @@ function App() {
       <section id="parcerias" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-normal bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               Parcerias Estratégicas
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -899,7 +899,7 @@ function App() {
             <Badge className="mb-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border-cyan-500/30">
               🤖 Nossos Agentes de IA
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-normal bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               Conheça os Agentes que Trabalham para Você
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -1008,7 +1008,7 @@ function App() {
       <section id="cases" className="py-20 px-4 bg-gray-900/50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-normal bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               Cases & Projetos
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -1207,7 +1207,7 @@ function App() {
       <section id="blog" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-normal bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               Blog de IA Prática
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -1513,7 +1513,7 @@ function App() {
                     </div>
                     <div>
                       <p className="font-semibold text-white">WhatsApp</p>
-                      <p className="text-gray-400">+55 (51) 9 9472-4351</p>
+                      <p className="text-gray-400">+55 (51) 9 9186-7042</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
