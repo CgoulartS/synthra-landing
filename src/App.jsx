@@ -1109,7 +1109,7 @@ function App() {
                 </div>
                 
                 <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                  <div className="text-3xl font-bold text-green-400 mb-2">+1000</div>
+                  <div className="text-3xl font-bold text-green-400 mb-2">+100</div>
                   <div className="text-gray-300 text-sm">Processos Automatizados</div>
                 </div>
               </div>
