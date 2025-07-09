@@ -1093,7 +1093,7 @@ function App() {
             <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl p-12 border border-cyan-400/20">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent flex items-center justify-center gap-4">
                 <Users className="w-12 h-12 text-cyan-400" />
-                Vamos construir juntos uma comunidade de IA
+                Comunidade IA em prática
               </h2>
               <p className="text-xl text-gray-300 mb-8">
                 Práticas semanais • Automação com propósito • Cases reais
