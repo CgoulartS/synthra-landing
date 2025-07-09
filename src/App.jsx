@@ -538,33 +538,6 @@ function App() {
     }
   ]
 
-  // Novos agentes de IA adicionados
-  const agents = [
-    {
-      icon: <Search className="w-12 h-12 text-cyan-400" />,
-      title: "Agente Analista",
-      subtitle: "Inteligência que nunca dorme",
-      description: "Monitora gastos em tempo real, identifica padrões de desperdício, sugere otimizações automáticas e gera relatórios inteligentes 24/7.",
-      benefits: ["Economia automática 24/7", "Análise de padrões", "Relatórios inteligentes"],
-      result: "Identifica R$ 50k+ em economia por mês"
-    },
-    {
-      icon: <Handshake className="w-12 h-12 text-purple-400" />,
-      title: "Agente Negociador",
-      subtitle: "Melhores preços automaticamente",
-      description: "Pesquisa fornecedores automaticamente, compara preços e condições, sugere renegociações e monitora contratos e vencimentos.",
-      benefits: ["Pesquisa automática", "Comparação inteligente", "Monitoramento contínuo"],
-      result: "Reduz 20-35% custos com fornecedores"
-    },
-    {
-      icon: <Workflow className="w-12 h-12 text-green-400" />,
-      title: "Agente Otimizador",
-      subtitle: "Eficiência operacional máxima",
-      description: "Automatiza processos repetitivos, elimina gargalos operacionais, otimiza fluxos de trabalho e reduz tempo de execução.",
-      benefits: ["Automação completa", "Eliminação de gargalos", "Otimização contínua"],
-      result: "Acelera processos em 60-80%"
-    }
-  ]
 
   // Novos modos de desenvolvimento
   const developmentModes = [
@@ -888,53 +861,6 @@ function App() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Nova Seção Agentes de IA */}
-      <section id="agentes" className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 border-cyan-500/30">
-              🤖 Nossos Agentes de IA
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-normal bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-              Conheça os Agentes que Trabalham para Você
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Enquanto outras consultorias fazem análises pontuais, nossos agentes de IA trabalham continuamente para identificar oportunidades e automatizar melhorias
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {agents.map((agent, index) => (
-              <Card key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700 hover:border-cyan-500/50 transition-all duration-300 group">
-                <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-4 p-4 bg-gradient-to-r from-gray-700 to-gray-800 rounded-full group-hover:scale-110 transition-transform duration-300">
-                    {agent.icon}
-                  </div>
-                  <CardTitle className="text-2xl font-bold text-white mb-2">{agent.title}</CardTitle>
-                  <CardDescription className="text-cyan-400 font-semibold">{agent.subtitle}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-gray-300 leading-relaxed">{agent.description}</p>
-                  
-                  <div className="space-y-2">
-                    {agent.benefits.map((benefit, idx) => (
-                      <div key={idx} className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
-                        <span className="text-sm text-gray-300">{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg p-4 border border-green-500/20 mt-6">
-                    <div className="text-green-400 font-semibold text-center">{agent.result}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
           </div>
         </div>
       </section>
