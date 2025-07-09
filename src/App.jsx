@@ -630,7 +630,6 @@ function App() {
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#inicio" className="text-gray-300 hover:text-cyan-400 transition-colors">Início</a>
               <a href="#servicos" className="text-gray-300 hover:text-cyan-400 transition-colors">Serviços</a>
-              <a href="#agentes" className="text-gray-300 hover:text-cyan-400 transition-colors">Agentes IA</a>
               <a href="#desenvolvimento" className="text-gray-300 hover:text-cyan-400 transition-colors">Desenvolvimento</a>
               <a href="#cases" className="text-gray-300 hover:text-cyan-400 transition-colors">Cases</a>
               <a href="#comunidade" className="text-gray-300 hover:text-cyan-400 transition-colors">Comunidade</a>
