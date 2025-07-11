@@ -674,10 +674,7 @@ function App() {
                 <div className="text-4xl font-bold text-purple-400 mb-2">{timeCounter}%</div>
                 <div className="text-gray-300">Menos Tempo Manual</div>
               </div>
-              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-500/20">
-                <div className="text-4xl font-bold text-green-400 mb-2">+{projectsCounter}</div>
-                <div className="text-gray-300">Empresas Transformadas</div>
-              </div>
+             
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -1097,10 +1094,7 @@ function App() {
 
               {/* Números de Impacto */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-                <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                  <div className="text-3xl font-bold text-cyan-400 mb-2">+100</div>
-                  <div className="text-gray-300 text-sm">Empresas Transformadas</div>
-                </div>
+            
                 
                 <div className="text-center p-4 bg-gray-800/50 rounded-lg border border-gray-700">
                   <div className="text-3xl font-bold text-purple-400 mb-2">+500</div>
