@@ -1,556 +1,1007 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
+import { Input } from '@/components/ui/input.jsx'
+import { Textarea } from '@/components/ui/textarea.jsx'
 import { 
-  Rocket, 
-  Brain, 
-  Heart, 
-  Sparkles, 
-  BookOpen, 
-  Users, 
-  Mail, 
-  Phone, 
+  Search,
+  Share2,
+  Megaphone,
+  Monitor,
   Calendar,
-  Instagram,
-  MessageCircle,
+  TrendingUp,
+  Menu,
+  X,
+  ChevronUp,
+  Send,
+  CheckCircle,
   ArrowRight,
-  Star,
-  Lightbulb,
-  Zap,
+  Phone,
+  Mail,
+  MessageCircle,
+  Instagram,
+  Linkedin,
   Globe,
+  Users,
+  Zap,
   Target,
-  Compass
+  Shield,
+  Clock,
+  Award,
+  Lightbulb,
+  Settings,
+  BarChart3,
+  Smartphone,
+  Cpu,
+  Bot,
+  Briefcase,
+  GraduationCap,
+  Building,
+  Rocket,
+  Star,
+  Eye,
+  Heart,
+  Brain,
+  Sparkles
 } from 'lucide-react'
 import './App.css'
 
 function App() {
-  const [showQuiz, setShowQuiz] = useState(false)
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState([])
-  const [quizResult, setQuizResult] = useState(null)
+  // Estados
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({ name: '', email: '', message: '', phone: '', company: '' })
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [visibleSection, setVisibleSection] = useState('inicio')
 
-  const questions = [
-    "Costumo conectar ideias de áreas muito diferentes e criar algo novo com isso.",
-    "Me sinto desconfortável em fazer sempre a mesma coisa da mesma forma.",
-    "Já me disseram que penso demais ou complico o que é simples.",
-    "Gosto de observar sistemas como um todo antes de tentar resolver um problema.",
-    "Tenho facilidade em conversar com pessoas de diferentes áreas ou perfis.",
-    "Muitas vezes percebo padrões ou relações que outras pessoas não notam.",
-    "Fico entediado(a) em ambientes que não estimulam minha criatividade.",
-    "Me emociono com frequência, mas também sei ser racional quando preciso.",
-    "Gosto de estudar temas diversos — mesmo que não pareçam 'úteis' de imediato.",
-    "Me interesso por resolver problemas que parecem difíceis ou sem solução.",
-    "Já criei soluções misturando saberes ou ferramentas improváveis.",
-    "Acredito que intuição e lógica podem caminhar juntas.",
-    "Sinto que muitas vezes não sou compreendido(a) nos ambientes convencionais.",
-    "Já fui chamado de 'esquisito(a)' ou 'diferente' — e vi isso como elogio.",
-    "Acredito que toda boa solução nasce da escuta profunda e da conexão humana."
-  ]
+  // Scroll tracking
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300)
+      
+      // Detectar seção visível
+      const sections = ['inicio', 'consultoria', 'automacao', 'social', 'sites', 'branding', 'sobre', 'contato']
+      const currentSection = sections.find(section => {
+        const element = document.getElementById(section)
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          return rect.top <= 100 && rect.bottom >= 100
+        }
+        return false
+      })
+      
+      if (currentSection) {
+        setVisibleSection(currentSection)
+      }
+    }
 
-  const handleAnswerSelect = (value) => {
-    const newAnswers = [...answers]
-    newAnswers[currentQuestion] = value
-    setAnswers(newAnswers)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-    } else {
-      calculateResult(newAnswers)
+  // Funções utilitárias
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+      setMobileMenuOpen(false)
     }
   }
 
-  const calculateResult = (allAnswers) => {
-    const total = allAnswers.reduce((sum, answer) => sum + answer, 0)
-    
-    let result = {}
-    if (total >= 15 && total <= 30) {
-      result = {
-        type: "Explorador Racional",
-        description: "Você tem traços nexialistas, mas ainda atua com foco mais técnico ou lógico. Costuma buscar segurança, mas está abrindo espaço para o novo.",
-        color: "from-blue-500 to-cyan-500"
-      }
-    } else if (total >= 31 && total <= 50) {
-      result = {
-        type: "Conector Intuitivo", 
-        description: "Você transita bem entre razão e intuição, conecta ideias com sensibilidade e costuma trazer visões originais. Já demonstra claramente o pensar nexialista.",
-        color: "from-purple-500 to-pink-500"
-      }
+  const showNotification = (message, type = 'success') => {
+    if (type === 'success') {
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 3000)
     } else {
-      result = {
-        type: "Nexialista Pleno",
-        description: "Você enxerga o mundo como uma teia interconectada. Resolve problemas com criatividade, escuta com empatia e pensa além do óbvio. Sua mente é uma constelação viva.",
-        color: "from-amber-500 to-orange-500"
-      }
+      setErrorMessage(message)
+      setShowError(true)
+      setTimeout(() => setShowError(false), 3000)
+    }
+  }
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return re.test(email)
+  }
+
+  // Funções de formulário
+  const handleContactSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    
+    // Validações
+    if (!formData.name.trim()) {
+      showNotification('Nome é obrigatório', 'error')
+      setIsLoading(false)
+      return
     }
     
-    setQuizResult(result)
+    if (!validateEmail(formData.email)) {
+      showNotification('E-mail inválido', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.message.trim()) {
+      showNotification('Mensagem é obrigatória', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    // Simular envio
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      setIsLoading(false)
+      showNotification('Mensagem enviada com sucesso! Retornaremos em breve.')
+      setFormData({ name: '', email: '', message: '', phone: '', company: '' })
+    } catch (error) {
+      setIsLoading(false)
+      showNotification('Erro ao enviar mensagem. Tente novamente.', 'error')
+    }
   }
 
-  const resetQuiz = () => {
-    setShowQuiz(false)
-    setCurrentQuestion(0)
-    setAnswers([])
-    setQuizResult(null)
-  }
-
-  if (showQuiz && !quizResult) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-        <div className="container mx-auto px-4 py-20">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Você pensa como um(a) Nexialista?
-              </h1>
-              <p className="text-xl text-gray-300 mb-8">
-                Responda com sinceridade. Não há respostas certas ou erradas — apenas formas diferentes de enxergar o mundo.
-              </p>
-              <div className="w-full bg-gray-700 rounded-full h-2 mb-8">
-                <div 
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-                ></div>
+  // Componentes
+  const Header = () => (
+    <header className="fixed top-0 w-full bg-slate-900/95 backdrop-blur-sm border-b border-gray-800 z-50 transition-all duration-300">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => scrollToSection('inicio')}>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-4 h-4 bg-white rounded-sm transform rotate-45"></div>
               </div>
-              <Badge className="mb-4 bg-purple-500/20 text-purple-300 border-purple-500/30">
-                Pergunta {currentQuestion + 1} de {questions.length}
-              </Badge>
+              <span className="text-2xl font-bold text-white">synthra</span>
             </div>
-
-            <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-2xl text-white text-center">
-                  {questions[currentQuestion]}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <Button
-                      key={value}
-                      onClick={() => handleAnswerSelect(value)}
-                      className="h-16 text-lg bg-gray-700 hover:bg-purple-600 border border-gray-600 hover:border-purple-500 transition-all"
-                    >
-                      {value}
-                    </Button>
-                  ))}
-                </div>
-                <div className="flex justify-between text-sm text-gray-400 mt-4">
-                  <span>Discordo totalmente</span>
-                  <span>Concordo totalmente</span>
-                </div>
-              </CardContent>
-            </Card>
           </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-8">
+            {[
+              { id: 'consultoria', label: 'CONSULTORIA\nESTRATÉGICA' },
+              { id: 'automacao', label: 'AUTOMAÇÃO\nE AGENTES\nINTELIGENTES' },
+              { id: 'social', label: 'SOCIAL INTELIGENTE\nSITES, PÁGINAS\nE MVPA' },
+              { id: 'sites', label: 'SITES, PÁGINAS E MVPS\nBEGUAIRS INE*\nTREINAMENTOS' }
+            ].map(item => (
+              <button 
+                key={item.id}
+                onClick={() => scrollToSection(item.id)} 
+                className={`text-gray-300 hover:text-cyan-400 transition-colors text-sm text-center leading-tight whitespace-pre-line ${
+                  visibleSection === item.id ? 'text-cyan-400' : ''
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="lg:hidden text-white p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
-      </div>
-    )
-  }
 
-  if (quizResult) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-        <div className="container mx-auto px-4 py-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className={`inline-block p-8 rounded-2xl bg-gradient-to-r ${quizResult.color} mb-8`}>
-              <Sparkles className="w-16 h-16 text-white mx-auto mb-4" />
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-                {quizResult.type}
-              </h1>
-            </div>
-            
-            <p className="text-xl text-gray-300 mb-12 leading-relaxed max-w-3xl mx-auto">
-              {quizResult.description}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg px-8 py-4"
-                onClick={() => window.open('https://chat.whatsapp.com/BgRgC0mETusFEDRnx0ZVzR', '_blank')}
-              >
-                <Users className="mr-2 w-5 h-5" />
-                Entre na Nave
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black text-lg px-8 py-4"
-              >
-                <BookOpen className="mr-2 w-5 h-5" />
-                Conheça meus serviços
-              </Button>
-            </div>
-
-            <Button 
-              onClick={resetQuiz}
-              variant="ghost"
-              className="text-gray-400 hover:text-white"
-            >
-              Refazer o teste
-            </Button>
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden py-4 border-t border-gray-800 animate-in slide-in-from-top duration-200">
+            <nav className="flex flex-col space-y-4">
+              {[
+                { id: 'inicio', label: 'Início' },
+                { id: 'consultoria', label: 'Consultoria Estratégica' },
+                { id: 'automacao', label: 'Automação e Agentes Inteligentes' },
+                { id: 'social', label: 'Social Inteligente' },
+                { id: 'sites', label: 'Sites, Páginas e MVPs' },
+                { id: 'branding', label: 'Branding, Marketing e Treinamentos' },
+                { id: 'sobre', label: 'Sobre a Synthra' },
+                { id: 'contato', label: 'Contato' }
+              ].map(item => (
+                <button 
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)} 
+                  className="text-gray-300 hover:text-cyan-400 transition-colors text-left py-2"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
           </div>
-        </div>
+        )}
       </div>
-    )
-  }
+    </header>
+  )
 
+  const BackToTopButton = () => (
+    showBackToTop && (
+      <button
+        onClick={scrollToTop}
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-4 rounded-full shadow-2xl hover:shadow-cyan-500/25 transition-all transform hover:scale-110 z-40 group"
+        aria-label="Voltar ao topo"
+      >
+        <ChevronUp className="w-6 h-6 group-hover:animate-bounce" />
+      </button>
+    )
+  )
+
+  const NotificationSystem = () => (
+    <>
+      {showSuccess && (
+        <div className="fixed top-20 right-4 bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 flex items-center animate-in slide-in-from-right duration-300">
+          <CheckCircle className="w-6 h-6 mr-3" />
+          <span>Sucesso! Ação realizada com êxito.</span>
+        </div>
+      )}
+      {showError && (
+        <div className="fixed top-20 right-4 bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 flex items-center animate-in slide-in-from-right duration-300">
+          <X className="w-6 h-6 mr-3" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+    </>
+  )
+
+  // Site Principal
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white">
+      <Header />
+      <NotificationSystem />
+      <BackToTopButton />
+
       {/* Hero Section */}
-      <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 blur-3xl"></div>
-        <div className="container mx-auto text-center relative z-10">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="text-5xl md:text-8xl font-bold mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Nexialismo não é só um conceito.
-              </span>
-              <br />
-              <span className="text-white">
-                É uma forma de existir.
-              </span>
+      <section id="inicio" className="py-32 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+        
+        <div className="container mx-auto text-left relative z-10 max-w-6xl">
+          <div className="max-w-4xl">
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight text-white">
+              Tecnologia, pessoas e estratégia conectadas para potencializar seu negócio
             </h1>
             
-            <div className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed space-y-2">
-              <p>Se você já ouviu que pensa demais...</p>
-              <p>Se já tentaram te convencer a escolher só uma área...</p>
-              <p>Se o seu coração pulsa por conexões que ninguém mais vê...</p>
-              <br />
-              <p className="text-purple-400 font-semibold">Temos um nome para isso: <span className="text-pink-400">Nexialista</span>.</p>
-              <p>E temos um lugar para você: <span className="text-cyan-400">a bordo da nave Synthra</span>.</p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xl px-10 py-6"
-                onClick={() => setShowQuiz(true)}
-              >
-                <Rocket className="mr-3 w-6 h-6" />
-                Descubra se você é Nexialista
-                <ArrowRight className="ml-3 w-6 h-6" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black text-xl px-10 py-6"
-              >
-                <Target className="mr-3 w-6 h-6" />
-                Conheça meus serviços
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black text-xl px-10 py-6"
-                onClick={() => window.open('https://chat.whatsapp.com/BgRgC0mETusFEDRnx0ZVzR', '_blank')}
-              >
-                <Sparkles className="mr-3 w-6 h-6" />
-                Entre na nave
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* O que é Nexialismo */}
-      <section className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Uma nova forma de pensar, sentir e resolver problemas
-            </h2>
-            
-            <div className="text-lg md:text-xl text-gray-300 leading-relaxed space-y-6 mb-12">
-              <p>
-                <span className="text-cyan-400 font-semibold">Nexialismo vem do latim nexus</span> — conexão.
-                <br />Mas virou muito mais do que isso.
-              </p>
-              
-              <p>
-                É a arte de integrar saberes distintos, ouvir o invisível dos sistemas e criar soluções onde outros só veem caos.
-              </p>
-              
-              <p>
-                É <span className="text-purple-400">intuição e análise</span>. <span className="text-pink-400">Emoção e estratégia</span>. <span className="text-cyan-400">Gente e tecnologia</span>.
-              </p>
-              
-              <p className="text-xl font-semibold text-white">
-                É para quem nunca se encaixou totalmente — e por isso mesmo nasceu para costurar o novo.
-              </p>
-            </div>
-
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-lg px-8 py-4"
-            >
-              <Globe className="mr-2 w-5 h-5" />
-              Quero entender melhor
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Você se reconhece aqui? */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
-              Você se reconhece aqui?
-            </h2>
-            
-            <div className="text-xl text-gray-300 mb-12 space-y-4">
-              <p>Você sente que pensa diferente?</p>
-              <p>Conecta áreas improváveis?</p>
-              <p>Resolve problemas como quem dança no meio da bagunça?</p>
-              <br />
-              <p className="text-2xl font-semibold text-purple-400">
-                Talvez você seja um(a) Nexialista.
-              </p>
-              <p className="text-lg">Mas só tem um jeito de saber:</p>
-            </div>
-
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-2xl px-12 py-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all"
-              onClick={() => setShowQuiz(true)}
-            >
-              <Brain className="mr-3 w-8 h-8" />
-              Faça o teste e descubra
-              <Zap className="ml-3 w-8 h-8" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Consultoria & Mentoria */}
-      <section className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-              Conectar pessoas, processos e tecnologia.
-            </h2>
-            <p className="text-xl text-gray-300">
-              Esse é o meu trabalho. E minha missão.
+            <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed max-w-3xl">
+              Somos uma empresa IA First, mas não fazemos só com IA: temos especialistas humanos que trabalham lado a lado com a tecnologia para garantir segurança, personalização e agilidade.
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-6 mb-16">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-xl px-12 py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-cyan-500/25 group"
+                onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Gostaria de agendar um diagnóstico gratuito.', '_blank')}
+              >
+                <Rocket className="mr-3 w-7 h-7 group-hover:animate-bounce" />
+                Agendar diagnóstico gratuito
+              </Button>
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xl px-12 py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-purple-500/25 group"
+                onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero automatizar meu negócio.', '_blank')}
+              >
+                <TrendingUp className="mr-3 w-7 h-7 group-hover:animate-pulse" />
+                Quero automatizar meu negócio
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* O que fazemos */}
+      <section className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
+              O QUE FAZEMOS
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            <Card className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-500/30 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-2xl text-white flex items-center">
-                  <Target className="mr-3 w-8 h-8 text-purple-400" />
-                  Empresas
-                </CardTitle>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Consultoria Estratégica */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+              <CardHeader className="pb-4">
+                <div className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
+                  <Search className="w-10 h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-xl mb-4">Consultoria Estratégica</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-lg leading-relaxed mb-6">
-                  Diagnóstico profundo de processos, implantação de IA com propósito, transformação cultural.
+                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                  Descobrimos se o gargalo está em pessoas, processos ou tecnologia.
                 </CardDescription>
-                <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
-                  Conheça a Consultoria Nexialista
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-cyan-900/50 to-blue-900/50 border-cyan-500/30 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-2xl text-white flex items-center">
-                  <Compass className="mr-3 w-8 h-8 text-cyan-400" />
-                  Profissionais
-                </CardTitle>
+            {/* Automação & Agentes Inteligentes */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+              <CardHeader className="pb-4">
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
+                  <Share2 className="w-10 h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-xl mb-4">Automação & Agentes Inteligentes</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-lg leading-relaxed mb-6">
-                  Mentoria 1:1 para quem pensa diferente e quer fazer disso um diferencial estratégico.
+                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                  Bots, integrações, relatórios e funis de vendas automatizados.
                 </CardDescription>
-                <Button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
-                  Quero minha mentoria
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Social Inteligente */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+              <CardHeader className="pb-4">
+                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
+                  <Megaphone className="w-10 h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-xl mb-4">Social Inteligente</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                  Criação de conteúdo, anúncios e presença digital com IA + estratégia humana.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Criação de Sites, Páginas e MVPs */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+              <CardHeader className="pb-4">
+                <div className="w-20 h-20 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
+                  <Monitor className="w-10 h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-xl mb-4">Criação de Sites, Páginas e MVPs</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                  Valide ideias, crie produtos e venda mais, rápido.
+                </CardDescription>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* O Manual Nexialista */}
+      {/* Diferenciais Synthra */}
       <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-              O Manual Nexialista
+        <div className="container mx-auto max-w-6xl">
+          <div className="mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
+              DIFERENCIAIS SYNTHRA
             </h2>
-            <p className="text-2xl text-gray-300 mb-8">
-              Um guia para quem vive entre mundos.
-              <br />E quer fazer disso um mapa de potência.
-            </p>
-            
-            <p className="text-lg text-gray-300 mb-12 leading-relaxed">
-              Escrevi este livro como ponto de apoio, espelho e bússola para mentes inquietas.
-              <br />Ele é parte estudo, parte manifesto — e completamente conversado com você.
-            </p>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
-              >
-                <BookOpen className="mr-2 w-5 h-5" />
-                Leia um trecho gratuito
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-black"
-              >
-                <Mail className="mr-2 w-5 h-5" />
-                Entrar na lista de espera
-              </Button>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">IA First com especialistas humanos</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Soluções personalizadas para cada negócio</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Agilidade com segurança</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Soluções personalizadas para cada negócio</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Diagnóstico profundo antes da execução</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Experiência multissetorial</h3>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Entre na Nave */}
-      <section className="py-20 px-4 bg-gradient-to-r from-purple-900/30 to-pink-900/30">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
-              Mais do que um site. Uma nave.
-              <br />Mais do que uma comunidade. Um chamado.
-            </h2>
-            
-            <p className="text-xl text-gray-300 mb-12 leading-relaxed">
-              Criamos um espaço para trocas entre Nexialistas — gente como você, que vê o todo, sente fundo e resolve profundo.
-              <br /><br />
-              Não é uma escola. Não é um curso.
-              <br />É um espaço vivo, interdimensional e provocador.
-            </p>
-
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xl px-10 py-6"
-              onClick={() => window.open('https://chat.whatsapp.com/BgRgC0mETusFEDRnx0ZVzR', '_blank')}
-            >
-              <Rocket className="mr-3 w-6 h-6" />
-              Quero embarcar
-              <Sparkles className="ml-3 w-6 h-6" />
-            </Button>
-          </div>
+      {/* Call to Action Final */}
+      <section className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
+            Pronto para sair do operacional e focar na estratégia?
+          </h2>
+          
+          <Button 
+            size="lg"
+            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-2xl px-16 py-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all group"
+            onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero falar com a Synthra sobre estratégia.', '_blank')}
+          >
+            <Rocket className="mr-3 w-8 h-8 group-hover:animate-bounce" />
+            Quero falar com a Synthra
+          </Button>
         </div>
       </section>
 
-      {/* Blog */}
-      <section className="py-20 px-4 bg-gray-900/50">
-        <div className="container mx-auto">
+      {/* Páginas Internas */}
+      
+      {/* Consultoria Estratégica */}
+      <section id="consultoria" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-              Nexialismo na prática
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Descubra onde está o gargalo do seu negócio
             </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Nossa consultoria identifica se o problema está em tecnologia, processos ou pessoas. Com uma visão 360°, criamos um plano estratégico personalizado para desbloquear o crescimento da sua empresa.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
-            {[
-              {
-                title: "A falácia da especialização: por que pensar amplo virou um ato revolucionário",
-                excerpt: "Explorando como a hiperespecialização pode limitar nossa capacidade de inovação..."
-              },
-              {
-                title: "IA, processos e alma: dá pra juntar tudo?",
-                excerpt: "Uma reflexão sobre como integrar tecnologia sem perder a essência humana..."
-              },
-              {
-                title: "O que a Grécia antiga pode nos ensinar sobre educação no século XXI",
-                excerpt: "Conectando saberes milenares com os desafios educacionais contemporâneos..."
-              }
-            ].map((article, index) => (
-              <Card key={index} className="bg-gray-800/50 border-gray-700 hover:border-green-500/50 transition-all duration-300 group">
-                <CardHeader>
-                  <CardTitle className="text-lg text-white group-hover:text-green-400 transition-colors">
-                    {article.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-400 leading-relaxed">
-                    {article.excerpt}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Target className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Diagnóstico 360°</h3>
+                <p className="text-gray-300">Análise completa de processos, tecnologia e pessoas</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <BarChart3 className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Plano Estratégico</h3>
+                <p className="text-gray-300">Roadmap personalizado para seu crescimento</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Rocket className="w-16 h-16 text-green-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Implementação</h3>
+                <p className="text-gray-300">Acompanhamento na execução das soluções</p>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="text-center">
             <Button 
               size="lg"
-              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-xl px-12 py-6"
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Gostaria de agendar um diagnóstico gratuito.', '_blank')}
             >
-              <BookOpen className="mr-2 w-5 h-5" />
-              Ver todos os artigos
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <Target className="mr-2 w-6 h-6" />
+              Agendar diagnóstico gratuito
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Contato */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-12 text-white">
-              Quer bater um papo interdimensional?
+      {/* Automação e Agentes Inteligentes */}
+      <section id="automacao" className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Liberte sua equipe do operacional
             </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Criamos agentes de atendimento, funis de vendas inteligentes e integrações completas para otimizar processos, aumentar conversões e gerar relatórios claros para decisões rápidas.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Bot className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Agentes Inteligentes</h3>
+                <p className="text-gray-300">Chatbots e assistentes virtuais que realmente funcionam</p>
+              </CardContent>
+            </Card>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <Button 
-                size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white flex flex-col items-center py-8"
-                onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Vi seu site sobre Nexialismo e gostaria de saber mais.', '_blank')}
-              >
-                <MessageCircle className="w-8 h-8 mb-2" />
-                WhatsApp
-              </Button>
-              <Button 
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white flex flex-col items-center py-8"
-                onClick={() => window.open('mailto:contato@synthraia.com.br?subject=Interesse em Nexialismo', '_blank')}
-              >
-                <Mail className="w-8 h-8 mb-2" />
-                E-mail
-              </Button>
-              <Button 
-                size="lg"
-                className="bg-purple-600 hover:bg-purple-700 text-white flex flex-col items-center py-8"
-                onClick={() => window.open('https://calendly.com/synthra', '_blank')}
-              >
-                <Calendar className="w-8 h-8 mb-2" />
-                Agendar
-              </Button>
-              <Button 
-                size="lg"
-                className="bg-pink-600 hover:bg-pink-700 text-white flex flex-col items-center py-8"
-                onClick={() => window.open('https://instagram.com/synthraia', '_blank')}
-              >
-                <Instagram className="w-8 h-8 mb-2" />
-                Instagram
-              </Button>
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <TrendingUp className="w-16 h-16 text-green-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Funis Automatizados</h3>
+                <p className="text-gray-300">Vendas que acontecem enquanto você dorme</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Settings className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Integrações</h3>
+                <p className="text-gray-300">Conectamos todos os seus sistemas</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xl px-12 py-6"
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero automatizar meu negócio.', '_blank')}
+            >
+              <Bot className="mr-2 w-6 h-6" />
+              Quero automatizar meu negócio
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Inteligente */}
+      <section id="social" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Conteúdo que conecta. Estratégia que converte.
+            </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Posicionamos sua marca e criamos conteúdo com propósito usando IA para potencializar resultados. Do planejamento às campanhas, cuidamos de tudo.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Megaphone className="w-16 h-16 text-green-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Criação de Conteúdo</h3>
+                <p className="text-gray-300">Posts, vídeos e campanhas que engajam</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Target className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Anúncios Inteligentes</h3>
+                <p className="text-gray-300">Campanhas otimizadas com IA para máximo ROI</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <BarChart3 className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Análise de Resultados</h3>
+                <p className="text-gray-300">Relatórios claros para decisões estratégicas</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-xl px-12 py-6"
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero acelerar minhas redes sociais.', '_blank')}
+            >
+              <TrendingUp className="mr-2 w-6 h-6" />
+              Quero acelerar minhas redes
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Sites, Páginas e MVPs */}
+      <section id="sites" className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Seu produto no ar em semanas, não meses
+            </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Desenvolvemos sites modernos, páginas de venda otimizadas e MVPs inteligentes para validar ideias e vender mais, unindo design + copy + IA.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Monitor className="w-16 h-16 text-amber-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Sites Modernos</h3>
+                <p className="text-gray-300">Design responsivo e otimizado para conversão</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Globe className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Landing Pages</h3>
+                <p className="text-gray-300">Páginas que vendem enquanto você dorme</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">MVPs Inteligentes</h3>
+                <p className="text-gray-300">Valide sua ideia rapidamente no mercado</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xl px-12 py-6"
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero meu site agora.', '_blank')}
+            >
+              <Globe className="mr-2 w-6 h-6" />
+              Quero meu site agora
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Branding, Marketing e Treinamentos */}
+      <section id="branding" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Posicione sua marca e equipe para o futuro
+            </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Construímos marcas fortes, campanhas assertivas e treinamentos corporativos para times que querem liderar com inteligência e performar com IA.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Award className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Branding Estratégico</h3>
+                <p className="text-gray-300">Identidade visual que marca e posiciona</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <TrendingUp className="w-16 h-16 text-green-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Marketing Inteligente</h3>
+                <p className="text-gray-300">Campanhas que geram resultados reais</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <GraduationCap className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Treinamentos IA</h3>
+                <p className="text-gray-300">Capacite sua equipe para o futuro</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xl px-12 py-6"
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero fortalecer minha marca.', '_blank')}
+            >
+              <Award className="mr-2 w-6 h-6" />
+              Quero fortalecer minha marca
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Sobre a Synthra */}
+      <section id="sobre" className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Sobre a Synthra
+            </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Somos uma empresa de tecnologia focada em conectar pessoas, processos e IA para potencializar negócios. Nossa missão é democratizar o acesso à inteligência artificial de forma humanizada e estratégica.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Brain className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">IA Humanizada</h3>
+                <p className="text-gray-300">Tecnologia que serve às pessoas, não o contrário</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Users className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Time Especializado</h3>
+                <p className="text-gray-300">Profissionais experientes em IA e estratégia</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Rocket className="w-16 h-16 text-green-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Resultados Rápidos</h3>
+                <p className="text-gray-300">Implementação ágil com impacto mensurável</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Contato */}
+      <section id="contato" className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
+              Vamos conversar?
+            </h2>
+            <p className="text-xl text-gray-300">
+              Entre em contato e descubra como podemos potencializar seu negócio
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Formulário de Contato */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white text-2xl">Envie sua mensagem</CardTitle>
+                <CardDescription className="text-gray-300 text-lg">
+                  Conte-nos sobre seu projeto ou desafio
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleContactSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        placeholder="Seu nome *"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        type="email"
+                        placeholder="Seu e-mail *"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        placeholder="Telefone (opcional)"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        placeholder="Empresa (opcional)"
+                        value={formData.company}
+                        onChange={(e) => setFormData({...formData, company: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Textarea
+                      placeholder="Sua mensagem *"
+                      value={formData.message}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 min-h-[150px] resize-none"
+                      required
+                    />
+                  </div>
+                  <Button 
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white h-12 text-lg"
+                  >
+                    {isLoading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        <Send className="mr-2 w-5 h-5" />
+                        Enviar mensagem
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Informações de Contato */}
+            <div className="space-y-6">
+              <Card className="bg-gradient-to-br from-cyan-900/30 to-blue-900/30 border-cyan-500/30 backdrop-blur-sm group hover:scale-105 transition-all">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    <MessageCircle className="w-8 h-8 text-cyan-400 mr-4 group-hover:animate-bounce" />
+                    <div>
+                      <span className="text-white font-semibold text-lg">WhatsApp</span>
+                      <div className="text-cyan-200 text-sm">Resposta rápida e direta</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    Canal preferencial para conversas rápidas e agendamentos.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    className="w-full border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black"
+                    onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Vi o site da Synthra e gostaria de conversar.', '_blank')}
+                  >
+                    <MessageCircle className="mr-2 w-5 h-5" />
+                    +55 51 99186-7042
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-purple-500/30 backdrop-blur-sm group hover:scale-105 transition-all">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    <Mail className="w-8 h-8 text-purple-400 mr-4 group-hover:animate-bounce" />
+                    <div>
+                      <span className="text-white font-semibold text-lg">E-mail</span>
+                      <div className="text-purple-200 text-sm">Para propostas e parcerias</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    Canal oficial para comunicações formais e propostas comerciais.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    className="w-full border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black"
+                    onClick={() => window.open('mailto:contato@synthraia.com.br?subject=Contato via Site', '_blank')}
+                  >
+                    <Mail className="mr-2 w-5 h-5" />
+                    contato@synthraia.com.br
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-green-500/30 backdrop-blur-sm group hover:scale-105 transition-all">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    <Instagram className="w-8 h-8 text-green-400 mr-4 group-hover:animate-bounce" />
+                    <div>
+                      <span className="text-white font-semibold text-lg">Instagram</span>
+                      <div className="text-green-200 text-sm">Conteúdo e bastidores</div>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 mb-4">
+                    Acompanhe nossos projetos e insights sobre IA e estratégia.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    className="w-full border-green-400 text-green-400 hover:bg-green-400 hover:text-black"
+                    onClick={() => window.open('https://instagram.com/synthra.ia', '_blank')}
+                  >
+                    <Instagram className="mr-2 w-5 h-5" />
+                    @synthra.ia
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black/70 py-12 px-4 border-t border-gray-700">
-        <div className="container mx-auto text-center">
-          <p className="text-gray-400 mb-4">
-            © 2025 Synthra Tecnologia. Todos os direitos reservados.
-          </p>
-          <p className="text-sm text-gray-500">
-            Nexialismo: onde conexões impossíveis se tornam soluções inevitáveis.
-          </p>
+      <footer className="py-16 px-4 bg-slate-900 border-t border-gray-800">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            {/* Logo e Descrição */}
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
+                    <div className="w-5 h-5 bg-white rounded-sm transform rotate-45"></div>
+                  </div>
+                  <span className="text-2xl font-bold text-white">synthra</span>
+                </div>
+              </div>
+              <p className="text-gray-400 leading-relaxed max-w-md">
+                Tecnologia, pessoas e estratégia conectadas para potencializar seu negócio. 
+                IA First com especialistas humanos.
+              </p>
+            </div>
+
+            {/* Links Rápidos */}
+            <div>
+              <h4 className="text-white font-semibold mb-4">Serviços</h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => scrollToSection('consultoria')} className="text-gray-400 hover:text-cyan-400 transition-colors">
+                    Consultoria Estratégica
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('automacao')} className="text-gray-400 hover:text-cyan-400 transition-colors">
+                    Automação e IA
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('social')} className="text-gray-400 hover:text-cyan-400 transition-colors">
+                    Social Inteligente
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('sites')} className="text-gray-400 hover:text-cyan-400 transition-colors">
+                    Sites e MVPs
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Contato */}
+            <div>
+              <h4 className="text-white font-semibold mb-4">Contato</h4>
+              <ul className="space-y-2">
+                <li>
+                  <a href="https://wa.me/5551991867042" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WhatsApp
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:contato@synthraia.com.br" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center">
+                    <Mail className="w-4 h-4 mr-2" />
+                    E-mail
+                  </a>
+                </li>
+                <li>
+                  <a href="https://instagram.com/synthra.ia" className="text-gray-400 hover:text-cyan-400 transition-colors flex items-center">
+                    <Instagram className="w-4 h-4 mr-2" />
+                    Instagram
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800">
+            <div className="flex items-center space-x-6 mb-4 md:mb-0">
+              <button 
+                onClick={() => window.open('https://wa.me/5551991867042', '_blank')}
+                className="text-gray-400 hover:text-cyan-400 transition-colors transform hover:scale-110"
+              >
+                <MessageCircle className="w-6 h-6" />
+              </button>
+              <button 
+                onClick={() => window.open('mailto:contato@synthraia.com.br', '_blank')}
+                className="text-gray-400 hover:text-cyan-400 transition-colors transform hover:scale-110"
+              >
+                <Mail className="w-6 h-6" />
+              </button>
+              <button 
+                onClick={() => window.open('https://instagram.com/synthra.ia', '_blank')}
+                className="text-gray-400 hover:text-cyan-400 transition-colors transform hover:scale-110"
+              >
+                <Instagram className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="text-center">
+              <p className="text-gray-400 text-sm">
+                © 2025 Synthra Tecnologia. Todos os direitos reservados.
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
