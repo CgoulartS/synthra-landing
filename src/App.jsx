@@ -160,7 +160,7 @@ function App() {
               <img 
                 src={logoSynthra} 
                 alt="Synthra Tecnologia" 
-                className="h-8 w-auto"
+                className="h-12 w-auto"
               />
             </div>
           </div>
@@ -913,7 +913,7 @@ function App() {
                   <img 
                     src={logoSynthra} 
                     alt="Synthra Tecnologia" 
-                    className="h-10 w-auto"
+                    className="h-14 w-auto"
                   />
                 </div>
               </div>
