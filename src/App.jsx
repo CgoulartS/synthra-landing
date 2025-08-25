@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge.jsx'
 import { Input } from '@/components/ui/input.jsx'
 import { Textarea } from '@/components/ui/textarea.jsx'
+import logoSynthra from './assets/logo-synthra.png'
 import { 
   Search,
   Share2,
@@ -156,10 +157,11 @@ function App() {
           {/* Logo */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => scrollToSection('inicio')}>
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
-                <div className="w-4 h-4 bg-white rounded-sm transform rotate-45"></div>
-              </div>
-              <span className="text-2xl font-bold text-white">synthra</span>
+              <img 
+                src={logoSynthra} 
+                alt="Synthra Tecnologia" 
+                className="h-8 w-auto"
+              />
             </div>
           </div>
 
@@ -908,10 +910,11 @@ function App() {
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="flex items-center space-x-2">
-                  <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
-                    <div className="w-5 h-5 bg-white rounded-sm transform rotate-45"></div>
-                  </div>
-                  <span className="text-2xl font-bold text-white">synthra</span>
+                  <img 
+                    src={logoSynthra} 
+                    alt="Synthra Tecnologia" 
+                    className="h-10 w-auto"
+                  />
                 </div>
               </div>
               <p className="text-gray-400 leading-relaxed max-w-md">
