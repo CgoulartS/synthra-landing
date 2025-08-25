@@ -164,18 +164,18 @@ function App() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6">
             {[
-              { id: 'consultoria', label: 'CONSULTORIA\nESTRATÉGICA' },
-              { id: 'automacao', label: 'AUTOMAÇÃO\nE AGENTES\nINTELIGENTES' },
-              { id: 'social', label: 'SOCIAL INTELIGENTE\nSITES, PÁGINAS\nE MVPA' },
-              { id: 'sites', label: 'SITES, PÁGINAS E MVPS\nBEGUAIRS INE*\nTREINAMENTOS' }
+              { id: 'consultoria', label: 'CONSULTORIA ESTRATÉGICA' },
+              { id: 'automacao', label: 'AUTOMAÇÃO E AGENTES INTELIGENTES' },
+              { id: 'social', label: 'SOCIAL INTELIGENTE' },
+              { id: 'sites', label: 'SITES, PÁGINAS E MVPS' }
             ].map(item => (
               <button 
                 key={item.id}
                 onClick={() => scrollToSection(item.id)} 
-                className={`text-gray-300 hover:text-cyan-400 transition-colors text-sm text-center leading-tight whitespace-pre-line ${
-                  visibleSection === item.id ? 'text-cyan-400' : ''
+                className={`text-gray-300 hover:text-cyan-400 transition-colors text-xs text-center leading-tight px-3 py-2 rounded-lg hover:bg-gray-800/50 ${
+                  visibleSection === item.id ? 'text-cyan-400 bg-gray-800/50' : ''
                 }`}
               >
                 {item.label}
@@ -209,7 +209,7 @@ function App() {
                 <button 
                   key={item.id}
                   onClick={() => scrollToSection(item.id)} 
-                  className="text-gray-300 hover:text-cyan-400 transition-colors text-left py-2"
+                  className="text-gray-300 hover:text-cyan-400 transition-colors text-left py-2 px-4 rounded-lg hover:bg-gray-800/50"
                 >
                   {item.label}
                 </button>
@@ -261,31 +261,31 @@ function App() {
       <section id="inicio" className="py-32 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
         
-        <div className="container mx-auto text-left relative z-10 max-w-6xl">
-          <div className="max-w-4xl">
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight text-white">
+        <div className="container mx-auto text-center relative z-10 max-w-6xl">
+          <div className="max-w-5xl mx-auto">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight text-white">
               Tecnologia, pessoas e estratégia conectadas para potencializar seu negócio
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed max-w-3xl">
+            <p className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-12 leading-relaxed max-w-4xl mx-auto">
               Somos uma empresa IA First, mas não fazemos só com IA: temos especialistas humanos que trabalham lado a lado com a tecnologia para garantir segurança, personalização e agilidade.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 mb-16">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center mb-16">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-xl px-12 py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-cyan-500/25 group"
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-lg lg:text-xl px-8 lg:px-12 py-6 lg:py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-cyan-500/25 group w-full sm:w-auto"
                 onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Gostaria de agendar um diagnóstico gratuito.', '_blank')}
               >
-                <Rocket className="mr-3 w-7 h-7 group-hover:animate-bounce" />
+                <Rocket className="mr-2 lg:mr-3 w-5 lg:w-7 h-5 lg:h-7 group-hover:animate-bounce" />
                 Agendar diagnóstico gratuito
               </Button>
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-xl px-12 py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-purple-500/25 group"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg lg:text-xl px-8 lg:px-12 py-6 lg:py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-purple-500/25 group w-full sm:w-auto"
                 onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero automatizar meu negócio.', '_blank')}
               >
-                <TrendingUp className="mr-3 w-7 h-7 group-hover:animate-pulse" />
+                <TrendingUp className="mr-2 lg:mr-3 w-5 lg:w-7 h-5 lg:h-7 group-hover:animate-pulse" />
                 Quero automatizar meu negócio
               </Button>
             </div>
@@ -296,68 +296,68 @@ function App() {
       {/* O que fazemos */}
       <section className="py-20 px-4 bg-slate-800/50">
         <div className="container mx-auto max-w-6xl">
-          <div className="mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
+          <div className="mb-16 text-center">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-white">
               O QUE FAZEMOS
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {/* Consultoria Estratégica */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
               <CardHeader className="pb-4">
-                <div className="w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
-                  <Search className="w-10 h-10 text-white" />
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Search className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
                 </div>
-                <CardTitle className="text-white text-xl mb-4">Consultoria Estratégica</CardTitle>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Consultoria Estratégica</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
                   Descobrimos se o gargalo está em pessoas, processos ou tecnologia.
                 </CardDescription>
               </CardContent>
             </Card>
 
             {/* Automação & Agentes Inteligentes */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
               <CardHeader className="pb-4">
-                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
-                  <Share2 className="w-10 h-10 text-white" />
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Share2 className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
                 </div>
-                <CardTitle className="text-white text-xl mb-4">Automação & Agentes Inteligentes</CardTitle>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Automação & Agentes Inteligentes</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
                   Bots, integrações, relatórios e funis de vendas automatizados.
                 </CardDescription>
               </CardContent>
             </Card>
 
             {/* Social Inteligente */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
               <CardHeader className="pb-4">
-                <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
-                  <Megaphone className="w-10 h-10 text-white" />
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Megaphone className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
                 </div>
-                <CardTitle className="text-white text-xl mb-4">Social Inteligente</CardTitle>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Social Inteligente</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
                   Criação de conteúdo, anúncios e presença digital com IA + estratégia humana.
                 </CardDescription>
               </CardContent>
             </Card>
 
             {/* Criação de Sites, Páginas e MVPs */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center">
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
               <CardHeader className="pb-4">
-                <div className="w-20 h-20 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse">
-                  <Monitor className="w-10 h-10 text-white" />
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Monitor className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
                 </div>
-                <CardTitle className="text-white text-xl mb-4">Criação de Sites, Páginas e MVPs</CardTitle>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Criação de Sites, Páginas e MVPs</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed">
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
                   Valide ideias, crie produtos e venda mais, rápido.
                 </CardDescription>
               </CardContent>
