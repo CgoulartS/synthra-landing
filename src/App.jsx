@@ -341,11 +341,11 @@ function App() {
                 <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
                   <Megaphone className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg lg:text-xl mb-4">Social Inteligente</CardTitle>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Marketing Digital & SEO</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
-                  Criação de conteúdo, anúncios e presença digital com IA + estratégia humana.
+                  Colocamos sua empresa no Google, cuidamos do tráfego e criamos presença digital estratégica.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -364,6 +364,93 @@ function App() {
                 </CardDescription>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO e Tráfego Digital */}
+      <section className="py-20 px-4 bg-slate-800/30">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-white">
+              PRESENÇA DIGITAL COMPLETA
+            </h2>
+            <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Não basta ter um site bonito. Seus clientes precisam te encontrar. Cuidamos de toda sua presença digital: do Google My Business às campanhas pagas.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {/* Google My Business */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+              <CardHeader className="pb-4">
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Globe className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Google My Business</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
+                  Perfil profissional otimizado para aparecer nas buscas locais.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* SEO Técnico */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+              <CardHeader className="pb-4">
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Search className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">SEO Técnico</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
+                  Otimização completa para ranquear no topo do Google.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Google Ads */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+              <CardHeader className="pb-4">
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <Target className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Google Ads</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
+                  Campanhas pagas inteligentes com ROI garantido.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            {/* Analytics & Relatórios */}
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+              <CardHeader className="pb-4">
+                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
+                  <BarChart3 className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                </div>
+                <CardTitle className="text-white text-lg lg:text-xl mb-4">Analytics & Relatórios</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
+                  Acompanhamento completo do desempenho digital.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-xl px-12 py-6"
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero colocar minha empresa no Google e gerenciar meu tráfego digital.', '_blank')}
+            >
+              <Globe className="mr-2 w-6 h-6" />
+              Quero dominar o digital
+            </Button>
           </div>
         </div>
       </section>
@@ -388,6 +475,27 @@ function App() {
             <div className="flex items-start space-x-4">
               <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
               <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Presença digital completa no Google</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">Gestão profissional de tráfego pago</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2">SEO técnico e otimização avançada</h3>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
                 <h3 className="text-white font-semibold text-lg mb-2">Soluções personalizadas para cada negócio</h3>
               </div>
             </div>
@@ -395,28 +503,7 @@ function App() {
             <div className="flex items-start space-x-4">
               <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
               <div>
-                <h3 className="text-white font-semibold text-lg mb-2">Agilidade com segurança</h3>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-4">
-              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-              <div>
-                <h3 className="text-white font-semibold text-lg mb-2">Soluções personalizadas para cada negócio</h3>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-4">
-              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-              <div>
-                <h3 className="text-white font-semibold text-lg mb-2">Diagnóstico profundo antes da execução</h3>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-4">
-              <div className="w-3 h-3 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-              <div>
-                <h3 className="text-white font-semibold text-lg mb-2">Experiência multissetorial</h3>
+                <h3 className="text-white font-semibold text-lg mb-2">Acompanhamento e relatórios detalhados</h3>
               </div>
             </div>
           </div>
@@ -545,40 +632,40 @@ function App() {
         </div>
       </section>
 
-      {/* Social Inteligente */}
+      {/* Marketing Digital & SEO */}
       <section id="social" className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold mb-8 text-white">
-              Conteúdo que conecta. Estratégia que converte.
+              Sua empresa visível no Google e redes sociais
             </h2>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Posicionamos sua marca e criamos conteúdo com propósito usando IA para potencializar resultados. Do planejamento às campanhas, cuidamos de tudo.
+              Colocamos sua empresa no Google, gerenciamos seu tráfego digital e criamos uma presença online que converte. Do SEO às campanhas pagas, cuidamos de tudo para você aparecer onde seus clientes estão.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
               <CardContent className="p-8">
-                <Megaphone className="w-16 h-16 text-green-400 mx-auto mb-6" />
-                <h3 className="text-white font-semibold text-xl mb-4">Criação de Conteúdo</h3>
-                <p className="text-gray-300">Posts, vídeos e campanhas que engajam</p>
+                <Search className="w-16 h-16 text-green-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">SEO & Google My Business</h3>
+                <p className="text-gray-300">Sua empresa no topo do Google com otimização completa e perfil profissional</p>
               </CardContent>
             </Card>
             
             <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
               <CardContent className="p-8">
-                <Target className="w-16 h-16 text-purple-400 mx-auto mb-6" />
-                <h3 className="text-white font-semibold text-xl mb-4">Anúncios Inteligentes</h3>
-                <p className="text-gray-300">Campanhas otimizadas com IA para máximo ROI</p>
+                <TrendingUp className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Gestão de Tráfego</h3>
+                <p className="text-gray-300">Campanhas inteligentes no Google Ads e redes sociais com ROI garantido</p>
               </CardContent>
             </Card>
             
             <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
               <CardContent className="p-8">
-                <BarChart3 className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
-                <h3 className="text-white font-semibold text-xl mb-4">Análise de Resultados</h3>
-                <p className="text-gray-300">Relatórios claros para decisões estratégicas</p>
+                <Megaphone className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Conteúdo Estratégico</h3>
+                <p className="text-gray-300">Posts, vídeos e campanhas que engajam e convertem com IA + estratégia humana</p>
               </CardContent>
             </Card>
           </div>
@@ -587,10 +674,10 @@ function App() {
             <Button 
               size="lg"
               className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-xl px-12 py-6"
-              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero acelerar minhas redes sociais.', '_blank')}
+              onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero colocar minha empresa no Google e aumentar o tráfego.', '_blank')}
             >
-              <TrendingUp className="mr-2 w-6 h-6" />
-              Quero acelerar minhas redes
+              <Search className="mr-2 w-6 h-6" />
+              Quero aparecer no Google
             </Button>
           </div>
         </div>
