@@ -44,7 +44,8 @@ import {
   Eye,
   Heart,
   Brain,
-  Sparkles
+  Sparkles,
+  Palette
 } from 'lucide-react'
 import './App.css'
 
@@ -53,7 +54,19 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({ name: '', email: '', message: '', phone: '', company: '' })
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    email: '', 
+    phone: '', 
+    company: '', 
+    position: '', 
+    companySize: '', 
+    service: '', 
+    budget: '', 
+    urgency: '', 
+    message: '', 
+    consent: false 
+  })
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -131,21 +144,144 @@ function App() {
       return
     }
     
-    if (!formData.message.trim()) {
-      showNotification('Mensagem é obrigatória', 'error')
+    if (!formData.phone.trim()) {
+      showNotification('WhatsApp é obrigatório', 'error')
       setIsLoading(false)
       return
     }
     
-    // Simular envio
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
+    if (!formData.company.trim()) {
+      showNotification('Nome da empresa é obrigatório', 'error')
       setIsLoading(false)
-      showNotification('Mensagem enviada com sucesso! Retornaremos em breve.')
-      setFormData({ name: '', email: '', message: '', phone: '', company: '' })
+      return
+    }
+    
+    if (!formData.position.trim()) {
+      showNotification('Cargo é obrigatório', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.companySize) {
+      showNotification('Tamanho da empresa é obrigatório', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.service) {
+      showNotification('Serviço de interesse é obrigatório', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.budget) {
+      showNotification('Orçamento é obrigatório', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.urgency) {
+      showNotification('Prazo é obrigatório', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.message.trim()) {
+      showNotification('Descrição do projeto é obrigatória', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    if (!formData.consent) {
+      showNotification('É necessário autorizar o contato', 'error')
+      setIsLoading(false)
+      return
+    }
+    
+    // Enviar para Google Sheets
+    try {
+      const leadData = {
+        timestamp: new Date().toLocaleString('pt-BR'),
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        position: formData.position,
+        companySize: formData.companySize,
+        service: formData.service,
+        budget: formData.budget,
+        urgency: formData.urgency,
+        message: formData.message,
+        consent: formData.consent ? 'Sim' : 'Não',
+        source: 'Site Synthra'
+      }
+      
+      // URL do Google Apps Script - SERÁ ATUALIZADA APÓS CONFIGURAR O SCRIPT
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID_AQUI/exec'
+      
+      // ID da planilha do Google Sheets
+      const SPREADSHEET_ID = '1TWBllTsMVHdy7czaabcA_LL_l0Dud47DhWcFTzFkL1o'
+      
+      // Tentar enviar para Google Sheets
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(leadData)
+        })
+        
+        console.log('Lead enviado para Google Sheets:', leadData)
+      } catch (sheetError) {
+        console.log('Erro ao enviar para Sheets, mas continuando...', sheetError)
+        // Não interrompe o fluxo se o Sheets falhar
+      }
+      
+      // Simular processamento
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      setIsLoading(false)
+      showNotification('Solicitação enviada com sucesso! Entraremos em contato em breve.')
+      
+      // Reset do formulário
+      setFormData({ 
+        name: '', 
+        email: '', 
+        phone: '', 
+        company: '', 
+        position: '', 
+        companySize: '', 
+        service: '', 
+        budget: '', 
+        urgency: '', 
+        message: '', 
+        consent: false 
+      })
+      
+      // Redirecionar para WhatsApp com dados do lead
+      const whatsappMessage = `🎯 *NOVO LEAD DO SITE*%0A%0A` +
+        `👤 *Nome:* ${formData.name}%0A` +
+        `🏢 *Empresa:* ${formData.company}%0A` +
+        `💼 *Cargo:* ${formData.position}%0A` +
+        `📊 *Tamanho:* ${formData.companySize}%0A` +
+        `🎯 *Serviço:* ${formData.service}%0A` +
+        `💰 *Orçamento:* ${formData.budget}%0A` +
+        `⏰ *Urgência:* ${formData.urgency}%0A` +
+        `📧 *Email:* ${formData.email}%0A` +
+        `📱 *WhatsApp:* ${formData.phone}%0A%0A` +
+        `📝 *Projeto:* ${formData.message}`
+      
+      // Abrir WhatsApp após 2 segundos
+      setTimeout(() => {
+        window.open(`https://wa.me/5551991867042?text=${whatsappMessage}`, '_blank')
+      }, 2000)
+      
     } catch (error) {
       setIsLoading(false)
-      showNotification('Erro ao enviar mensagem. Tente novamente.', 'error')
+      showNotification('Erro ao enviar solicitação. Tente novamente.', 'error')
+      console.error('Erro no formulário:', error)
     }
   }
 
@@ -659,12 +795,20 @@ function App() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
               <CardContent className="p-8">
                 <Award className="w-16 h-16 text-purple-400 mx-auto mb-6" />
                 <h3 className="text-white font-semibold text-xl mb-4">Branding Estratégico</h3>
                 <p className="text-gray-300">Identidade visual que marca e posiciona</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm text-center">
+              <CardContent className="p-8">
+                <Palette className="w-16 h-16 text-pink-400 mx-auto mb-6" />
+                <h3 className="text-white font-semibold text-xl mb-4">Posicionamento de Marca e ID Visual</h3>
+                <p className="text-gray-300">Construímos marcas fortes e identidades visuais que conectam com seu público</p>
               </CardContent>
             </Card>
             
@@ -764,7 +908,7 @@ function App() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Input
-                        placeholder="Seu nome *"
+                        placeholder="Seu nome completo *"
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                         className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
@@ -774,7 +918,7 @@ function App() {
                     <div>
                       <Input
                         type="email"
-                        placeholder="Seu e-mail *"
+                        placeholder="Seu e-mail profissional *"
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                         className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
@@ -785,29 +929,120 @@ function App() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Input
-                        placeholder="Telefone (opcional)"
+                        placeholder="WhatsApp com DDD *"
                         value={formData.phone}
                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
                         className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                        required
                       />
                     </div>
                     <div>
                       <Input
-                        placeholder="Empresa (opcional)"
+                        placeholder="Nome da empresa *"
                         value={formData.company}
                         onChange={(e) => setFormData({...formData, company: e.target.value})}
                         className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                        required
                       />
                     </div>
                   </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        placeholder="Seu cargo/função *"
+                        value={formData.position}
+                        onChange={(e) => setFormData({...formData, position: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-12"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <select
+                        value={formData.companySize}
+                        onChange={(e) => setFormData({...formData, companySize: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white h-12 w-full rounded-md px-3 border"
+                        required
+                      >
+                        <option value="">Tamanho da empresa *</option>
+                        <option value="1-10">1-10 funcionários</option>
+                        <option value="11-50">11-50 funcionários</option>
+                        <option value="51-200">51-200 funcionários</option>
+                        <option value="201-500">201-500 funcionários</option>
+                        <option value="500+">Mais de 500 funcionários</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <select
+                        value={formData.service}
+                        onChange={(e) => setFormData({...formData, service: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white h-12 w-full rounded-md px-3 border"
+                        required
+                      >
+                        <option value="">Serviço de interesse *</option>
+                        <option value="consultoria">Consultoria Estratégica</option>
+                        <option value="automacao">Automação e IA</option>
+                        <option value="marketing">Marketing Digital & SEO</option>
+                        <option value="sites">Sites e MVPs</option>
+                        <option value="branding">Branding e Treinamentos</option>
+                        <option value="posicionamento">Posicionamento de Marca e ID Visual</option>
+                        <option value="multiplos">Múltiplos serviços</option>
+                      </select>
+                    </div>
+                    <div>
+                      <select
+                        value={formData.budget}
+                        onChange={(e) => setFormData({...formData, budget: e.target.value})}
+                        className="bg-gray-700 border-gray-600 text-white h-12 w-full rounded-md px-3 border"
+                        required
+                      >
+                        <option value="">Orçamento disponível *</option>
+                        <option value="5k-15k">R$ 5.000 - R$ 15.000</option>
+                        <option value="15k-30k">R$ 15.000 - R$ 30.000</option>
+                        <option value="30k-50k">R$ 30.000 - R$ 50.000</option>
+                        <option value="50k-100k">R$ 50.000 - R$ 100.000</option>
+                        <option value="100k+">Acima de R$ 100.000</option>
+                        <option value="conversar">Prefiro conversar sobre valores</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <select
+                      value={formData.urgency}
+                      onChange={(e) => setFormData({...formData, urgency: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white h-12 w-full rounded-md px-3 border mb-4"
+                      required
+                    >
+                      <option value="">Prazo para início *</option>
+                      <option value="imediato">Imediato (até 1 semana)</option>
+                      <option value="curto">Curto prazo (1-4 semanas)</option>
+                      <option value="medio">Médio prazo (1-3 meses)</option>
+                      <option value="longo">Longo prazo (3+ meses)</option>
+                      <option value="planejando">Ainda estou planejando</option>
+                    </select>
+                  </div>
                   <div>
                     <Textarea
-                      placeholder="Sua mensagem *"
+                      placeholder="Descreva seu projeto ou desafio *"
                       value={formData.message}
                       onChange={(e) => setFormData({...formData, message: e.target.value})}
-                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 min-h-[150px] resize-none"
+                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 min-h-[120px] resize-none"
                       required
                     />
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      id="consent"
+                      checked={formData.consent}
+                      onChange={(e) => setFormData({...formData, consent: e.target.checked})}
+                      className="mt-1 w-4 h-4 text-cyan-500 bg-gray-700 border-gray-600 rounded focus:ring-cyan-500"
+                      required
+                    />
+                    <label htmlFor="consent" className="text-gray-300 text-sm leading-relaxed">
+                      Autorizo o contato da Synthra Tecnologia via WhatsApp, e-mail ou telefone para apresentação de propostas comerciais e acompanhamento do meu interesse. *
+                    </label>
                   </div>
                   <Button 
                     type="submit"
@@ -819,7 +1054,7 @@ function App() {
                     ) : (
                       <>
                         <Send className="mr-2 w-5 h-5" />
-                        Enviar mensagem
+                        Enviar solicitação
                       </>
                     )}
                   </Button>
