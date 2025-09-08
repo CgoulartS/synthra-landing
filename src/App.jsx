@@ -319,6 +319,15 @@ function App() {
                 {item.label}
               </button>
             ))}
+            
+            {/* Portal do Cliente */}
+            <Button
+              onClick={() => window.open('https://hub.synthraia.com.br', '_blank')}
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-xs px-4 py-2 h-auto"
+            >
+              <Users className="mr-2 w-4 h-4" />
+              Portal do Cliente
+            </Button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -352,6 +361,17 @@ function App() {
                   {item.label}
                 </button>
               ))}
+              
+              {/* Portal do Cliente Mobile */}
+              <div className="px-4 pt-2">
+                <Button
+                  onClick={() => window.open('https://hub.synthraia.com.br', '_blank')}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white"
+                >
+                  <Users className="mr-2 w-4 h-4" />
+                  Portal do Cliente
+                </Button>
+              </div>
             </nav>
           </div>
         )}
@@ -406,7 +426,17 @@ function App() {
             </h1>
             
             <p className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-12 leading-relaxed max-w-4xl mx-auto">
-              Somos uma empresa IA First, mas não fazemos só com IA: temos especialistas humanos que trabalham lado a lado com a tecnologia para garantir segurança, personalização e agilidade.
+              Somos uma Agência Nexialista e isso não é um rótulo bonito, é um conceito.<br/>
+              É sobre conectar pontos que normalmente andam separados:<br/><br/>
+              
+              <span className="text-cyan-400 font-semibold">Gestão inteligente</span><br/>
+              <span className="text-purple-400 font-semibold">Tecnologia aplicada</span><br/>
+              <span className="text-green-400 font-semibold">Posicionamento estratégico</span><br/>
+              <span className="text-pink-400 font-semibold">Comunicação que converte</span><br/><br/>
+              
+              Enquanto agências tradicionais dividem, a Synthra integra.<br/>
+              Tudo que o teu negócio precisa, funcionando de forma centralizada e transparente.<br/>
+              O presente exige conexão. E é isso que a gente entrega.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center mb-16">
