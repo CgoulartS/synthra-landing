@@ -48,9 +48,15 @@ import {
   Sparkles,
   Palette
 } from 'lucide-react'
+import emailjs from '@emailjs/browser'
 import './App.css'
 
 function App() {
+  // Variáveis de ambiente para EmailJS
+  const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID"; // Substitua pelo seu Service ID do EmailJS
+  const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID"; // Substitua pelo seu Template ID do EmailJS
+  const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY"; // Substitua pela sua Public Key do EmailJS
+
   // Estados
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
@@ -72,6 +78,11 @@ function App() {
   const [showError, setShowError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [visibleSection, setVisibleSection] = useState('inicio')
+
+  // Inicialização do EmailJS
+  useEffect(() => {
+    emailjs.init(EMAILJS_PUBLIC_KEY); // Substitua YOUR_PUBLIC_KEY pela sua chave pública do EmailJS
+  }, []);
 
   // Scroll tracking
   useEffect(() => {
@@ -217,62 +228,102 @@ function App() {
         source: 'Site Synthra'
       }
       
-      // Enviar email usando Formspree (serviço gratuito e confiável)
-      try {
-        const emailResponse = await fetch('https://formspree.io/f/xdkogqpb', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            _replyto: formData.email,
-            _subject: `🎯 Novo Lead - ${formData.name} (${formData.company})`,
-            message: `
-NOVO LEAD RECEBIDO VIA SITE SYNTHRA
-
-👤 Nome: ${formData.name}
-🏢 Empresa: ${formData.company}
-💼 Cargo: ${formData.position}
-📊 Tamanho da Empresa: ${formData.companySize}
-🎯 Serviço de Interesse: ${formData.service}
-💰 Orçamento: ${formData.budget}
-⏰ Urgência: ${formData.urgency}
-📧 Email: ${formData.email}
-📱 WhatsApp: ${formData.phone}
-
-📝 Mensagem:
-${formData.message}
-
-✅ Consentimento: ${formData.consent ? 'Sim' : 'Não'}
-⏰ Recebido em: ${leadData.timestamp}
-🌐 Origem: Site Synthra
-
----
-Este lead foi capturado automaticamente pelo formulário do site.
-            `,
-            nome: formData.name,
-            email: formData.email,
-            telefone: formData.phone,
-            empresa: formData.company,
-            cargo: formData.position,
-            tamanho_empresa: formData.companySize,
-            servico: formData.service,
-            orcamento: formData.budget,
-            urgencia: formData.urgency,
-            mensagem_cliente: formData.message,
-            consentimento: formData.consent ? 'Sim' : 'Não',
-            timestamp: leadData.timestamp
-          })
-        })
-        
-        if (emailResponse.ok) {
-          console.log('Email enviado com sucesso:', leadData)
-        } else {
-          console.log('Erro no envio do email, mas continuando...')
+      // Função para enviar email via EmailJS
+      const sendEmailJS = async (templateParams) => {
+        try {
+          const response = await emailjs.send(
+            EMAILJS_SERVICE_ID,
+            EMAILJS_TEMPLATE_ID,
+            templateParams,
+            EMAILJS_PUBLIC_KEY
+          );
+          console.log("EmailJS Success:", response.status, response.text);
+          return true;
+        } catch (error) {
+          console.error("EmailJS Failed:", error);
+          return false;
         }
-      } catch (emailError) {
-        console.log('Erro ao enviar email, mas continuando...', emailError)
-        // Não interrompe o fluxo se o email falhar
+      };
+
+      // Enviar email usando Formspree (serviço gratuito e confiável)
+
+      let emailSentSuccessfully = false;
+
+      // Tentar enviar email via EmailJS
+      try {
+        const templateParams = {
+          from_name: formData.name,
+          from_email: formData.email,
+          to_name: "Synthra", // Pode ser o nome da sua empresa ou um email específico
+          subject: `🎯 Novo Lead - ${formData.name} (${formData.company})`,
+          message: `
+NOVO LEAD RECEBIDO VIA SITE SYNTHRA\n\n👤 Nome: ${formData.name}\n🏢 Empresa: ${formData.company}\n💼 Cargo: ${formData.position}\n📊 Tamanho da Empresa: ${formData.companySize}\n🎯 Serviço de Interesse: ${formData.service}\n💰 Orçamento: ${formData.budget}\n⏰ Urgência: ${formData.urgency}\n📧 Email: ${formData.email}\n📱 WhatsApp: ${formData.phone}\n\n📝 Mensagem:\n${formData.message}\n\n✅ Consentimento: ${formData.consent ? 'Sim' : 'Não'}\n⏰ Recebido em: ${leadData.timestamp}\n🌐 Origem: Site Synthra\n\n---\nEste lead foi capturado automaticamente pelo formulário do site.
+          `,
+          // Adicione outros campos do formulário que você queira enviar para o EmailJS
+          nome: formData.name,
+          email: formData.email,
+          telefone: formData.phone,
+          empresa: formData.company,
+          cargo: formData.position,
+          tamanho_empresa: formData.companySize,
+          servico: formData.service,
+          orcamento: formData.budget,
+          urgencia: formData.urgency,
+          mensagem_cliente: formData.message,
+          consentimento: formData.consent ? 'Sim' : 'Não',
+          timestamp: leadData.timestamp
+        };
+        emailSentSuccessfully = await sendEmailJS(templateParams);
+        if (emailSentSuccessfully) {
+          console.log("Email enviado com sucesso via EmailJS:", leadData);
+        } else {
+          console.log("Falha no envio via EmailJS. Tentando Formspree...");
+        }
+      } catch (emailJSError) {
+        console.error("Erro inesperado ao tentar EmailJS:", emailJSError);
+        console.log("Erro no EmailJS. Tentando Formspree...");
+      }
+
+      // Se o EmailJS falhar, tentar Formspree
+      if (!emailSentSuccessfully) {
+        try {
+          const formspreeResponse = await fetch("https://formspree.io/f/xdkogqpb", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              _replyto: formData.email,
+              _subject: `🎯 Novo Lead - ${formData.name} (${formData.company})`,
+              message: `
+NOVO LEAD RECEBIDO VIA SITE SYNTHRA\n\n👤 Nome: ${formData.name}\n🏢 Empresa: ${formData.company}\n💼 Cargo: ${formData.position}\n📊 Tamanho da Empresa: ${formData.companySize}\n🎯 Serviço de Interesse: ${formData.service}\n💰 Orçamento: ${formData.budget}\n⏰ Urgência: ${formData.urgency}\n📧 Email: ${formData.email}\n📱 WhatsApp: ${formData.phone}\n\n📝 Mensagem:\n${formData.message}\n\n✅ Consentimento: ${formData.consent ? 'Sim' : 'Não'}\n⏰ Recebido em: ${leadData.timestamp}\n🌐 Origem: Site Synthra\n\n---\nEste lead foi capturado automaticamente pelo formulário do site.
+              `,
+              nome: formData.name,
+              email: formData.email,
+              telefone: formData.phone,
+              empresa: formData.company,
+              cargo: formData.position,
+              tamanho_empresa: formData.companySize,
+              servico: formData.service,
+              orcamento: formData.budget,
+              urgencia: formData.urgency,
+              mensagem_cliente: formData.message,
+              consentimento: formData.consent ? 'Sim' : 'Não',
+              timestamp: leadData.timestamp
+            })
+          });
+
+          if (formspreeResponse.ok) {
+            console.log("Email enviado com sucesso via Formspree:", leadData);
+            emailSentSuccessfully = true;
+          } else {
+            console.error("Erro no envio do email via Formspree:", formspreeResponse.status, formspreeResponse.statusText);
+            showNotification("Erro ao enviar solicitação. Tente novamente.", "error");
+          }
+        } catch (formspreeError) {
+          console.error("Erro ao enviar email via Formspree:", formspreeError);
+          showNotification("Erro ao enviar solicitação. Tente novamente.", "error");
+        }
       }
       
       // Preparar mensagem do WhatsApp ANTES do reset
