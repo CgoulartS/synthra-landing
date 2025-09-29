@@ -275,6 +275,20 @@ Este lead foi capturado automaticamente pelo formulário do site.
         // Não interrompe o fluxo se o email falhar
       }
       
+      // Preparar mensagem do WhatsApp ANTES do reset
+      const whatsappMessage = `Olá! Acabei de preencher o formulário no site da Synthra.%0A%0A` +
+        `🎯 *DADOS DO CONTATO*%0A%0A` +
+        `👤 *Nome:* ${formData.name}%0A` +
+        `🏢 *Empresa:* ${formData.company}%0A` +
+        `💼 *Cargo:* ${formData.position}%0A` +
+        `📊 *Funcionários:* ${formData.companySize}%0A` +
+        `🎯 *Interesse:* ${formData.service}%0A` +
+        `💰 *Orçamento:* ${formData.budget}%0A` +
+        `⏰ *Prazo:* ${formData.urgency}%0A` +
+        `📧 *Email:* ${formData.email}%0A%0A` +
+        `📝 *Detalhes do projeto:*%0A${formData.message}%0A%0A` +
+        `Gostaria de agendar uma conversa para discutir como a Synthra pode ajudar!`
+      
       // Simular processamento
       await new Promise(resolve => setTimeout(resolve, 1500))
       
@@ -295,19 +309,6 @@ Este lead foi capturado automaticamente pelo formulário do site.
         message: '', 
         consent: false 
       })
-      
-      // Redirecionar para WhatsApp com dados do lead
-      const whatsappMessage = `🎯 *NOVO LEAD DO SITE*%0A%0A` +
-        `👤 *Nome:* ${formData.name}%0A` +
-        `🏢 *Empresa:* ${formData.company}%0A` +
-        `💼 *Cargo:* ${formData.position}%0A` +
-        `📊 *Tamanho:* ${formData.companySize}%0A` +
-        `🎯 *Serviço:* ${formData.service}%0A` +
-        `💰 *Orçamento:* ${formData.budget}%0A` +
-        `⏰ *Urgência:* ${formData.urgency}%0A` +
-        `📧 *Email:* ${formData.email}%0A` +
-        `📱 *WhatsApp:* ${formData.phone}%0A%0A` +
-        `📝 *Projeto:* ${formData.message}`
       
       // Abrir WhatsApp após 2 segundos
       setTimeout(() => {
