@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge.jsx'
 import { Input } from '@/components/ui/input.jsx'
 import { Textarea } from '@/components/ui/textarea.jsx'
 import logoSynthra from './assets/logo-synthra.png'
+import synthiMascote from './assets/synthi-mascote.png'
 import { 
   Search,
   Share2,
@@ -216,11 +217,11 @@ function App() {
         source: 'Site Synthra'
       }
       
-      // URL do Google Apps Script - SERÁ ATUALIZADA APÓS CONFIGURAR O SCRIPT
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID_AQUI/exec'
+      // URL do Google Apps Script - CONFIGURADO E FUNCIONANDO
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwrE34XOoMxEqRTBqUmFqWLEJA1H8Mle9-gmbWhvl3FNEtuXxp0MV75AraHPp3tooB_/exec'
       
       // ID da planilha do Google Sheets
-      const SPREADSHEET_ID = '1TWBllTsMVHdy7czaabcA_LL_l0Dud47DhWcFTzFkL1o'
+      const SPREADSHEET_ID = '10AxLKQeeI_xY6GlUpDz0CF5whagFxTkild8J08VtzSM'
       
       // Tentar enviar para Google Sheets
       try {
@@ -416,33 +417,97 @@ function App() {
       <BackToTopButton />
 
       {/* Hero Section */}
-      <section id="inicio" className="py-32 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+      <section id="inicio" className="py-32 px-4 relative overflow-hidden min-h-screen flex items-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-slate-900 to-cyan-900"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-600/20 via-transparent to-transparent"></div>
+        
+        {/* Elementos decorativos */}
+        <div className="absolute top-20 left-10 w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-purple-400 rounded-full animate-ping"></div>
+        <div className="absolute bottom-40 left-20 w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse"></div>
+        <div className="absolute top-60 left-1/3 w-1 h-1 bg-green-400 rounded-full animate-ping"></div>
+        
+        {/* Mascote Synthi */}
+        <div className="absolute top-10 right-10 lg:top-20 lg:right-20 z-20">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+            <img 
+              src={synthiMascote} 
+              alt="Synthi - Mascote da Synthra" 
+              className="relative w-20 h-20 lg:w-32 lg:h-32 rounded-full object-cover border-2 border-cyan-400/30 hover:border-cyan-400/60 transition-all duration-300 hover:scale-110"
+            />
+            <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-slate-900 animate-bounce"></div>
+          </div>
+        </div>
         
         <div className="container mx-auto text-center relative z-10 max-w-6xl">
           <div className="max-w-5xl mx-auto">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight text-white">
-              Tecnologia, pessoas e estratégia conectadas para potencializar seu negócio
+            <div className="mb-8">
+              <span className="inline-block px-6 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-300 text-sm font-semibold mb-6">
+                🚀 Agência Nexialista
+              </span>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight text-white">
+              Tecnologia, pessoas e <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">estratégia conectadas</span> para potencializar seu negócio
             </h1>
             
-            <p className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-12 leading-relaxed max-w-4xl mx-auto">
-              Somos uma Agência Nexialista e isso não é um rótulo bonito, é um conceito.<br/>
-              É sobre conectar pontos que normalmente andam separados:<br/><br/>
+            <div className="max-w-4xl mx-auto mb-12">
+              <p className="text-xl md:text-2xl lg:text-3xl text-gray-300 mb-8 leading-relaxed">
+                Somos uma <span className="text-cyan-400 font-semibold">Agência Nexialista</span> e isso não é um rótulo bonito, é um conceito.
+              </p>
               
-              <span className="text-cyan-400 font-semibold">Gestão inteligente</span><br/>
-              <span className="text-purple-400 font-semibold">Tecnologia aplicada</span><br/>
-              <span className="text-green-400 font-semibold">Posicionamento estratégico</span><br/>
-              <span className="text-pink-400 font-semibold">Comunicação que converte</span><br/><br/>
+              <p className="text-lg md:text-xl text-gray-400 mb-8">
+                É sobre conectar pontos que normalmente andam separados:
+              </p>
               
-              Enquanto agências tradicionais dividem, a Synthra integra.<br/>
-              Tudo que o teu negócio precisa, funcionando de forma centralizada e transparente.<br/>
-              O presente exige conexão. E é isso que a gente entrega.
-            </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="bg-slate-800/30 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-4 hover:border-cyan-500/40 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Brain className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-cyan-400 font-semibold text-sm">Gestão inteligente</p>
+                </div>
+                
+                <div className="bg-slate-800/30 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-4 hover:border-purple-500/40 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-purple-400 font-semibold text-sm">Tecnologia aplicada</p>
+                </div>
+                
+                <div className="bg-slate-800/30 backdrop-blur-sm border border-green-500/20 rounded-2xl p-4 hover:border-green-500/40 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-green-400 font-semibold text-sm">Posicionamento estratégico</p>
+                </div>
+                
+                <div className="bg-slate-800/30 backdrop-blur-sm border border-pink-500/20 rounded-2xl p-4 hover:border-pink-500/40 transition-all">
+                  <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <MessageCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-pink-400 font-semibold text-sm">Comunicação que converte</p>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <p className="text-lg md:text-xl text-gray-300 mb-2">
+                  Enquanto agências tradicionais <span className="text-red-400">dividem</span>, a Synthra <span className="text-green-400">integra</span>.
+                </p>
+                <p className="text-lg md:text-xl text-gray-300 mb-2">
+                  Tudo que o teu negócio precisa, funcionando de forma <span className="text-cyan-400">centralizada</span> e <span className="text-purple-400">transparente</span>.
+                </p>
+                <p className="text-xl md:text-2xl text-white font-semibold">
+                  O presente exige <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">conexão</span>. E é isso que a gente entrega.
+                </p>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center mb-16">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-lg lg:text-xl px-8 lg:px-12 py-6 lg:py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-cyan-500/25 group w-full sm:w-auto"
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-lg lg:text-xl px-8 lg:px-12 py-6 lg:py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-cyan-500/25 group w-full sm:w-auto border-0"
                 onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Gostaria de agendar um diagnóstico gratuito.', '_blank')}
               >
                 <Rocket className="mr-2 lg:mr-3 w-5 lg:w-7 h-5 lg:h-7 group-hover:animate-bounce" />
@@ -450,7 +515,7 @@ function App() {
               </Button>
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg lg:text-xl px-8 lg:px-12 py-6 lg:py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-purple-500/25 group w-full sm:w-auto"
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg lg:text-xl px-8 lg:px-12 py-6 lg:py-8 transform hover:scale-105 transition-all shadow-2xl hover:shadow-purple-500/25 group w-full sm:w-auto border-0"
                 onClick={() => window.open('https://wa.me/5551991867042?text=Olá! Quero automatizar meu negócio.', '_blank')}
               >
                 <TrendingUp className="mr-2 lg:mr-3 w-5 lg:w-7 h-5 lg:h-7 group-hover:animate-pulse" />
@@ -462,71 +527,77 @@ function App() {
       </section>
 
       {/* O que fazemos */}
-      <section className="py-20 px-4 bg-slate-800/50">
+      <section className="py-20 px-4 bg-gradient-to-b from-slate-800/50 to-slate-900/50">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-white">
-              O QUE FAZEMOS
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 rounded-full text-cyan-300 text-sm font-semibold mb-4">
+              ✨ Nossos Serviços
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+              A <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">conexão perfeita</span> para o seu sucesso
             </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Cada serviço funciona de forma integrada, criando um ecossistema completo para o seu negócio
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {/* Consultoria Estratégica */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+            <Card className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 border-gray-700/50 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full hover:border-cyan-500/50 hover:shadow-2xl hover:shadow-cyan-500/10">
               <CardHeader className="pb-4">
-                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
-                  <Search className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                <div className="w-20 lg:w-24 h-20 lg:h-24 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse group-hover:shadow-2xl group-hover:shadow-cyan-500/25">
+                  <Search className="w-10 lg:w-12 h-10 lg:h-12 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg lg:text-xl mb-4">Consultoria Estratégica</CardTitle>
+                <CardTitle className="text-white text-xl lg:text-2xl mb-4 font-bold">Consultoria Estratégica</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
-                  Descobrimos se o gargalo está em pessoas, processos ou tecnologia.
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-base lg:text-lg">
+                  Descobrimos se o gargalo está em <span className="text-cyan-400 font-semibold">pessoas</span>, <span className="text-purple-400 font-semibold">processos</span> ou <span className="text-green-400 font-semibold">tecnologia</span>.
                 </CardDescription>
               </CardContent>
             </Card>
 
             {/* Automação & Agentes Inteligentes */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+            <Card className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 border-gray-700/50 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/10">
               <CardHeader className="pb-4">
-                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
-                  <Share2 className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                <div className="w-20 lg:w-24 h-20 lg:h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse group-hover:shadow-2xl group-hover:shadow-purple-500/25">
+                  <Share2 className="w-10 lg:w-12 h-10 lg:h-12 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg lg:text-xl mb-4">Automação & Agentes Inteligentes</CardTitle>
+                <CardTitle className="text-white text-xl lg:text-2xl mb-4 font-bold">Automação & Agentes Inteligentes</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
-                  Bots, integrações, relatórios e funis de vendas automatizados.
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-base lg:text-lg">
+                  <span className="text-purple-400 font-semibold">Bots</span>, <span className="text-pink-400 font-semibold">integrações</span>, <span className="text-cyan-400 font-semibold">relatórios</span> e funis de vendas automatizados.
                 </CardDescription>
               </CardContent>
             </Card>
 
-            {/* Social Inteligente */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+            {/* Marketing Digital & SEO */}
+            <Card className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 border-gray-700/50 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full hover:border-green-500/50 hover:shadow-2xl hover:shadow-green-500/10">
               <CardHeader className="pb-4">
-                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
-                  <Megaphone className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                <div className="w-20 lg:w-24 h-20 lg:h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse group-hover:shadow-2xl group-hover:shadow-green-500/25">
+                  <Megaphone className="w-10 lg:w-12 h-10 lg:h-12 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg lg:text-xl mb-4">Marketing Digital & SEO</CardTitle>
+                <CardTitle className="text-white text-xl lg:text-2xl mb-4 font-bold">Marketing Digital & SEO</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
-                  Colocamos sua empresa no Google, cuidamos do tráfego e criamos presença digital estratégica.
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-base lg:text-lg">
+                  Criação de conteúdo, <span className="text-green-400 font-semibold">anúncios</span> e presença digital com <span className="text-emerald-400 font-semibold">estratégia humana</span>.
                 </CardDescription>
               </CardContent>
             </Card>
 
-            {/* Criação de Sites, Páginas e MVPs */}
-            <Card className="bg-slate-800/50 border-gray-700 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full">
+            {/* Sites e MVPs */}
+            <Card className="bg-gradient-to-b from-slate-800/80 to-slate-900/80 border-gray-700/50 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 group text-center h-full hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/10">
               <CardHeader className="pb-4">
-                <div className="w-16 lg:w-20 h-16 lg:h-20 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 lg:mb-6 group-hover:animate-pulse">
-                  <Monitor className="w-8 lg:w-10 h-8 lg:h-10 text-white" />
+                <div className="w-20 lg:w-24 h-20 lg:h-24 bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:animate-pulse group-hover:shadow-2xl group-hover:shadow-amber-500/25">
+                  <Monitor className="w-10 lg:w-12 h-10 lg:h-12 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg lg:text-xl mb-4">Criação de Sites, Páginas e MVPs</CardTitle>
+                <CardTitle className="text-white text-xl lg:text-2xl mb-4 font-bold">Sites, Páginas e MVPs</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-gray-300 text-center leading-relaxed text-sm lg:text-base">
-                  Valide ideias, crie produtos e venda mais, rápido.
+                <CardDescription className="text-gray-300 text-center leading-relaxed text-base lg:text-lg">
+                  Valide ideias, crie <span className="text-amber-400 font-semibold">produtos</span> e venda mais, <span className="text-orange-400 font-semibold">rápido</span>.
                 </CardDescription>
               </CardContent>
             </Card>
