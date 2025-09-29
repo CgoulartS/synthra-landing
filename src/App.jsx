@@ -199,7 +199,7 @@ function App() {
       return
     }
     
-    // Enviar para Google Sheets
+    // Enviar email com os dados do formulário
     try {
       const leadData = {
         timestamp: new Date().toLocaleString('pt-BR'),
@@ -217,27 +217,62 @@ function App() {
         source: 'Site Synthra'
       }
       
-      // URL do Google Apps Script - CONFIGURADO E FUNCIONANDO
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwrE34XOoMxEqRTBqUmFqWLEJA1H8Mle9-gmbWhvl3FNEtuXxp0MV75AraHPp3tooB_/exec'
-      
-      // ID da planilha do Google Sheets
-      const SPREADSHEET_ID = '10AxLKQeeI_xY6GlUpDz0CF5whagFxTkild8J08VtzSM'
-      
-      // Tentar enviar para Google Sheets
+      // Enviar email usando Formspree (serviço gratuito e confiável)
       try {
-        await fetch(GOOGLE_SCRIPT_URL, {
+        const emailResponse = await fetch('https://formspree.io/f/xdkogqpb', {
           method: 'POST',
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(leadData)
+          body: JSON.stringify({
+            _replyto: formData.email,
+            _subject: `🎯 Novo Lead - ${formData.name} (${formData.company})`,
+            message: `
+NOVO LEAD RECEBIDO VIA SITE SYNTHRA
+
+👤 Nome: ${formData.name}
+🏢 Empresa: ${formData.company}
+💼 Cargo: ${formData.position}
+📊 Tamanho da Empresa: ${formData.companySize}
+🎯 Serviço de Interesse: ${formData.service}
+💰 Orçamento: ${formData.budget}
+⏰ Urgência: ${formData.urgency}
+📧 Email: ${formData.email}
+📱 WhatsApp: ${formData.phone}
+
+📝 Mensagem:
+${formData.message}
+
+✅ Consentimento: ${formData.consent ? 'Sim' : 'Não'}
+⏰ Recebido em: ${leadData.timestamp}
+🌐 Origem: Site Synthra
+
+---
+Este lead foi capturado automaticamente pelo formulário do site.
+            `,
+            nome: formData.name,
+            email: formData.email,
+            telefone: formData.phone,
+            empresa: formData.company,
+            cargo: formData.position,
+            tamanho_empresa: formData.companySize,
+            servico: formData.service,
+            orcamento: formData.budget,
+            urgencia: formData.urgency,
+            mensagem_cliente: formData.message,
+            consentimento: formData.consent ? 'Sim' : 'Não',
+            timestamp: leadData.timestamp
+          })
         })
         
-        console.log('Lead enviado para Google Sheets:', leadData)
-      } catch (sheetError) {
-        console.log('Erro ao enviar para Sheets, mas continuando...', sheetError)
-        // Não interrompe o fluxo se o Sheets falhar
+        if (emailResponse.ok) {
+          console.log('Email enviado com sucesso:', leadData)
+        } else {
+          console.log('Erro no envio do email, mas continuando...')
+        }
+      } catch (emailError) {
+        console.log('Erro ao enviar email, mas continuando...', emailError)
+        // Não interrompe o fluxo se o email falhar
       }
       
       // Simular processamento
